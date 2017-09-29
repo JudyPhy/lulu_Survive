@@ -6,13 +6,15 @@ using System;
 public class TimeSync
 {
     public static long delayTime = 0;
+    public static bool syncOver = false;
     private static long delayTimeThreshold = 100;
-    private static Queue<long> _reqtime;
+    private static Queue<long> _reqtime = new Queue<long>();
 
     public static void ReqSyncTime()
     {
-        long now = GetNowLocalTimeStamp();
-        //send
+        syncOver = false;
+        long now = GetNowLocalTimeStamp();  //1 5066 5415 2652
+        TimeSyncMsgHandler.Instance.SendMsgC2GSReqSyncTime(now);
         _reqtime.Enqueue(now);
     }
 
@@ -20,9 +22,12 @@ public class TimeSync
     {
         Debug.Log("RevSyncTime: serviceTime=" + serviceTime.ToString());
         long now = GetNowLocalTimeStamp();
+        Debug.Log("error Time:" + now);
         long prev = _reqtime.Dequeue();
-        long netDelay = (now - prev) / 2;
+        long netDelay = (long)((now - prev) / 2.0f + 0.5f);
+        Debug.Log("netDelay=" + netDelay);
         long correctTime = serviceTime + netDelay;
+        Debug.Log("correctTime=" + correctTime);
         long curDelayTime = correctTime - now;
         delayTime += curDelayTime;
         Debug.Log("curDelayTime=" + curDelayTime.ToString());
@@ -30,12 +35,16 @@ public class TimeSync
         {
             ReqSyncTime();
         }
+        else
+        {
+            syncOver = true;
+        }
     }
 
     private static long GetNowLocalTimeStamp()
     {
         TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-        return Convert.ToInt64(ts.TotalMilliseconds) + delayTime;
+        return Convert.ToInt64(ts.TotalSeconds) + delayTime;
     }
 
 }

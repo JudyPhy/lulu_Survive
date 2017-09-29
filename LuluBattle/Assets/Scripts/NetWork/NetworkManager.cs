@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviour
     private ushort GameServerPort = 3563;
 
     //socket线程
-    public TcpNetworkProcessor GateServerTcpConnect_ = new TcpNetworkProcessor();
+    //public TcpNetworkProcessor GateServerTcpConnect_ = new TcpNetworkProcessor();
     public TcpNetworkProcessor GameServerTcpConnect_ = new TcpNetworkProcessor();
 
     private static readonly object TcpIDLock = new object();    //同步锁
@@ -36,6 +36,8 @@ public class NetworkManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         InitNetwork();
         RegisterAllNetworkMsgHandler();
+
+        prevTime = DateTime.Now;
     }
 
     private void Start()
@@ -70,7 +72,8 @@ public class NetworkManager : MonoBehaviour
     //注册需要处理的消息函数
     public void RegisterAllNetworkMsgHandler()
     {
-        RegisterMessageHandler((int)MsgDef.C2GSReqSyncTime, TimeSyncMsgHandler.Instance.RevMsgC2GSReqSyncTime);
+        RegisterMessageHandler((int)MsgDef.GS2CRevSyncTime, TimeSyncMsgHandler.Instance.RevMsgGS2CRevSyncTime);
+        RegisterMessageHandler((int)MsgDef.GS2CSyncTimeAgain, TimeSyncMsgHandler.Instance.RevMsgGS2CSyncTimeAgain);
     }
 
     private void RegisterMessageHandler(int pid, PacketHandle hander)
@@ -106,35 +109,53 @@ public class NetworkManager : MonoBehaviour
 
         //处理取出的服务器消息
         ProcMsgLogic();
-    }
 
-    //心跳
-    private void ProcessHeartTick()
-    {
-        if (this.Test_GateConnectSuccess_ && this.GateServerTcpConnect_ != null)
+
+
+        if (TimeSync.syncOver && OverTestTimeInterval())
         {
-            if (this.GateServerTcpConnect_.IsConnected())
-            {
-                if (this.GateServerTcpConnect_.IsHeartTickSendTime())
-                {
-                    //LoginMsgHandler.Instance.SendMsgC2GSHeartTick();
-                }
-                //心跳超时，连接断开
-                if (this.GateServerTcpConnect_.IsConnectOverTime())
-                {
-                    Debug.LogError("心跳超时，连接断开");
-                    this.GateServerTcpConnect_.DisConnect();
-                }
-            }
-            else
-            {
-                if (!this.GateServerTcpConnect_.IsNativeSocketNull())
-                {
-                    Debug.LogError("连接断开");
-                }
-            }
+            TimeSyncMsgHandler.Instance.SendMsgC2GSMove();
         }
     }
+
+    DateTime prevTime;
+
+    private bool OverTestTimeInterval() {
+        if (DateTime.Now.Subtract(prevTime).TotalMilliseconds > 1000)
+        {
+            prevTime = DateTime.Now;
+            return true;
+        }
+        return false;
+    }
+
+    ////心跳
+    //private void ProcessHeartTick()
+    //{
+    //    if (this.Test_GateConnectSuccess_ && this.GateServerTcpConnect_ != null)
+    //    {
+    //        if (this.GateServerTcpConnect_.IsConnected())
+    //        {
+    //            if (this.GateServerTcpConnect_.IsHeartTickSendTime())
+    //            {
+    //                //LoginMsgHandler.Instance.SendMsgC2GSHeartTick();
+    //            }
+    //            //心跳超时，连接断开
+    //            if (this.GateServerTcpConnect_.IsConnectOverTime())
+    //            {
+    //                Debug.LogError("心跳超时，连接断开");
+    //                this.GateServerTcpConnect_.DisConnect();
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (!this.GateServerTcpConnect_.IsNativeSocketNull())
+    //            {
+    //                Debug.LogError("连接断开");
+    //            }
+    //        }
+    //    }
+    //}
 
     //每100毫秒检测一次网络连接状况
     private bool IsOverProcessNetworkEventTimeInterval()
@@ -163,7 +184,7 @@ public class NetworkManager : MonoBehaviour
     //游戏服务器连接成功
     private void OnConnectedGameServer()
     {
-        if (null == this.GateServerTcpConnect_)
+        if (null == this.GameServerTcpConnect_)
         {
             Debug.LogError("OnConnectedGateServer error!");
         }

@@ -26,17 +26,17 @@ public class LoginMsgHandler  {
     #region 服务器->客户端
     
 
-    //登录网关成功
-    public void LoginGateServerSuccess() {
-        NetworkManager.Instance.GateServerTcpConnect_.UpdateRecvHeartTickTime();
-        NetworkManager.Instance.Test_GateConnectSuccess_ = true;
-    }
+    ////登录网关成功
+    //public void LoginGateServerSuccess() {
+    //    NetworkManager.Instance.GateServerTcpConnect_.UpdateRecvHeartTickTime();
+    //    NetworkManager.Instance.Test_GateConnectSuccess_ = true;
+    //}
 
-    //接收心跳
-    public void RevMsgGS2CHeartTickRet(int pid, byte[] msgBuf, int msgSize) {
-        //Debug.LogError("RevMsgGS2CHeartTickRet");
-        NetworkManager.Instance.GateServerTcpConnect_.UpdateRecvHeartTickTime();
-    }
+    ////接收心跳
+    //public void RevMsgGS2CHeartTickRet(int pid, byte[] msgBuf, int msgSize) {
+    //    //Debug.LogError("RevMsgGS2CHeartTickRet");
+    //    NetworkManager.Instance.GateServerTcpConnect_.UpdateRecvHeartTickTime();
+    //}
 
     #endregion
 }

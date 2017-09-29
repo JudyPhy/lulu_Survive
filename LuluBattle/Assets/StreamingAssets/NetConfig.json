@@ -1,5 +1,5 @@
 {
 "NetAddr" : "192.168.1.7",
 "Port" : "3563",
-"UseLocalAddr" : "0"
+"UseLocalAddr" : "1"
 }

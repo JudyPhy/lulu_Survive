@@ -3,5 +3,19 @@ package pb;
 /////////////////////////////////////////////////////////////
 message C2GSReqSyncTime
 {
+	required int64 time = 1;	//current client time(updated time, not system time.)
+}
+
+message GS2CRevSyncTime
+{
+	required int64 time = 1;	//current service time
+}
+
+message GS2CSyncTimeAgain
+{
+}
+
+message C2GSMove
+{
 	required int64 time = 1;
 }
