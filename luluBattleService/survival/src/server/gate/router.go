@@ -8,7 +8,6 @@ import (
 
 func init() {
 
-	msg.Processor.SetRouter(&pb.C2GSReqSyncTime{}, login.ChanRPC)
-	msg.Processor.SetRouter(&pb.C2GSMove{}, login.ChanRPC)
+	msg.Processor.SetRouter(&pb.GSSyncPkgRecv{}, game.ChanRPC)
 
 }

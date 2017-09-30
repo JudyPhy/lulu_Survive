@@ -9,6 +9,9 @@ It is generated from these files:
 	luluBattle.proto
 
 It has these top-level messages:
+	Transform
+	GSSyncPkgRecv
+	GSSyncPkgSend
 	C2GSReqSyncTime
 	GS2CRevSyncTime
 	GS2CSyncTimeAgain
@@ -22,6 +25,118 @@ import math "math"
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = math.Inf
+
+type Transform struct {
+	PosX             *int32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *int32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+	PosZ             *int32 `protobuf:"varint,3,req,name=pos_z" json:"pos_z,omitempty"`
+	RotX             *int32 `protobuf:"varint,4,req,name=rot_x" json:"rot_x,omitempty"`
+	RotY             *int32 `protobuf:"varint,5,req,name=rot_y" json:"rot_y,omitempty"`
+	RotZ             *int32 `protobuf:"varint,6,req,name=rot_z" json:"rot_z,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *Transform) Reset()         { *m = Transform{} }
+func (m *Transform) String() string { return proto.CompactTextString(m) }
+func (*Transform) ProtoMessage()    {}
+
+func (m *Transform) GetPosX() int32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *Transform) GetPosY() int32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+func (m *Transform) GetPosZ() int32 {
+	if m != nil && m.PosZ != nil {
+		return *m.PosZ
+	}
+	return 0
+}
+
+func (m *Transform) GetRotX() int32 {
+	if m != nil && m.RotX != nil {
+		return *m.RotX
+	}
+	return 0
+}
+
+func (m *Transform) GetRotY() int32 {
+	if m != nil && m.RotY != nil {
+		return *m.RotY
+	}
+	return 0
+}
+
+func (m *Transform) GetRotZ() int32 {
+	if m != nil && m.RotZ != nil {
+		return *m.RotZ
+	}
+	return 0
+}
+
+type GSSyncPkgRecv struct {
+	ClientAct        *int32     `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
+	Trs              *Transform `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
+	Act              *int32     `protobuf:"varint,3,req" json:"Act,omitempty"`
+	XXX_unrecognized []byte     `json:"-"`
+}
+
+func (m *GSSyncPkgRecv) Reset()         { *m = GSSyncPkgRecv{} }
+func (m *GSSyncPkgRecv) String() string { return proto.CompactTextString(m) }
+func (*GSSyncPkgRecv) ProtoMessage()    {}
+
+func (m *GSSyncPkgRecv) GetClientAct() int32 {
+	if m != nil && m.ClientAct != nil {
+		return *m.ClientAct
+	}
+	return 0
+}
+
+func (m *GSSyncPkgRecv) GetTrs() *Transform {
+	if m != nil {
+		return m.Trs
+	}
+	return nil
+}
+
+func (m *GSSyncPkgRecv) GetAct() int32 {
+	if m != nil && m.Act != nil {
+		return *m.Act
+	}
+	return 0
+}
+
+type GSSyncPkgSend struct {
+	Act              *int32     `protobuf:"varint,1,req" json:"Act,omitempty"`
+	Trs              *Transform `protobuf:"bytes,2,req" json:"Trs,omitempty"`
+	XXX_unrecognized []byte     `json:"-"`
+}
+
+func (m *GSSyncPkgSend) Reset()         { *m = GSSyncPkgSend{} }
+func (m *GSSyncPkgSend) String() string { return proto.CompactTextString(m) }
+func (*GSSyncPkgSend) ProtoMessage()    {}
+
+func (m *GSSyncPkgSend) GetAct() int32 {
+	if m != nil && m.Act != nil {
+		return *m.Act
+	}
+	return 0
+}
+
+func (m *GSSyncPkgSend) GetTrs() *Transform {
+	if m != nil {
+		return m.Trs
+	}
+	return nil
+}
 
 // ///////////////////////////////////////////////////////////
 type C2GSReqSyncTime struct {

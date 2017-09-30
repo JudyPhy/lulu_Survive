@@ -46,6 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\FrameSync\ClientFrame.cs" />
+     <Compile Include="Assets\Scripts\FrameSync\FrameSync.cs" />
+     <Compile Include="Assets\Scripts\FrameSync\FrameSyncHandler.cs" />
      <Compile Include="Assets\Scripts\LitJson\IJsonWrapper.cs" />
      <Compile Include="Assets\Scripts\LitJson\JsonData.cs" />
      <Compile Include="Assets\Scripts\LitJson\JsonException.cs" />
@@ -59,8 +62,6 @@
      <Compile Include="Assets\Scripts\NetWork\NetConfig.cs" />
      <Compile Include="Assets\Scripts\NetWork\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\NetWork\TcpNetworkProcessor.cs" />
-     <Compile Include="Assets\Scripts\TimeSync\TimeSync.cs" />
-     <Compile Include="Assets\Scripts\TimeSync\TimeSyncMsgHandler.cs" />
      <Compile Include="Assets\Scripts\pbmsg.cs" />
      <Compile Include="Assets\protobuf-net\BclHelpers.cs" />
      <Compile Include="Assets\protobuf-net\BufferExtension.cs" />

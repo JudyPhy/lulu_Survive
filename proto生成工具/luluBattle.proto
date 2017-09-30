@@ -1,5 +1,29 @@
 package pb;
 
+message Transform
+{
+	required int32 pos_x = 1;
+	required int32 pos_y = 2;
+	required int32 pos_z = 3;	
+	
+	required int32 rot_x = 4;
+	required int32 rot_y = 5;
+	required int32 rot_z = 6;
+}
+
+message GSSyncPkgRecv
+{	
+	optional int32 ClientAct = 1;	//客户端当前操作帧序号
+	optional Transform Trs = 2;
+	required int32 Act = 3;	//已经处理过的最大service帧序号
+}
+
+message GSSyncPkgSend
+{
+	required int32 Act = 1;	//service帧序号
+	required Transform Trs = 2;
+}
+
 /////////////////////////////////////////////////////////////
 message C2GSReqSyncTime
 {

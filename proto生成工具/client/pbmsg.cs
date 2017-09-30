@@ -10,6 +10,115 @@
 // Generated from: luluBattle.proto
 namespace pb
 {
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Transform")]
+  public partial class Transform : global::ProtoBuf.IExtensible
+  {
+    public Transform() {}
+    
+    private int _pos_x;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int pos_x
+    {
+      get { return _pos_x; }
+      set { _pos_x = value; }
+    }
+    private int _pos_y;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int pos_y
+    {
+      get { return _pos_y; }
+      set { _pos_y = value; }
+    }
+    private int _pos_z;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"pos_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int pos_z
+    {
+      get { return _pos_z; }
+      set { _pos_z = value; }
+    }
+    private int _rot_x;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"rot_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int rot_x
+    {
+      get { return _rot_x; }
+      set { _rot_x = value; }
+    }
+    private int _rot_y;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"rot_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int rot_y
+    {
+      get { return _rot_y; }
+      set { _rot_y = value; }
+    }
+    private int _rot_z;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = true, Name=@"rot_z", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int rot_z
+    {
+      get { return _rot_z; }
+      set { _rot_z = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GSSyncPkgRecv")]
+  public partial class GSSyncPkgRecv : global::ProtoBuf.IExtensible
+  {
+    public GSSyncPkgRecv() {}
+    
+    private int _ClientAct = default(int);
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"ClientAct", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int ClientAct
+    {
+      get { return _ClientAct; }
+      set { _ClientAct = value; }
+    }
+    private pb.Transform _Trs = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"Trs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public pb.Transform Trs
+    {
+      get { return _Trs; }
+      set { _Trs = value; }
+    }
+    private int _Act;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Act", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int Act
+    {
+      get { return _Act; }
+      set { _Act = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GSSyncPkgSend")]
+  public partial class GSSyncPkgSend : global::ProtoBuf.IExtensible
+  {
+    public GSSyncPkgSend() {}
+    
+    private int _Act;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"Act", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int Act
+    {
+      get { return _Act; }
+      set { _Act = value; }
+    }
+    private pb.Transform _Trs;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"Trs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public pb.Transform Trs
+    {
+      get { return _Trs; }
+      set { _Trs = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2GSReqSyncTime")]
   public partial class C2GSReqSyncTime : global::ProtoBuf.IExtensible
   {

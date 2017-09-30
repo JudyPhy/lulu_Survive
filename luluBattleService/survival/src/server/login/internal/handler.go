@@ -15,8 +15,6 @@ func handleMsg(m interface{}, h interface{}) {
 }
 
 func init() {
-	handleMsg(&pb.C2GSReqSyncTime{}, recvC2GSReqSyncTime)
-	handleMsg(&pb.C2GSMove{}, recvC2GSMove)
 }
 
 func recvC2GSReqSyncTime(args []interface{}) {

@@ -72,8 +72,7 @@ public class NetworkManager : MonoBehaviour
     //注册需要处理的消息函数
     public void RegisterAllNetworkMsgHandler()
     {
-        RegisterMessageHandler((int)MsgDef.GS2CRevSyncTime, TimeSyncMsgHandler.Instance.RevMsgGS2CRevSyncTime);
-        RegisterMessageHandler((int)MsgDef.GS2CSyncTimeAgain, TimeSyncMsgHandler.Instance.RevMsgGS2CSyncTimeAgain);
+        RegisterMessageHandler((int)MsgDef.GSSyncPkgSend, FrameSyncHandler.Instance.RevMsgGSSyncPkgSend);
     }
 
     private void RegisterMessageHandler(int pid, PacketHandle hander)
@@ -109,13 +108,6 @@ public class NetworkManager : MonoBehaviour
 
         //处理取出的服务器消息
         ProcMsgLogic();
-
-
-
-        if (TimeSync.syncOver && OverTestTimeInterval())
-        {
-            TimeSyncMsgHandler.Instance.SendMsgC2GSMove();
-        }
     }
 
     DateTime prevTime;
@@ -190,9 +182,7 @@ public class NetworkManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("游戏服务器连接成功，跳转主场景，并且同步时间");
-            TimeSync.delayTime = 0;
-            TimeSync.ReqSyncTime();
+            Debug.Log("游戏服务器连接成功，跳转主场景");
             //UIManager.Instance.ShowMainWindow<Panel_Login>(eWindowsID.LoginUI);
         }
     }
