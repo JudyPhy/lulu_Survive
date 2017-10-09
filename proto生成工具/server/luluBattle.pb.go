@@ -9,13 +9,18 @@ It is generated from these files:
 	luluBattle.proto
 
 It has these top-level messages:
-	Transform
+	PlayerInfo
+	FrameRoleData
+	RoleTrs
+	EnergeCN
+	BuffCN
+	C2GSLogin
+	GS2CLoginRet
+	C2GSChooseRole
+	GS2CChooseRoleRet
+	GS2CEnterGame
 	GSSyncPkgRecv
 	GSSyncPkgSend
-	C2GSReqSyncTime
-	GS2CRevSyncTime
-	GS2CSyncTimeAgain
-	C2GSMove
 */
 package pb
 
@@ -26,88 +31,339 @@ import math "math"
 var _ = proto.Marshal
 var _ = math.Inf
 
-type Transform struct {
-	PosX             *int32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
-	PosY             *int32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
-	PosZ             *int32 `protobuf:"varint,3,req,name=pos_z" json:"pos_z,omitempty"`
-	RotX             *int32 `protobuf:"varint,4,req,name=rot_x" json:"rot_x,omitempty"`
-	RotY             *int32 `protobuf:"varint,5,req,name=rot_y" json:"rot_y,omitempty"`
-	RotZ             *int32 `protobuf:"varint,6,req,name=rot_z" json:"rot_z,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+type ErrorCode int32
+
+const (
+	ErrorCode_SUCCESS        ErrorCode = 1
+	ErrorCode_FAIL           ErrorCode = 2
+	ErrorCode_ACCOUNT_ERROR  ErrorCode = 3
+	ErrorCode_PASSWORD_ERROR ErrorCode = 4
+	ErrorCode_NICKNAME_EXIST ErrorCode = 5
+)
+
+var ErrorCode_name = map[int32]string{
+	1: "SUCCESS",
+	2: "FAIL",
+	3: "ACCOUNT_ERROR",
+	4: "PASSWORD_ERROR",
+	5: "NICKNAME_EXIST",
+}
+var ErrorCode_value = map[string]int32{
+	"SUCCESS":        1,
+	"FAIL":           2,
+	"ACCOUNT_ERROR":  3,
+	"PASSWORD_ERROR": 4,
+	"NICKNAME_EXIST": 5,
 }
 
-func (m *Transform) Reset()         { *m = Transform{} }
-func (m *Transform) String() string { return proto.CompactTextString(m) }
-func (*Transform) ProtoMessage()    {}
+func (x ErrorCode) Enum() *ErrorCode {
+	p := new(ErrorCode)
+	*p = x
+	return p
+}
+func (x ErrorCode) String() string {
+	return proto.EnumName(ErrorCode_name, int32(x))
+}
+func (x *ErrorCode) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(ErrorCode_value, data, "ErrorCode")
+	if err != nil {
+		return err
+	}
+	*x = ErrorCode(value)
+	return nil
+}
 
-func (m *Transform) GetPosX() int32 {
-	if m != nil && m.PosX != nil {
-		return *m.PosX
+type PlayerInfo struct {
+	OID              *int32  `protobuf:"varint,1,req" json:"OID,omitempty"`
+	NickName         *string `protobuf:"bytes,2,req" json:"NickName,omitempty"`
+	HeadIcon         *string `protobuf:"bytes,3,req" json:"HeadIcon,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *PlayerInfo) Reset()         { *m = PlayerInfo{} }
+func (m *PlayerInfo) String() string { return proto.CompactTextString(m) }
+func (*PlayerInfo) ProtoMessage()    {}
+
+func (m *PlayerInfo) GetOID() int32 {
+	if m != nil && m.OID != nil {
+		return *m.OID
 	}
 	return 0
 }
 
-func (m *Transform) GetPosY() int32 {
-	if m != nil && m.PosY != nil {
-		return *m.PosY
+func (m *PlayerInfo) GetNickName() string {
+	if m != nil && m.NickName != nil {
+		return *m.NickName
+	}
+	return ""
+}
+
+func (m *PlayerInfo) GetHeadIcon() string {
+	if m != nil && m.HeadIcon != nil {
+		return *m.HeadIcon
+	}
+	return ""
+}
+
+type FrameRoleData struct {
+	PlayerID         *uint32  `protobuf:"varint,1,req" json:"PlayerID,omitempty"`
+	Trs              *RoleTrs `protobuf:"bytes,2,req" json:"Trs,omitempty"`
+	Buff             *BuffCN  `protobuf:"bytes,3,req" json:"Buff,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *FrameRoleData) Reset()         { *m = FrameRoleData{} }
+func (m *FrameRoleData) String() string { return proto.CompactTextString(m) }
+func (*FrameRoleData) ProtoMessage()    {}
+
+func (m *FrameRoleData) GetPlayerID() uint32 {
+	if m != nil && m.PlayerID != nil {
+		return *m.PlayerID
 	}
 	return 0
 }
 
-func (m *Transform) GetPosZ() int32 {
-	if m != nil && m.PosZ != nil {
-		return *m.PosZ
-	}
-	return 0
-}
-
-func (m *Transform) GetRotX() int32 {
-	if m != nil && m.RotX != nil {
-		return *m.RotX
-	}
-	return 0
-}
-
-func (m *Transform) GetRotY() int32 {
-	if m != nil && m.RotY != nil {
-		return *m.RotY
-	}
-	return 0
-}
-
-func (m *Transform) GetRotZ() int32 {
-	if m != nil && m.RotZ != nil {
-		return *m.RotZ
-	}
-	return 0
-}
-
-type GSSyncPkgRecv struct {
-	ClientAct        *int32     `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
-	Trs              *Transform `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
-	Act              *int32     `protobuf:"varint,3,req" json:"Act,omitempty"`
-	XXX_unrecognized []byte     `json:"-"`
-}
-
-func (m *GSSyncPkgRecv) Reset()         { *m = GSSyncPkgRecv{} }
-func (m *GSSyncPkgRecv) String() string { return proto.CompactTextString(m) }
-func (*GSSyncPkgRecv) ProtoMessage()    {}
-
-func (m *GSSyncPkgRecv) GetClientAct() int32 {
-	if m != nil && m.ClientAct != nil {
-		return *m.ClientAct
-	}
-	return 0
-}
-
-func (m *GSSyncPkgRecv) GetTrs() *Transform {
+func (m *FrameRoleData) GetTrs() *RoleTrs {
 	if m != nil {
 		return m.Trs
 	}
 	return nil
 }
 
-func (m *GSSyncPkgRecv) GetAct() int32 {
+func (m *FrameRoleData) GetBuff() *BuffCN {
+	if m != nil {
+		return m.Buff
+	}
+	return nil
+}
+
+type RoleTrs struct {
+	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+	Rot              *uint32 `protobuf:"varint,3,req,name=rot" json:"rot,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *RoleTrs) Reset()         { *m = RoleTrs{} }
+func (m *RoleTrs) String() string { return proto.CompactTextString(m) }
+func (*RoleTrs) ProtoMessage()    {}
+
+func (m *RoleTrs) GetPosX() uint32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *RoleTrs) GetPosY() uint32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+func (m *RoleTrs) GetRot() uint32 {
+	if m != nil && m.Rot != nil {
+		return *m.Rot
+	}
+	return 0
+}
+
+type EnergeCN struct {
+	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *EnergeCN) Reset()         { *m = EnergeCN{} }
+func (m *EnergeCN) String() string { return proto.CompactTextString(m) }
+func (*EnergeCN) ProtoMessage()    {}
+
+func (m *EnergeCN) GetPosX() uint32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *EnergeCN) GetPosY() uint32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+type BuffCN struct {
+	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *BuffCN) Reset()         { *m = BuffCN{} }
+func (m *BuffCN) String() string { return proto.CompactTextString(m) }
+func (*BuffCN) ProtoMessage()    {}
+
+func (m *BuffCN) GetPosX() uint32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *BuffCN) GetPosY() uint32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+// ///////////////////////////////////////////////////////////////////
+type C2GSLogin struct {
+	Account          *string `protobuf:"bytes,1,req,name=account" json:"account,omitempty"`
+	Password         *string `protobuf:"bytes,2,req,name=password" json:"password,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *C2GSLogin) Reset()         { *m = C2GSLogin{} }
+func (m *C2GSLogin) String() string { return proto.CompactTextString(m) }
+func (*C2GSLogin) ProtoMessage()    {}
+
+func (m *C2GSLogin) GetAccount() string {
+	if m != nil && m.Account != nil {
+		return *m.Account
+	}
+	return ""
+}
+
+func (m *C2GSLogin) GetPassword() string {
+	if m != nil && m.Password != nil {
+		return *m.Password
+	}
+	return ""
+}
+
+type GS2CLoginRet struct {
+	ErrorCode        *ErrorCode  `protobuf:"varint,1,req,name=errorCode,enum=pb.ErrorCode" json:"errorCode,omitempty"`
+	PlayerInfo       *PlayerInfo `protobuf:"bytes,2,opt,name=playerInfo" json:"playerInfo,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *GS2CLoginRet) Reset()         { *m = GS2CLoginRet{} }
+func (m *GS2CLoginRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CLoginRet) ProtoMessage()    {}
+
+func (m *GS2CLoginRet) GetErrorCode() ErrorCode {
+	if m != nil && m.ErrorCode != nil {
+		return *m.ErrorCode
+	}
+	return ErrorCode_SUCCESS
+}
+
+func (m *GS2CLoginRet) GetPlayerInfo() *PlayerInfo {
+	if m != nil {
+		return m.PlayerInfo
+	}
+	return nil
+}
+
+type C2GSChooseRole struct {
+	NickName         *string `protobuf:"bytes,1,req" json:"NickName,omitempty"`
+	HeadIcon         *string `protobuf:"bytes,2,req" json:"HeadIcon,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *C2GSChooseRole) Reset()         { *m = C2GSChooseRole{} }
+func (m *C2GSChooseRole) String() string { return proto.CompactTextString(m) }
+func (*C2GSChooseRole) ProtoMessage()    {}
+
+func (m *C2GSChooseRole) GetNickName() string {
+	if m != nil && m.NickName != nil {
+		return *m.NickName
+	}
+	return ""
+}
+
+func (m *C2GSChooseRole) GetHeadIcon() string {
+	if m != nil && m.HeadIcon != nil {
+		return *m.HeadIcon
+	}
+	return ""
+}
+
+type GS2CChooseRoleRet struct {
+	ErrorCode        *ErrorCode  `protobuf:"varint,1,req,name=errorCode,enum=pb.ErrorCode" json:"errorCode,omitempty"`
+	PlayerInfo       *PlayerInfo `protobuf:"bytes,2,req,name=playerInfo" json:"playerInfo,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *GS2CChooseRoleRet) Reset()         { *m = GS2CChooseRoleRet{} }
+func (m *GS2CChooseRoleRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CChooseRoleRet) ProtoMessage()    {}
+
+func (m *GS2CChooseRoleRet) GetErrorCode() ErrorCode {
+	if m != nil && m.ErrorCode != nil {
+		return *m.ErrorCode
+	}
+	return ErrorCode_SUCCESS
+}
+
+func (m *GS2CChooseRoleRet) GetPlayerInfo() *PlayerInfo {
+	if m != nil {
+		return m.PlayerInfo
+	}
+	return nil
+}
+
+type GS2CEnterGame struct {
+	RoomID           *string  `protobuf:"bytes,1,req" json:"RoomID,omitempty"`
+	BornTrs          *RoleTrs `protobuf:"bytes,2,req" json:"BornTrs,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *GS2CEnterGame) Reset()         { *m = GS2CEnterGame{} }
+func (m *GS2CEnterGame) String() string { return proto.CompactTextString(m) }
+func (*GS2CEnterGame) ProtoMessage()    {}
+
+func (m *GS2CEnterGame) GetRoomID() string {
+	if m != nil && m.RoomID != nil {
+		return *m.RoomID
+	}
+	return ""
+}
+
+func (m *GS2CEnterGame) GetBornTrs() *RoleTrs {
+	if m != nil {
+		return m.BornTrs
+	}
+	return nil
+}
+
+type GSSyncPkgRecv struct {
+	ClientAct        *uint32  `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
+	Trs              *RoleTrs `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
+	Act              *uint32  `protobuf:"varint,3,req" json:"Act,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *GSSyncPkgRecv) Reset()         { *m = GSSyncPkgRecv{} }
+func (m *GSSyncPkgRecv) String() string { return proto.CompactTextString(m) }
+func (*GSSyncPkgRecv) ProtoMessage()    {}
+
+func (m *GSSyncPkgRecv) GetClientAct() uint32 {
+	if m != nil && m.ClientAct != nil {
+		return *m.ClientAct
+	}
+	return 0
+}
+
+func (m *GSSyncPkgRecv) GetTrs() *RoleTrs {
+	if m != nil {
+		return m.Trs
+	}
+	return nil
+}
+
+func (m *GSSyncPkgRecv) GetAct() uint32 {
 	if m != nil && m.Act != nil {
 		return *m.Act
 	}
@@ -115,85 +371,37 @@ func (m *GSSyncPkgRecv) GetAct() int32 {
 }
 
 type GSSyncPkgSend struct {
-	Act              *int32     `protobuf:"varint,1,req" json:"Act,omitempty"`
-	Trs              *Transform `protobuf:"bytes,2,req" json:"Trs,omitempty"`
-	XXX_unrecognized []byte     `json:"-"`
+	Act              *uint32          `protobuf:"varint,1,req" json:"Act,omitempty"`
+	Role             []*FrameRoleData `protobuf:"bytes,2,rep" json:"Role,omitempty"`
+	Energe           *EnergeCN        `protobuf:"bytes,3,req" json:"Energe,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
 }
 
 func (m *GSSyncPkgSend) Reset()         { *m = GSSyncPkgSend{} }
 func (m *GSSyncPkgSend) String() string { return proto.CompactTextString(m) }
 func (*GSSyncPkgSend) ProtoMessage()    {}
 
-func (m *GSSyncPkgSend) GetAct() int32 {
+func (m *GSSyncPkgSend) GetAct() uint32 {
 	if m != nil && m.Act != nil {
 		return *m.Act
 	}
 	return 0
 }
 
-func (m *GSSyncPkgSend) GetTrs() *Transform {
+func (m *GSSyncPkgSend) GetRole() []*FrameRoleData {
 	if m != nil {
-		return m.Trs
+		return m.Role
 	}
 	return nil
 }
 
-// ///////////////////////////////////////////////////////////
-type C2GSReqSyncTime struct {
-	Time             *int64 `protobuf:"varint,1,req,name=time" json:"time,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *C2GSReqSyncTime) Reset()         { *m = C2GSReqSyncTime{} }
-func (m *C2GSReqSyncTime) String() string { return proto.CompactTextString(m) }
-func (*C2GSReqSyncTime) ProtoMessage()    {}
-
-func (m *C2GSReqSyncTime) GetTime() int64 {
-	if m != nil && m.Time != nil {
-		return *m.Time
+func (m *GSSyncPkgSend) GetEnerge() *EnergeCN {
+	if m != nil {
+		return m.Energe
 	}
-	return 0
-}
-
-type GS2CRevSyncTime struct {
-	Time             *int64 `protobuf:"varint,1,req,name=time" json:"time,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *GS2CRevSyncTime) Reset()         { *m = GS2CRevSyncTime{} }
-func (m *GS2CRevSyncTime) String() string { return proto.CompactTextString(m) }
-func (*GS2CRevSyncTime) ProtoMessage()    {}
-
-func (m *GS2CRevSyncTime) GetTime() int64 {
-	if m != nil && m.Time != nil {
-		return *m.Time
-	}
-	return 0
-}
-
-type GS2CSyncTimeAgain struct {
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *GS2CSyncTimeAgain) Reset()         { *m = GS2CSyncTimeAgain{} }
-func (m *GS2CSyncTimeAgain) String() string { return proto.CompactTextString(m) }
-func (*GS2CSyncTimeAgain) ProtoMessage()    {}
-
-type C2GSMove struct {
-	Time             *int64 `protobuf:"varint,1,req,name=time" json:"time,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *C2GSMove) Reset()         { *m = C2GSMove{} }
-func (m *C2GSMove) String() string { return proto.CompactTextString(m) }
-func (*C2GSMove) ProtoMessage()    {}
-
-func (m *C2GSMove) GetTime() int64 {
-	if m != nil && m.Time != nil {
-		return *m.Time
-	}
-	return 0
+	return nil
 }
 
 func init() {
+	proto.RegisterEnum("pb.ErrorCode", ErrorCode_name, ErrorCode_value)
 }

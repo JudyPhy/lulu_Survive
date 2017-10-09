@@ -1,30 +1,30 @@
 package frameSync
 
 import (
-	"server/msgSendHandler"
+	//	"server/msgSendHandler"
 	"server/pb"
 	"time"
 
-	"github.com/name5566/leaf/gate"
+	//	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 )
 
-var timer *Ticker
-
 type FrameData struct {
-	trs *pb.Transform
+	trs *pb.RoleTrs
 }
 
 var ServiceFrameList []*FrameData
-var curFrameIndex int
+var curFrameIndex int32
 
-func init() {
+func Init() {
 	//create frame sync timer
-	timer = time.NewTicker(99 * time.Millisecond)
+	log.Debug("init frame sync")
 	go sendFrame()
 }
 
 func sendFrame() {
+	timer := time.NewTicker(99 * time.Millisecond)
+	curFrameIndex = 999999
 	for _ = range timer.C {
 		log.Debug("Send Frame -> %v", curFrameIndex)
 		curFrameIndex++

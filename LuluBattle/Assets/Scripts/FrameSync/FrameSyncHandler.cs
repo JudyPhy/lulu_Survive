@@ -19,6 +19,16 @@ public class FrameSyncHandler : MonoBehaviour {
     }
 
     #region GS -> C
+
+    public void RevMsgGS2CEnterGame(int pid, byte[] msgBuf, int msgSize)
+    {
+        Stream stream = new MemoryStream(msgBuf);
+        pb.GS2CEnterGame msg = ProtoBuf.Serializer.Deserialize<pb.GS2CEnterGame>(stream);
+        Debug.Log("GS2CEnterGame( ============>>>>>>>>>> roomId:" + msg.RoomID);
+        FrameSync.Instance.ResetFrame();
+        Player.Instance.SetBornTrs(msg.BornTrs);
+    }
+
     public void RevMsgGSSyncPkgSend(int pid, byte[] msgBuf, int msgSize)
     {
         Debug.Log("==>> RevMsgGSSyncPkgSend");
@@ -26,6 +36,7 @@ public class FrameSyncHandler : MonoBehaviour {
         pb.GSSyncPkgSend msg = ProtoBuf.Serializer.Deserialize<pb.GSSyncPkgSend>(stream);
         FrameSync.Instance.RecvSyncPkg(msg);
     }
+
     #endregion
 
 }

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"server/pb"
 
-	"github.com/name5566/leaf/gate"
+	//	"github.com/name5566/leaf/gate"
 	//	"github.com/name5566/leaf/log"
 )
 
@@ -20,7 +20,7 @@ func init() {
 }
 
 func recvGSSyncPkgRecv(args []interface{}) {
-	m := args[0].(*pb.GSSyncPkgRecv)
-	a := args[1].(gate.Agent)
+	//	m := args[0].(*pb.GSSyncPkgRecv)
+	//a := args[1].(gate.Agent)
 
 }

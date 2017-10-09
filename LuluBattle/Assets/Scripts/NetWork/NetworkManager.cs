@@ -14,9 +14,6 @@ public class NetworkManager : MonoBehaviour
 
     private NetConfigData _netConfigData;
 
-    private string GameServerPath = "192.168.1.7";   //"127.0.0.1" "192.168.1.7"
-    private ushort GameServerPort = 3563;
-
     //socket线程
     //public TcpNetworkProcessor GateServerTcpConnect_ = new TcpNetworkProcessor();
     public TcpNetworkProcessor GameServerTcpConnect_ = new TcpNetworkProcessor();
@@ -46,7 +43,9 @@ public class NetworkManager : MonoBehaviour
         {
             _netConfigData.NetAddr = "127.0.0.1";
         }
-        NetworkManager.Instance.ConnectGameServer(_netConfigData.NetAddr, _netConfigData.Port);
+        ConnectGameServer(_netConfigData.NetAddr, _netConfigData.Port);
+
+        ConfigManager.Instance.InitConfigs();
     }
 
     //初始化socket连接
@@ -72,6 +71,9 @@ public class NetworkManager : MonoBehaviour
     //注册需要处理的消息函数
     public void RegisterAllNetworkMsgHandler()
     {
+        RegisterMessageHandler((int)MsgDef.GS2CLoginRet, LoginMsgHandler.Instance.RevMsgGS2CLoginRet);
+        RegisterMessageHandler((int)MsgDef.GS2CChooseRoleRet, LoginMsgHandler.Instance.RevMsgGS2CChooseRoleRet);
+        RegisterMessageHandler((int)MsgDef.GS2CEnterGame, FrameSyncHandler.Instance.RevMsgGS2CEnterGame);
         RegisterMessageHandler((int)MsgDef.GSSyncPkgSend, FrameSyncHandler.Instance.RevMsgGSSyncPkgSend);
     }
 
@@ -120,34 +122,6 @@ public class NetworkManager : MonoBehaviour
         }
         return false;
     }
-
-    ////心跳
-    //private void ProcessHeartTick()
-    //{
-    //    if (this.Test_GateConnectSuccess_ && this.GateServerTcpConnect_ != null)
-    //    {
-    //        if (this.GateServerTcpConnect_.IsConnected())
-    //        {
-    //            if (this.GateServerTcpConnect_.IsHeartTickSendTime())
-    //            {
-    //                //LoginMsgHandler.Instance.SendMsgC2GSHeartTick();
-    //            }
-    //            //心跳超时，连接断开
-    //            if (this.GateServerTcpConnect_.IsConnectOverTime())
-    //            {
-    //                Debug.LogError("心跳超时，连接断开");
-    //                this.GateServerTcpConnect_.DisConnect();
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (!this.GateServerTcpConnect_.IsNativeSocketNull())
-    //            {
-    //                Debug.LogError("连接断开");
-    //            }
-    //        }
-    //    }
-    //}
 
     //每100毫秒检测一次网络连接状况
     private bool IsOverProcessNetworkEventTimeInterval()
