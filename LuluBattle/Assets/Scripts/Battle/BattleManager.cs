@@ -33,4 +33,13 @@ public class BattleManager
         }
     }
 
+    public Dictionary<uint, Role> RoomPlayersInfo = new Dictionary<uint, Role>();
+
+    public void AddNewPlayer(pb.GS2CEnterGame data)
+    {
+        Role role = new Role();
+        role.InitRole(data);
+        RoomPlayersInfo.Add(data.PlayerID, role);
+    }
+
 }

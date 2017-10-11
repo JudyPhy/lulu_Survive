@@ -5,11 +5,11 @@ using EventTransmit;
 
 public class Panel_ChooseRole : WindowsBasePanel
 {
-    private UIGrid _roleRoot;
-    private List<Item_LoginRole> _roles = new List<Item_LoginRole>();
-    private UIInput _nickName;
-    private GameObject _btnStartGame;
-    private GameObject _btnBack;
+    //private UIGrid _roleRoot;
+    //private List<Item_LoginRole> _roles = new List<Item_LoginRole>();
+    //private UIInput _nickName;
+    //private GameObject _btnStartGame;
+    //private GameObject _btnBack;
 
     private string _curChoosedRole;
 
@@ -17,28 +17,30 @@ public class Panel_ChooseRole : WindowsBasePanel
     {
         base.OnAwake();
 
-        _roleRoot = transform.FindChild("UIGrid").GetComponent<UIGrid>();
-        _nickName = transform.FindChild("nickName").GetComponent<UIInput>();
-        _btnStartGame = transform.FindChild("UIGrid").gameObject;
-        _btnBack = transform.FindChild("btnBack").gameObject;
-        UIEventListener.Get(_btnStartGame).onClick = OnClickStartGame;
-        UIEventListener.Get(_btnBack).onClick = OnClickBack;
+        //_roleRoot = transform.FindChild("UIGrid").GetComponent<UIGrid>();
+        //_nickName = transform.FindChild("nickName").GetComponent<UIInput>();
+        //_btnStartGame = transform.FindChild("UIGrid").gameObject;
+        //_btnBack = transform.FindChild("btnBack").gameObject;
+        //UIEventListener.Get(_btnStartGame).onClick = OnClickStartGame;
+        //UIEventListener.Get(_btnBack).onClick = OnClickBack;
     }
 
     public override void OnStart()
     {
         base.OnStart();
 
-        List<RoleTypeData> roleDatas = ConfigManager.Instance.GetLoginRoleTypes();
-        _curChoosedRole = roleDatas[0]._headIcon;
-        for (int i = 0; i < roleDatas.Count; i++)
-        {
-            Item_LoginRole script = UIManager.AddChild<Item_LoginRole>(_roleRoot.gameObject);
-            script.UpdateUI(roleDatas[i]);
-            script.ChooseRole(i == 0);
-            _roles.Add(script);
-        }
-        _roleRoot.repositionNow = true;
+        LoginMsgHandler.Instance.SendMsgC2GSChooseRole("lulu", "lulu");
+
+        //List<RoleTypeData> roleDatas = ConfigManager.Instance.GetLoginRoleTypes();
+        //_curChoosedRole = roleDatas[0]._headIcon;
+        //for (int i = 0; i < roleDatas.Count; i++)
+        //{
+        //    Item_LoginRole script = UIManager.AddChild<Item_LoginRole>(_roleRoot.gameObject);
+        //    script.UpdateUI(roleDatas[i]);
+        //    script.ChooseRole(i == 0);
+        //    _roles.Add(script);
+        //}
+        //_roleRoot.repositionNow = true;
     }
 
     public override void OnRegisterEvent()
@@ -53,11 +55,11 @@ public class Panel_ChooseRole : WindowsBasePanel
 
     private void ChooseRole(RoleTypeData data)
     {
-        _curChoosedRole = data._headIcon;
-        for (int i = 0; i < _roles.Count; i++)
-        {
-            _roles[i].ChooseRole(_roles[i].Data._id == data._id);            
-        }
+        //_curChoosedRole = data._headIcon;
+        //for (int i = 0; i < _roles.Count; i++)
+        //{
+        //    _roles[i].ChooseRole(_roles[i].Data._id == data._id);            
+        //}
     }
 
     private void OnClickBack(GameObject go)
@@ -67,12 +69,12 @@ public class Panel_ChooseRole : WindowsBasePanel
 
     private void OnClickStartGame(GameObject go)
     {
-        if (string.IsNullOrEmpty(_nickName.value))
-        {
-            UIManager.Instance.ShowTips(TipsType.text, "nickName can't be null.");
-            return;
-        }
-        LoginMsgHandler.Instance.SendMsgC2GSChooseRole(_nickName.value, _curChoosedRole);        
+        //if (string.IsNullOrEmpty(_nickName.value))
+        //{
+        //    UIManager.Instance.ShowTips(TipsType.text, "nickName can't be null.");
+        //    return;
+        //}
+        //LoginMsgHandler.Instance.SendMsgC2GSChooseRole(_nickName.value, _curChoosedRole);        
     }
 
 }

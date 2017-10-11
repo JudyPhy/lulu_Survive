@@ -2,7 +2,6 @@ package main
 
 import (
 	"server/conf"
-	"server/frameSync"
 	"server/game"
 	"server/gate"
 	"server/login"
@@ -17,8 +16,6 @@ func main() {
 	lconf.LogFlag = conf.LogFlag
 	lconf.ConsolePort = conf.Server.ConsolePort
 	lconf.ProfilePath = conf.Server.ProfilePath
-
-	frameSync.Init()
 
 	leaf.Run(
 		game.Module,

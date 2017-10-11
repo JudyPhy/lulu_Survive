@@ -11,9 +11,16 @@ enum ErrorCode
 	NICKNAME_EXIST = 5;	
 }
 
+enum MoveStatus
+{
+	Idle = 1;
+	Walk = 2;	
+	Run = 3;
+}
+
 message PlayerInfo
 {
-	required int32 OID = 1;
+	required uint32 OID = 1;
 	required string NickName = 2;
 	required string HeadIcon = 3;
 }
@@ -21,15 +28,14 @@ message PlayerInfo
 message FrameRoleData
 {
 	required uint32 PlayerID = 1;
-	required RoleTrs Trs = 2;
-	required BuffCN Buff = 3;
+	required uint32 Hp = 2;
+	required RoleMove Move = 3;
 }
 
-message RoleTrs
+message RoleMove
 {
-	required uint32 pos_x = 1;
-	required uint32 pos_y = 2;	
-	required uint32 rot = 3;
+	required MoveStatus Status = 1;
+	required uint32 Rot = 2;
 }
 
 message EnergeCN
@@ -72,13 +78,18 @@ message GS2CChooseRoleRet
 message GS2CEnterGame
 {
 	required string RoomID = 1;
-	required RoleTrs BornTrs = 2;
+	required uint32 PlayerID = 2;
+	required string Nickname = 3;
+	required string HeadIcon = 4;	
+	required int32 PosX = 5;
+	required int32 PosY = 6;
+	required uint32 Hp = 7;
 }
 
 message GSSyncPkgRecv
 {	
 	optional uint32 ClientAct = 1;	//客户端当前操作帧序号
-	optional RoleTrs Trs = 2;
+	optional RoleMove Trs = 2;
 	required uint32 Act = 3;	//已经处理过的最大service帧序号
 }
 
@@ -86,5 +97,4 @@ message GSSyncPkgSend
 {
 	required uint32 Act = 1;	//service帧序号
 	repeated FrameRoleData Role = 2;
-	required EnergeCN Energe = 3;
 }

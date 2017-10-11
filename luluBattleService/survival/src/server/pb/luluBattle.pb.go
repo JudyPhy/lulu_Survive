@@ -10,7 +10,8 @@ It is generated from these files:
 
 It has these top-level messages:
 	PlayerInfo
-	RoleTrs
+	FrameRoleData
+	RoleMove
 	EnergeCN
 	BuffCN
 	C2GSLogin
@@ -72,6 +73,42 @@ func (x *ErrorCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type MoveStatus int32
+
+const (
+	MoveStatus_Idle MoveStatus = 1
+	MoveStatus_Walk MoveStatus = 2
+	MoveStatus_Run  MoveStatus = 3
+)
+
+var MoveStatus_name = map[int32]string{
+	1: "Idle",
+	2: "Walk",
+	3: "Run",
+}
+var MoveStatus_value = map[string]int32{
+	"Idle": 1,
+	"Walk": 2,
+	"Run":  3,
+}
+
+func (x MoveStatus) Enum() *MoveStatus {
+	p := new(MoveStatus)
+	*p = x
+	return p
+}
+func (x MoveStatus) String() string {
+	return proto.EnumName(MoveStatus_name, int32(x))
+}
+func (x *MoveStatus) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(MoveStatus_value, data, "MoveStatus")
+	if err != nil {
+		return err
+	}
+	*x = MoveStatus(value)
+	return nil
+}
+
 type PlayerInfo struct {
 	OID              *int32  `protobuf:"varint,1,req" json:"OID,omitempty"`
 	NickName         *string `protobuf:"bytes,2,req" json:"NickName,omitempty"`
@@ -104,32 +141,56 @@ func (m *PlayerInfo) GetHeadIcon() string {
 	return ""
 }
 
-type RoleTrs struct {
-	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
-	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
-	Rot              *uint32 `protobuf:"varint,3,req,name=rot" json:"rot,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+type FrameRoleData struct {
+	PlayerID         *uint32   `protobuf:"varint,1,req" json:"PlayerID,omitempty"`
+	Hp               *uint32   `protobuf:"varint,2,req" json:"Hp,omitempty"`
+	Move             *RoleMove `protobuf:"bytes,3,req" json:"Move,omitempty"`
+	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *RoleTrs) Reset()         { *m = RoleTrs{} }
-func (m *RoleTrs) String() string { return proto.CompactTextString(m) }
-func (*RoleTrs) ProtoMessage()    {}
+func (m *FrameRoleData) Reset()         { *m = FrameRoleData{} }
+func (m *FrameRoleData) String() string { return proto.CompactTextString(m) }
+func (*FrameRoleData) ProtoMessage()    {}
 
-func (m *RoleTrs) GetPosX() uint32 {
-	if m != nil && m.PosX != nil {
-		return *m.PosX
+func (m *FrameRoleData) GetPlayerID() uint32 {
+	if m != nil && m.PlayerID != nil {
+		return *m.PlayerID
 	}
 	return 0
 }
 
-func (m *RoleTrs) GetPosY() uint32 {
-	if m != nil && m.PosY != nil {
-		return *m.PosY
+func (m *FrameRoleData) GetHp() uint32 {
+	if m != nil && m.Hp != nil {
+		return *m.Hp
 	}
 	return 0
 }
 
-func (m *RoleTrs) GetRot() uint32 {
+func (m *FrameRoleData) GetMove() *RoleMove {
+	if m != nil {
+		return m.Move
+	}
+	return nil
+}
+
+type RoleMove struct {
+	Status           *MoveStatus `protobuf:"varint,1,req,enum=pb.MoveStatus" json:"Status,omitempty"`
+	Rot              *uint32     `protobuf:"varint,2,req" json:"Rot,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *RoleMove) Reset()         { *m = RoleMove{} }
+func (m *RoleMove) String() string { return proto.CompactTextString(m) }
+func (*RoleMove) ProtoMessage()    {}
+
+func (m *RoleMove) GetStatus() MoveStatus {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return MoveStatus_Idle
+}
+
+func (m *RoleMove) GetRot() uint32 {
 	if m != nil && m.Rot != nil {
 		return *m.Rot
 	}
@@ -282,9 +343,14 @@ func (m *GS2CChooseRoleRet) GetPlayerInfo() *PlayerInfo {
 }
 
 type GS2CEnterGame struct {
-	RoomID           *string  `protobuf:"bytes,1,req" json:"RoomID,omitempty"`
-	BornTrs          *RoleTrs `protobuf:"bytes,2,req" json:"BornTrs,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	RoomID           *string `protobuf:"bytes,1,req" json:"RoomID,omitempty"`
+	PlayerID         *int32  `protobuf:"varint,2,req" json:"PlayerID,omitempty"`
+	Nickname         *string `protobuf:"bytes,3,req" json:"Nickname,omitempty"`
+	HeadIcon         *string `protobuf:"bytes,4,req" json:"HeadIcon,omitempty"`
+	PosX             *int32  `protobuf:"varint,5,req" json:"PosX,omitempty"`
+	PosY             *int32  `protobuf:"varint,6,req" json:"PosY,omitempty"`
+	Hp               *uint32 `protobuf:"varint,7,req" json:"Hp,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *GS2CEnterGame) Reset()         { *m = GS2CEnterGame{} }
@@ -298,18 +364,53 @@ func (m *GS2CEnterGame) GetRoomID() string {
 	return ""
 }
 
-func (m *GS2CEnterGame) GetBornTrs() *RoleTrs {
-	if m != nil {
-		return m.BornTrs
+func (m *GS2CEnterGame) GetPlayerID() int32 {
+	if m != nil && m.PlayerID != nil {
+		return *m.PlayerID
 	}
-	return nil
+	return 0
+}
+
+func (m *GS2CEnterGame) GetNickname() string {
+	if m != nil && m.Nickname != nil {
+		return *m.Nickname
+	}
+	return ""
+}
+
+func (m *GS2CEnterGame) GetHeadIcon() string {
+	if m != nil && m.HeadIcon != nil {
+		return *m.HeadIcon
+	}
+	return ""
+}
+
+func (m *GS2CEnterGame) GetPosX() int32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *GS2CEnterGame) GetPosY() int32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+func (m *GS2CEnterGame) GetHp() uint32 {
+	if m != nil && m.Hp != nil {
+		return *m.Hp
+	}
+	return 0
 }
 
 type GSSyncPkgRecv struct {
-	ClientAct        *uint32  `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
-	Trs              *RoleTrs `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
-	Act              *uint32  `protobuf:"varint,3,req" json:"Act,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	ClientAct        *uint32   `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
+	Trs              *RoleMove `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
+	Act              *uint32   `protobuf:"varint,3,req" json:"Act,omitempty"`
+	XXX_unrecognized []byte    `json:"-"`
 }
 
 func (m *GSSyncPkgRecv) Reset()         { *m = GSSyncPkgRecv{} }
@@ -323,7 +424,7 @@ func (m *GSSyncPkgRecv) GetClientAct() uint32 {
 	return 0
 }
 
-func (m *GSSyncPkgRecv) GetTrs() *RoleTrs {
+func (m *GSSyncPkgRecv) GetTrs() *RoleMove {
 	if m != nil {
 		return m.Trs
 	}
@@ -338,11 +439,9 @@ func (m *GSSyncPkgRecv) GetAct() uint32 {
 }
 
 type GSSyncPkgSend struct {
-	Act              *uint32   `protobuf:"varint,1,req" json:"Act,omitempty"`
-	Trs              *RoleTrs  `protobuf:"bytes,2,req" json:"Trs,omitempty"`
-	Energe           *EnergeCN `protobuf:"bytes,3,req" json:"Energe,omitempty"`
-	Buff             *BuffCN   `protobuf:"bytes,4,req" json:"Buff,omitempty"`
-	XXX_unrecognized []byte    `json:"-"`
+	Act              *uint32          `protobuf:"varint,1,req" json:"Act,omitempty"`
+	Role             []*FrameRoleData `protobuf:"bytes,2,rep" json:"Role,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
 }
 
 func (m *GSSyncPkgSend) Reset()         { *m = GSSyncPkgSend{} }
@@ -356,27 +455,14 @@ func (m *GSSyncPkgSend) GetAct() uint32 {
 	return 0
 }
 
-func (m *GSSyncPkgSend) GetTrs() *RoleTrs {
+func (m *GSSyncPkgSend) GetRole() []*FrameRoleData {
 	if m != nil {
-		return m.Trs
-	}
-	return nil
-}
-
-func (m *GSSyncPkgSend) GetEnerge() *EnergeCN {
-	if m != nil {
-		return m.Energe
-	}
-	return nil
-}
-
-func (m *GSSyncPkgSend) GetBuff() *BuffCN {
-	if m != nil {
-		return m.Buff
+		return m.Role
 	}
 	return nil
 }
 
 func init() {
 	proto.RegisterEnum("pb.ErrorCode", ErrorCode_name, ErrorCode_value)
+	proto.RegisterEnum("pb.MoveStatus", MoveStatus_name, MoveStatus_value)
 }

@@ -24,16 +24,25 @@ public class FrameSyncHandler : MonoBehaviour {
     {
         Stream stream = new MemoryStream(msgBuf);
         pb.GS2CEnterGame msg = ProtoBuf.Serializer.Deserialize<pb.GS2CEnterGame>(stream);
-        Debug.Log("GS2CEnterGame( ============>>>>>>>>>> roomId:" + msg.RoomID);
-        FrameSync.Instance.ResetFrame();
-        Player.Instance.SetBornTrs(msg.BornTrs);
+        Debug.Log("GS2CEnterGame( ============>>>>>>>>>> roomId:" + msg.RoomID);        
+        if (msg.PlayerID == Player.Instance.PlayerID)
+        {
+            Debug.Log("Slef born.");
+            FrameSync.Instance.ResetFrame();
+            Player.Instance.InitRole(msg);
+        }
+        else
+        {
+            Debug.Log("create other player.");
+            BattleManager.Instance.AddNewPlayer(msg);
+        }
     }
 
     public void RevMsgGSSyncPkgSend(int pid, byte[] msgBuf, int msgSize)
     {
-        Debug.Log("==>> RevMsgGSSyncPkgSend");
         Stream stream = new MemoryStream(msgBuf);
         pb.GSSyncPkgSend msg = ProtoBuf.Serializer.Deserialize<pb.GSSyncPkgSend>(stream);
+        Debug.Log("GSSyncPkgSend ============>>>>>>>>>> act:" + msg.Act+", time:"+ (System.DateTime.Now - new System.DateTime(1970, 1, 1, 8, 0, 0)).TotalMilliseconds);
         FrameSync.Instance.RecvSyncPkg(msg);
     }
 

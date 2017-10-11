@@ -191,7 +191,6 @@
      <Compile Include="Assets\Scripts\EventDispatch\EventDefine.cs" />
      <Compile Include="Assets\Scripts\EventDispatch\EventDispatcher.cs" />
      <Compile Include="Assets\Scripts\EventDispatch\EventException.cs" />
-     <Compile Include="Assets\Scripts\FrameSync\ClientFrame.cs" />
      <Compile Include="Assets\Scripts\FrameSync\FrameSync.cs" />
      <Compile Include="Assets\Scripts\FrameSync\FrameSyncHandler.cs" />
      <Compile Include="Assets\Scripts\LitJson\IJsonWrapper.cs" />

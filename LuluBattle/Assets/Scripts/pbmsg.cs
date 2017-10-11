@@ -15,9 +15,9 @@ namespace pb
   {
     public PlayerInfo() {}
     
-    private int _OID;
+    private uint _OID;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"OID", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int OID
+    public uint OID
     {
       get { return _OID; }
       set { _OID = value; }
@@ -53,50 +53,43 @@ namespace pb
       get { return _PlayerID; }
       set { _PlayerID = value; }
     }
-    private pb.RoleTrs _Trs;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"Trs", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public pb.RoleTrs Trs
+    private uint _Hp;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"Hp", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint Hp
     {
-      get { return _Trs; }
-      set { _Trs = value; }
+      get { return _Hp; }
+      set { _Hp = value; }
     }
-    private pb.BuffCN _Buff;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Buff", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public pb.BuffCN Buff
+    private pb.RoleMove _Move;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Move", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public pb.RoleMove Move
     {
-      get { return _Buff; }
-      set { _Buff = value; }
+      get { return _Move; }
+      set { _Move = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoleTrs")]
-  public partial class RoleTrs : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoleMove")]
+  public partial class RoleMove : global::ProtoBuf.IExtensible
   {
-    public RoleTrs() {}
+    public RoleMove() {}
     
-    private uint _pos_x;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"pos_x", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public uint pos_x
+    private pb.MoveStatus _Status;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"Status", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public pb.MoveStatus Status
     {
-      get { return _pos_x; }
-      set { _pos_x = value; }
+      get { return _Status; }
+      set { _Status = value; }
     }
-    private uint _pos_y;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"pos_y", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public uint pos_y
+    private uint _Rot;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"Rot", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint Rot
     {
-      get { return _pos_y; }
-      set { _pos_y = value; }
-    }
-    private uint _rot;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"rot", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public uint rot
-    {
-      get { return _rot; }
-      set { _rot = value; }
+      get { return _Rot; }
+      set { _Rot = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -260,12 +253,47 @@ namespace pb
       get { return _RoomID; }
       set { _RoomID = value; }
     }
-    private pb.RoleTrs _BornTrs;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"BornTrs", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public pb.RoleTrs BornTrs
+    private uint _PlayerID;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"PlayerID", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint PlayerID
     {
-      get { return _BornTrs; }
-      set { _BornTrs = value; }
+      get { return _PlayerID; }
+      set { _PlayerID = value; }
+    }
+    private string _Nickname;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Nickname", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string Nickname
+    {
+      get { return _Nickname; }
+      set { _Nickname = value; }
+    }
+    private string _HeadIcon;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"HeadIcon", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string HeadIcon
+    {
+      get { return _HeadIcon; }
+      set { _HeadIcon = value; }
+    }
+    private int _PosX;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"PosX", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int PosX
+    {
+      get { return _PosX; }
+      set { _PosX = value; }
+    }
+    private int _PosY;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = true, Name=@"PosY", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int PosY
+    {
+      get { return _PosY; }
+      set { _PosY = value; }
+    }
+    private uint _Hp;
+    [global::ProtoBuf.ProtoMember(7, IsRequired = true, Name=@"Hp", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint Hp
+    {
+      get { return _Hp; }
+      set { _Hp = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -285,10 +313,10 @@ namespace pb
       get { return _ClientAct; }
       set { _ClientAct = value; }
     }
-    private pb.RoleTrs _Trs = null;
+    private pb.RoleMove _Trs = null;
     [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"Trs", DataFormat = global::ProtoBuf.DataFormat.Default)]
     [global::System.ComponentModel.DefaultValue(null)]
-    public pb.RoleTrs Trs
+    public pb.RoleMove Trs
     {
       get { return _Trs; }
       set { _Trs = value; }
@@ -324,13 +352,6 @@ namespace pb
       get { return _Role; }
     }
   
-    private pb.EnergeCN _Energe;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Energe", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public pb.EnergeCN Energe
-    {
-      get { return _Energe; }
-      set { _Energe = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -354,6 +375,20 @@ namespace pb
             
       [global::ProtoBuf.ProtoEnum(Name=@"NICKNAME_EXIST", Value=5)]
       NICKNAME_EXIST = 5
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"MoveStatus")]
+    public enum MoveStatus
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Idle", Value=1)]
+      Idle = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Walk", Value=2)]
+      Walk = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Run", Value=3)]
+      Run = 3
     }
   
 }

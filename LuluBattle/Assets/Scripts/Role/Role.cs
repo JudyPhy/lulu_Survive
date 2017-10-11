@@ -5,26 +5,46 @@ using EventTransmit;
 
 public class Role
 {
-    public int _playerId;
-    public string _headIcon;
-    public string _nickName;
+    public uint PlayerID;
+    public string HeadIcon;
+    public string Nickname;
 
-    public Vector2 _pos;
-    public float _rot;
+    public Vector2 BornPos;
 
-    public void UpdateInfo(pb.PlayerInfo info)
+    private pb.MoveStatus _moveStatus;
+    public pb.MoveStatus MoveStatus { get { return _moveStatus; } }
+
+    private uint _rot;
+    public uint Rot { get { return _rot; } }
+
+    private uint _hp;
+    public uint Hp { get { return _hp; } set { _hp = value; } }
+
+    public void InitRole(pb.GS2CEnterGame data)
     {
-        _playerId = info.OID;
-        _headIcon = info.HeadIcon;
-        _nickName = info.NickName;
+        PlayerID = data.PlayerID;
+        Nickname = data.Nickname;
+        HeadIcon = data.HeadIcon;
+        Hp = data.Hp;
+        BornPos = new Vector2(data.PosX, data.PosY);
     }
 
-    public void UpdateTrs(pb.RoleTrs trs)
+    public void UpdateCurInfo(Role info)
     {
-        _pos.x = trs.pos_x / 100.0f;
-        _pos.y = trs.pos_y / 100.0f;
-        _rot = trs.rot / 100.0f;
+        _hp = info.Hp;
+        _moveStatus = info.MoveStatus;
+        _rot = info.Rot;
     }
-    
+
+    public void UpdateFrameInfo(pb.FrameRoleData info)
+    {
+        PlayerID = info.PlayerID;
+        _hp = info.Hp;
+        _moveStatus = info.Move.Status;
+        _rot = info.Move.Rot;
+    }
+
+   
+
 
 }

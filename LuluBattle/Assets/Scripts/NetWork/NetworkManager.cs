@@ -45,7 +45,7 @@ public class NetworkManager : MonoBehaviour
         }
         ConnectGameServer(_netConfigData.NetAddr, _netConfigData.Port);
 
-        ConfigManager.Instance.InitConfigs();
+        //ConfigManager.Instance.InitConfigs();
     }
 
     //初始化socket连接
@@ -157,7 +157,7 @@ public class NetworkManager : MonoBehaviour
         else
         {
             Debug.Log("游戏服务器连接成功，跳转主场景");
-            //UIManager.Instance.ShowMainWindow<Panel_Login>(eWindowsID.LoginUI);
+            UIManager.Instance.ShowMainWindow<Panel_Login>(eWindowsID.LoginUI);
         }
     }
 

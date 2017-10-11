@@ -28,30 +28,41 @@ public class RoomManager : MonoBehaviour
 
     private void Update()
     {
-        if (CanUpdateFrame())
-        {
-            FrameSync.Instance.CurFrameIndex++;
-            FramePacket curFrameData = FrameSync.Instance.FrameList[0];
-            Debug.Log("CurFrameIndex:" + FrameSync.Instance.CurFrameIndex + ", FrameList[0]:" + curFrameData.frameIndex);
-            if (curFrameData.frameIndex <= FrameSync.Instance.CurFrameIndex)
-            {
-                Debug.Log("Refresh cur frame ui...");
-                FrameSync.Instance.FrameList.RemoveAt(0);
-                RefreshCurFrameUI(curFrameData);
-            }
+        if (FrameSync.Instance.ClientFrameIndex > 0 && DisplayFrame() && FrameSync.Instance.LockFrameIndex > 0)
+        {            
+            Debug.Log("ClientFrameIndex:" + FrameSync.Instance.ClientFrameIndex + ", LockFrameIndex:" + FrameSync.Instance.LockFrameIndex);
             FrameSync.Instance.UpdateNextFrameTimes();
+            if (FrameSync.Instance.FrameList.Count > 0)
+            {
+                FramePacket curFrameData = FrameSync.Instance.FrameList[0];
+                //Debug.Log("FrameList[0]:" + curFrameData.frameIndex +
+                //    ", FrameList[max]:" + FrameSync.Instance.FrameList[FrameSync.Instance.FrameList.Count - 1].frameIndex);
+                if (curFrameData.frameIndex <= FrameSync.Instance.ClientFrameIndex)
+                {
+                    Debug.Log("Refresh cur frame ui...");
+                    FrameSync.Instance.FrameList.RemoveAt(0);
+                    RefreshCurFrameUI(curFrameData);
+                }
+            }
+            FrameSync.Instance.ClientFrameIndex++;
         }
     }
 
     private void RefreshCurFrameUI(FramePacket data)
     {
-
+        //Debug.Log("RefreshCurFrameUI roleCount:" + data.roleDatas.Count);
+        foreach (uint playerId in data.roleDatas.Keys)
+        {
+            if (BattleManager.Instance.RoomPlayersInfo.ContainsKey(playerId))
+            {
+                BattleManager.Instance.RoomPlayersInfo[playerId].UpdateCurInfo(data.roleDatas[playerId]);
+            }
+        }
     }
 
-    private bool CanUpdateFrame()
+    private bool DisplayFrame()
     {
-        if (FrameSync.Instance.FrameList.Count > 0 && 
-            DateTime.Now.Subtract(prevTime).TotalMilliseconds > (FrameSync.Instance.FrameIntervalTime / FrameSync.Instance.NextFrameTimes))
+        if (DateTime.Now.Subtract(prevTime).TotalMilliseconds > (FrameSync.Instance.FrameIntervalTime / FrameSync.Instance.NextFrameTimes))
         {
             prevTime = DateTime.Now;
             return true;

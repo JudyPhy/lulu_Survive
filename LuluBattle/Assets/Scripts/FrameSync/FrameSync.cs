@@ -13,7 +13,7 @@ public class FramePacket
     public Dictionary<uint, Role> roleDatas = new Dictionary<uint, Role>();   //pos、rotate、buff
 }
 
-public sealed class FrameSync
+public class FrameSync
 {
     private static FrameSync instance;
     public static FrameSync Instance
@@ -29,63 +29,56 @@ public sealed class FrameSync
     }
 
     public int FrameIntervalTime = 99;
-    
-    //当前锁定客户端帧
-    private long lockFrameIndex;
+
+    //当前锁定帧
+    public long LockFrameIndex;
     //当前客户端帧号
-    public long CurFrameIndex = 0;
+    public long ClientFrameIndex = 0;
     //下一个客户端帧的帧率
     public float NextFrameTimes = 1;
     //接收到的服务器帧队列
     public List<FramePacket> FrameList = new List<FramePacket>();
+    
 
     public void ResetFrame()
     {
-        CurFrameIndex = 0;
+        ClientFrameIndex = 0;
         FrameList.Clear();
     }
 
     public void RecvSyncPkg(pb.GSSyncPkgSend msg)
     {
-        Debug.Log("RecvSyncPkg: Service FrameIndex=" + msg.Act);
         FramePacket pkg = new FramePacket();
         pkg.frameIndex = msg.Act;
         for (int i = 0; i < msg.Role.Count; i++)
         {
-            if (!pkg.roleDatas.ContainsKey(msg.Role[i].PlayerID))
-            {
-                Role role = new Role();
-                role.UpdateTrs(msg.Role[i].Trs);
-                pkg.roleDatas.Add(msg.Role[i].PlayerID, role);
-            }
+            Role role = new Role();
+            role.UpdateFrameInfo(msg.Role[i]);
+            pkg.roleDatas.Add(msg.Role[i].PlayerID, role);
         }
         FrameList.Add(pkg);
-    }
-
-    public void RefreshCurFrame()
-    {
-        if (CurFrameIndex > 0 && FrameList.Count > 0 && FrameList[0].frameIndex <= CurFrameIndex)
+        LockFrameIndex = msg.Act;
+        if (ClientFrameIndex == 0)
         {
-            Debug.Log("RefreshCurFrame");
-            //refresh ui
-            //
-            //
-
-            FrameList.RemoveAt(0);
+            ClientFrameIndex = msg.Act;
         }
     }
 
     public void UpdateNextFrameTimes()
     {
-        List<FramePacket> nextFrameDatas = new List<FramePacket>();
-        for (int i = 0; i < FrameList.Count; i++)
+        if (ClientFrameIndex >= LockFrameIndex)
         {
-            if (FrameList[i].frameIndex <= CurFrameIndex)
+            NextFrameTimes = 1;
+        }
+        else if (ClientFrameIndex < LockFrameIndex)
+        {
+            NextFrameTimes = FrameList.Count;
+            if (NextFrameTimes == 0)
             {
-                nextFrameDatas.Add(FrameList[i]);
+                Debug.LogError("Fatal! ClientFrameIndex < LockFrameIndex, but FrameList.Count=0.");
+                NextFrameTimes = 1;
             }
         }
-        NextFrameTimes = nextFrameDatas.Count;
         Debug.Log("NextFrameTimes:" + NextFrameTimes);
     }
 }

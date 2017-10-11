@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Panel_Loading : WindowsBasePanel
 {
-    private UIProgressBar _progressBar;
+    //private UIProgressBar _progressBar;
     private uint _toProgress;
     private uint _displayProgress;
     private AsyncOperation async;
@@ -13,40 +13,41 @@ public class Panel_Loading : WindowsBasePanel
     {
         base.OnAwake();
         _toProgress = 0;
-        _progressBar = transform.FindChild("ProgressBar").GetComponent<UIProgressBar>();       
+        //_progressBar = transform.FindChild("ProgressBar").GetComponent<UIProgressBar>();       
     }
 
     public override void OnStart()
     {
-        StartCoroutine(StartLoading(1));
+        StartCoroutine(StartLoading("Battle"));
     }
 
-    private IEnumerator StartLoading(int scene)
+    private IEnumerator StartLoading(string sceneName)
     {
-        async = SceneManager.LoadSceneAsync("Battle");
+        Debug.Log("StartLoading");
+        async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         while (async.progress < 0.9f)
         {
             _toProgress = (uint)(async.progress * 100);
-            while (_displayProgress < _toProgress)
-            {
-                _displayProgress++;
-                _progressBar.value = _displayProgress / 100.0f;
-                yield return new WaitForEndOfFrame();
-            }
+            //while (_displayProgress < _toProgress)
+            //{
+            //    _displayProgress++;
+            //    _progressBar.value = _displayProgress / 100.0f;
+            //    yield return new WaitForEndOfFrame();
+            //}
         }
         _toProgress = 100;
         while (_displayProgress < _toProgress)
         {
             _displayProgress++;
-            _progressBar.value = _displayProgress / 100.0f;
+            //_progressBar.value = _displayProgress / 100.0f;
             yield return new WaitForEndOfFrame();
         }           
     }
 
     private void Update()
     {
-        if (_progressBar.value == 1 && Player.Instance.HasBorn)
+        if (/*_progressBar.value == 1 && */BattleManager.Instance.RoomPlayersInfo.Count > 0)
         {
             async.allowSceneActivation = true;
         }
