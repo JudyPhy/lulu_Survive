@@ -83,7 +83,7 @@ public class LoginMsgHandler  {
         {
             case pb.ErrorCode.SUCCESS:
                 Player.Instance.UpdateInfo(msg.playerInfo);
-                UIManager.Instance.ShowMainWindow<Panel_Loading>(eWindowsID.LoadingUI);
+                UIManager.Instance.ShowMainWindow<Panel_Map>(eWindowsID.BattleMap);
                 break;
             case pb.ErrorCode.NICKNAME_EXIST:
                 break;

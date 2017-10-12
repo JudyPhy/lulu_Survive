@@ -8,7 +8,7 @@ public enum MsgDef
     GS2CLoginRet = 1,
     C2GSChooseRole = 2,
     GS2CChooseRoleRet = 3,
-    GS2CEnterGame = 4,
+    C2GSStartGame = 4,
     GSSyncPkgRecv = 5,
     GSSyncPkgSend = 6,
 }

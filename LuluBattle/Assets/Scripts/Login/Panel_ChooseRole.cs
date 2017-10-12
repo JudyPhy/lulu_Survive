@@ -29,7 +29,7 @@ public class Panel_ChooseRole : WindowsBasePanel
     {
         base.OnStart();
 
-        LoginMsgHandler.Instance.SendMsgC2GSChooseRole("lulu", "lulu");
+        LoginMsgHandler.Instance.SendMsgC2GSChooseRole("lulu", "icon_lulu");
 
         //List<RoleTypeData> roleDatas = ConfigManager.Instance.GetLoginRoleTypes();
         //_curChoosedRole = roleDatas[0]._headIcon;

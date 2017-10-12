@@ -47,7 +47,7 @@ public class Panel_Loading : WindowsBasePanel
 
     private void Update()
     {
-        if (/*_progressBar.value == 1 && */BattleManager.Instance.RoomPlayersInfo.Count > 0)
+        if (/*_progressBar.value == 1 && */BattleManager.Instance.Process == BattleProcess.Start)
         {
             async.allowSceneActivation = true;
         }

@@ -45,7 +45,7 @@ public class NetworkManager : MonoBehaviour
         }
         ConnectGameServer(_netConfigData.NetAddr, _netConfigData.Port);
 
-        //ConfigManager.Instance.InitConfigs();
+        ConfigManager.Instance.InitConfigs();
     }
 
     //初始化socket连接
@@ -73,7 +73,7 @@ public class NetworkManager : MonoBehaviour
     {
         RegisterMessageHandler((int)MsgDef.GS2CLoginRet, LoginMsgHandler.Instance.RevMsgGS2CLoginRet);
         RegisterMessageHandler((int)MsgDef.GS2CChooseRoleRet, LoginMsgHandler.Instance.RevMsgGS2CChooseRoleRet);
-        RegisterMessageHandler((int)MsgDef.GS2CEnterGame, FrameSyncHandler.Instance.RevMsgGS2CEnterGame);
+        RegisterMessageHandler((int)MsgDef.C2GSStartGame, BattleMsgHandler.Instance.RevMsgGS2CStartGameRet);
         RegisterMessageHandler((int)MsgDef.GSSyncPkgSend, FrameSyncHandler.Instance.RevMsgGSSyncPkgSend);
     }
 

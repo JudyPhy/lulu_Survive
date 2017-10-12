@@ -6,5 +6,6 @@ public enum eWindowsID
     LoginUI = 1,
     ChooseRole,
     LoadingUI,
+    BattleMap,
     BattleUI,
 }

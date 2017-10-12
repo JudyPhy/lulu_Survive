@@ -11,9 +11,15 @@ enum ErrorCode
 	NICKNAME_EXIST = 5;	
 }
 
+enum GameMode
+{
+	GameMode_Idle = 1;
+	Single = 2;	
+}
+
 enum MoveStatus
 {
-	Idle = 1;
+	MoveStatus_Idle = 1;
 	Walk = 2;	
 	Run = 3;
 }
@@ -23,6 +29,21 @@ message PlayerInfo
 	required uint32 OID = 1;
 	required string NickName = 2;
 	required string HeadIcon = 3;
+}
+
+message BaseAttr
+{
+	required uint32 Hp = 1;
+}
+
+message BornInfo
+{
+	required uint32 OID = 1;
+	required string NickName = 2;
+	required int32 RoleID = 3;
+	required int32 PosX = 4;
+	required int32 PosY = 5;
+	required BaseAttr Attr = 6;
 }
 
 message FrameRoleData
@@ -38,16 +59,18 @@ message RoleMove
 	required uint32 Rot = 2;
 }
 
-message EnergeCN
+message ExpCN
 {
-	required uint32 pos_x = 1;
-	required uint32 pos_y = 2;
+	required uint32 Status = 1; //0:Idle 1:Add 2:Sub
+	required uint32 pos_x = 2;
+	required uint32 pos_y = 3;
 }
 
 message BuffCN
 {
-	required uint32 pos_x = 1;
-	required uint32 pos_y = 2;
+	required uint32 Status = 1;	//0:Idle 1:Add 2:Sub
+	required uint32 pos_x = 2;
+	required uint32 pos_y = 3;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -75,15 +98,20 @@ message GS2CChooseRoleRet
 	required PlayerInfo playerInfo = 2;
 }
 
-message GS2CEnterGame
+message C2GSStartGame
 {
-	required string RoomID = 1;
-	required uint32 PlayerID = 2;
-	required string Nickname = 3;
-	required string HeadIcon = 4;	
-	required int32 PosX = 5;
-	required int32 PosY = 6;
-	required uint32 Hp = 7;
+	required GameMode Mode = 1;
+	required int32 MapID = 2;
+	required int32 RoleID = 3;
+}
+
+message GS2CStartGameRet
+{
+	required GameMode Mode = 1;
+	required int32 MapID = 2;
+	repeated BornInfo Players = 3;
+	repeated ExpCN Exp = 4;
+	repeated BuffCN Buff = 5;
 }
 
 message GSSyncPkgRecv

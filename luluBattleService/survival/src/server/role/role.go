@@ -12,16 +12,10 @@ type RoleAttr struct {
 
 type Role struct {
 	A        gate.Agent
-	PlayerId int32
 	Name     string
-	HeadIcon string
+	RoleType int32
 	Attr     *RoleAttr
 	RoomId   string
-}
-
-func (role *Role) InitInfo() {
-	role.Name = "lulu"
-	role.HeadIcon = "lulu"
 }
 
 func (role *Role) InitAttr() {

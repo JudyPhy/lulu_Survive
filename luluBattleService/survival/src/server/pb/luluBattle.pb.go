@@ -10,15 +10,18 @@ It is generated from these files:
 
 It has these top-level messages:
 	PlayerInfo
+	BaseAttr
+	BornInfo
 	FrameRoleData
 	RoleMove
-	EnergeCN
+	ExpCN
 	BuffCN
 	C2GSLogin
 	GS2CLoginRet
 	C2GSChooseRole
 	GS2CChooseRoleRet
-	GS2CEnterGame
+	C2GSStartGame
+	GS2CStartGameRet
 	GSSyncPkgRecv
 	GSSyncPkgSend
 */
@@ -73,23 +76,56 @@ func (x *ErrorCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type GameMode int32
+
+const (
+	GameMode_GameMode_Idle GameMode = 1
+	GameMode_Single        GameMode = 2
+)
+
+var GameMode_name = map[int32]string{
+	1: "GameMode_Idle",
+	2: "Single",
+}
+var GameMode_value = map[string]int32{
+	"GameMode_Idle": 1,
+	"Single":        2,
+}
+
+func (x GameMode) Enum() *GameMode {
+	p := new(GameMode)
+	*p = x
+	return p
+}
+func (x GameMode) String() string {
+	return proto.EnumName(GameMode_name, int32(x))
+}
+func (x *GameMode) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(GameMode_value, data, "GameMode")
+	if err != nil {
+		return err
+	}
+	*x = GameMode(value)
+	return nil
+}
+
 type MoveStatus int32
 
 const (
-	MoveStatus_Idle MoveStatus = 1
-	MoveStatus_Walk MoveStatus = 2
-	MoveStatus_Run  MoveStatus = 3
+	MoveStatus_MoveStatus_Idle MoveStatus = 1
+	MoveStatus_Walk            MoveStatus = 2
+	MoveStatus_Run             MoveStatus = 3
 )
 
 var MoveStatus_name = map[int32]string{
-	1: "Idle",
+	1: "MoveStatus_Idle",
 	2: "Walk",
 	3: "Run",
 }
 var MoveStatus_value = map[string]int32{
-	"Idle": 1,
-	"Walk": 2,
-	"Run":  3,
+	"MoveStatus_Idle": 1,
+	"Walk":            2,
+	"Run":             3,
 }
 
 func (x MoveStatus) Enum() *MoveStatus {
@@ -110,7 +146,7 @@ func (x *MoveStatus) UnmarshalJSON(data []byte) error {
 }
 
 type PlayerInfo struct {
-	OID              *int32  `protobuf:"varint,1,req" json:"OID,omitempty"`
+	OID              *uint32 `protobuf:"varint,1,req" json:"OID,omitempty"`
 	NickName         *string `protobuf:"bytes,2,req" json:"NickName,omitempty"`
 	HeadIcon         *string `protobuf:"bytes,3,req" json:"HeadIcon,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -120,7 +156,7 @@ func (m *PlayerInfo) Reset()         { *m = PlayerInfo{} }
 func (m *PlayerInfo) String() string { return proto.CompactTextString(m) }
 func (*PlayerInfo) ProtoMessage()    {}
 
-func (m *PlayerInfo) GetOID() int32 {
+func (m *PlayerInfo) GetOID() uint32 {
 	if m != nil && m.OID != nil {
 		return *m.OID
 	}
@@ -139,6 +175,78 @@ func (m *PlayerInfo) GetHeadIcon() string {
 		return *m.HeadIcon
 	}
 	return ""
+}
+
+type BaseAttr struct {
+	Hp               *uint32 `protobuf:"varint,1,req" json:"Hp,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *BaseAttr) Reset()         { *m = BaseAttr{} }
+func (m *BaseAttr) String() string { return proto.CompactTextString(m) }
+func (*BaseAttr) ProtoMessage()    {}
+
+func (m *BaseAttr) GetHp() uint32 {
+	if m != nil && m.Hp != nil {
+		return *m.Hp
+	}
+	return 0
+}
+
+type BornInfo struct {
+	OID              *uint32   `protobuf:"varint,1,req" json:"OID,omitempty"`
+	NickName         *string   `protobuf:"bytes,2,req" json:"NickName,omitempty"`
+	RoleID           *int32    `protobuf:"varint,3,req" json:"RoleID,omitempty"`
+	PosX             *int32    `protobuf:"varint,4,req" json:"PosX,omitempty"`
+	PosY             *int32    `protobuf:"varint,5,req" json:"PosY,omitempty"`
+	Attr             *BaseAttr `protobuf:"bytes,6,req" json:"Attr,omitempty"`
+	XXX_unrecognized []byte    `json:"-"`
+}
+
+func (m *BornInfo) Reset()         { *m = BornInfo{} }
+func (m *BornInfo) String() string { return proto.CompactTextString(m) }
+func (*BornInfo) ProtoMessage()    {}
+
+func (m *BornInfo) GetOID() uint32 {
+	if m != nil && m.OID != nil {
+		return *m.OID
+	}
+	return 0
+}
+
+func (m *BornInfo) GetNickName() string {
+	if m != nil && m.NickName != nil {
+		return *m.NickName
+	}
+	return ""
+}
+
+func (m *BornInfo) GetRoleID() int32 {
+	if m != nil && m.RoleID != nil {
+		return *m.RoleID
+	}
+	return 0
+}
+
+func (m *BornInfo) GetPosX() int32 {
+	if m != nil && m.PosX != nil {
+		return *m.PosX
+	}
+	return 0
+}
+
+func (m *BornInfo) GetPosY() int32 {
+	if m != nil && m.PosY != nil {
+		return *m.PosY
+	}
+	return 0
+}
+
+func (m *BornInfo) GetAttr() *BaseAttr {
+	if m != nil {
+		return m.Attr
+	}
+	return nil
 }
 
 type FrameRoleData struct {
@@ -187,7 +295,7 @@ func (m *RoleMove) GetStatus() MoveStatus {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return MoveStatus_Idle
+	return MoveStatus_MoveStatus_Idle
 }
 
 func (m *RoleMove) GetRot() uint32 {
@@ -197,24 +305,32 @@ func (m *RoleMove) GetRot() uint32 {
 	return 0
 }
 
-type EnergeCN struct {
-	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
-	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+type ExpCN struct {
+	Status           *uint32 `protobuf:"varint,1,req" json:"Status,omitempty"`
+	PosX             *uint32 `protobuf:"varint,2,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *uint32 `protobuf:"varint,3,req,name=pos_y" json:"pos_y,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *EnergeCN) Reset()         { *m = EnergeCN{} }
-func (m *EnergeCN) String() string { return proto.CompactTextString(m) }
-func (*EnergeCN) ProtoMessage()    {}
+func (m *ExpCN) Reset()         { *m = ExpCN{} }
+func (m *ExpCN) String() string { return proto.CompactTextString(m) }
+func (*ExpCN) ProtoMessage()    {}
 
-func (m *EnergeCN) GetPosX() uint32 {
+func (m *ExpCN) GetStatus() uint32 {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return 0
+}
+
+func (m *ExpCN) GetPosX() uint32 {
 	if m != nil && m.PosX != nil {
 		return *m.PosX
 	}
 	return 0
 }
 
-func (m *EnergeCN) GetPosY() uint32 {
+func (m *ExpCN) GetPosY() uint32 {
 	if m != nil && m.PosY != nil {
 		return *m.PosY
 	}
@@ -222,14 +338,22 @@ func (m *EnergeCN) GetPosY() uint32 {
 }
 
 type BuffCN struct {
-	PosX             *uint32 `protobuf:"varint,1,req,name=pos_x" json:"pos_x,omitempty"`
-	PosY             *uint32 `protobuf:"varint,2,req,name=pos_y" json:"pos_y,omitempty"`
+	Status           *uint32 `protobuf:"varint,1,req" json:"Status,omitempty"`
+	PosX             *uint32 `protobuf:"varint,2,req,name=pos_x" json:"pos_x,omitempty"`
+	PosY             *uint32 `protobuf:"varint,3,req,name=pos_y" json:"pos_y,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *BuffCN) Reset()         { *m = BuffCN{} }
 func (m *BuffCN) String() string { return proto.CompactTextString(m) }
 func (*BuffCN) ProtoMessage()    {}
+
+func (m *BuffCN) GetStatus() uint32 {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return 0
+}
 
 func (m *BuffCN) GetPosX() uint32 {
 	if m != nil && m.PosX != nil {
@@ -342,68 +466,84 @@ func (m *GS2CChooseRoleRet) GetPlayerInfo() *PlayerInfo {
 	return nil
 }
 
-type GS2CEnterGame struct {
-	RoomID           *string `protobuf:"bytes,1,req" json:"RoomID,omitempty"`
-	PlayerID         *int32  `protobuf:"varint,2,req" json:"PlayerID,omitempty"`
-	Nickname         *string `protobuf:"bytes,3,req" json:"Nickname,omitempty"`
-	HeadIcon         *string `protobuf:"bytes,4,req" json:"HeadIcon,omitempty"`
-	PosX             *int32  `protobuf:"varint,5,req" json:"PosX,omitempty"`
-	PosY             *int32  `protobuf:"varint,6,req" json:"PosY,omitempty"`
-	Hp               *uint32 `protobuf:"varint,7,req" json:"Hp,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+type C2GSStartGame struct {
+	Mode             *GameMode `protobuf:"varint,1,req,enum=pb.GameMode" json:"Mode,omitempty"`
+	MapID            *int32    `protobuf:"varint,2,req" json:"MapID,omitempty"`
+	RoleID           *int32    `protobuf:"varint,3,req" json:"RoleID,omitempty"`
+	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *GS2CEnterGame) Reset()         { *m = GS2CEnterGame{} }
-func (m *GS2CEnterGame) String() string { return proto.CompactTextString(m) }
-func (*GS2CEnterGame) ProtoMessage()    {}
+func (m *C2GSStartGame) Reset()         { *m = C2GSStartGame{} }
+func (m *C2GSStartGame) String() string { return proto.CompactTextString(m) }
+func (*C2GSStartGame) ProtoMessage()    {}
 
-func (m *GS2CEnterGame) GetRoomID() string {
-	if m != nil && m.RoomID != nil {
-		return *m.RoomID
+func (m *C2GSStartGame) GetMode() GameMode {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
 	}
-	return ""
+	return GameMode_GameMode_Idle
 }
 
-func (m *GS2CEnterGame) GetPlayerID() int32 {
-	if m != nil && m.PlayerID != nil {
-		return *m.PlayerID
+func (m *C2GSStartGame) GetMapID() int32 {
+	if m != nil && m.MapID != nil {
+		return *m.MapID
 	}
 	return 0
 }
 
-func (m *GS2CEnterGame) GetNickname() string {
-	if m != nil && m.Nickname != nil {
-		return *m.Nickname
-	}
-	return ""
-}
-
-func (m *GS2CEnterGame) GetHeadIcon() string {
-	if m != nil && m.HeadIcon != nil {
-		return *m.HeadIcon
-	}
-	return ""
-}
-
-func (m *GS2CEnterGame) GetPosX() int32 {
-	if m != nil && m.PosX != nil {
-		return *m.PosX
+func (m *C2GSStartGame) GetRoleID() int32 {
+	if m != nil && m.RoleID != nil {
+		return *m.RoleID
 	}
 	return 0
 }
 
-func (m *GS2CEnterGame) GetPosY() int32 {
-	if m != nil && m.PosY != nil {
-		return *m.PosY
+type GS2CStartGameRet struct {
+	Mode             *GameMode   `protobuf:"varint,1,req,enum=pb.GameMode" json:"Mode,omitempty"`
+	MapID            *int32      `protobuf:"varint,2,req" json:"MapID,omitempty"`
+	Players          []*BornInfo `protobuf:"bytes,3,rep" json:"Players,omitempty"`
+	Exp              []*ExpCN    `protobuf:"bytes,4,rep" json:"Exp,omitempty"`
+	Buff             []*BuffCN   `protobuf:"bytes,5,rep" json:"Buff,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *GS2CStartGameRet) Reset()         { *m = GS2CStartGameRet{} }
+func (m *GS2CStartGameRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CStartGameRet) ProtoMessage()    {}
+
+func (m *GS2CStartGameRet) GetMode() GameMode {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
+	}
+	return GameMode_GameMode_Idle
+}
+
+func (m *GS2CStartGameRet) GetMapID() int32 {
+	if m != nil && m.MapID != nil {
+		return *m.MapID
 	}
 	return 0
 }
 
-func (m *GS2CEnterGame) GetHp() uint32 {
-	if m != nil && m.Hp != nil {
-		return *m.Hp
+func (m *GS2CStartGameRet) GetPlayers() []*BornInfo {
+	if m != nil {
+		return m.Players
 	}
-	return 0
+	return nil
+}
+
+func (m *GS2CStartGameRet) GetExp() []*ExpCN {
+	if m != nil {
+		return m.Exp
+	}
+	return nil
+}
+
+func (m *GS2CStartGameRet) GetBuff() []*BuffCN {
+	if m != nil {
+		return m.Buff
+	}
+	return nil
 }
 
 type GSSyncPkgRecv struct {
@@ -464,5 +604,6 @@ func (m *GSSyncPkgSend) GetRole() []*FrameRoleData {
 
 func init() {
 	proto.RegisterEnum("pb.ErrorCode", ErrorCode_name, ErrorCode_value)
+	proto.RegisterEnum("pb.GameMode", GameMode_name, GameMode_value)
 	proto.RegisterEnum("pb.MoveStatus", MoveStatus_name, MoveStatus_value)
 }

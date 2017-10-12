@@ -182,6 +182,8 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Scripts\Battle\BattleManager.cs" />
+     <Compile Include="Assets\Scripts\Battle\BattleMsgHandler.cs" />
+     <Compile Include="Assets\Scripts\Battle\Panel_Map.cs" />
      <Compile Include="Assets\Scripts\Battle\Panel_battle.cs" />
      <Compile Include="Assets\Scripts\Battle\RoomManager.cs" />
      <Compile Include="Assets\Scripts\Effects\EffectDepth.cs" />

@@ -21,7 +21,7 @@ public class Player : Role
 
     public void UpdateInfo(pb.PlayerInfo info)
     {
-        PlayerID = info.OID;
+        OID = info.OID;
         Nickname = info.NickName;
         HeadIcon = info.HeadIcon;
     }

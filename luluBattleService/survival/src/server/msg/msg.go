@@ -16,9 +16,11 @@ func init() {
 	Processor.Register(&pb.GS2CLoginRet{})      //1
 	Processor.Register(&pb.C2GSChooseRole{})    //2
 	Processor.Register(&pb.GS2CChooseRoleRet{}) //3
-	Processor.Register(&pb.GS2CEnterGame{})     //4
-	Processor.Register(&pb.GSSyncPkgRecv{})     //5
-	Processor.Register(&pb.GSSyncPkgSend{})     //6
+	Processor.Register(&pb.GS2CSceneCreate{})   //4
+	Processor.Register(&pb.C2GSStartGame{})     //5
+	Processor.Register(&pb.GS2CStartGameRet{})  //6
+	Processor.Register(&pb.GSSyncPkgRecv{})     //7
+	Processor.Register(&pb.GSSyncPkgSend{})     //8
 
-	log.Debug("Register msg over, msg count=7")
+	log.Debug("Register msg over, msg count=9")
 }

@@ -19,25 +19,7 @@ public class FrameSyncHandler : MonoBehaviour {
     }
 
     #region GS -> C
-
-    public void RevMsgGS2CEnterGame(int pid, byte[] msgBuf, int msgSize)
-    {
-        Stream stream = new MemoryStream(msgBuf);
-        pb.GS2CEnterGame msg = ProtoBuf.Serializer.Deserialize<pb.GS2CEnterGame>(stream);
-        Debug.Log("GS2CEnterGame( ============>>>>>>>>>> roomId:" + msg.RoomID);        
-        if (msg.PlayerID == Player.Instance.PlayerID)
-        {
-            Debug.Log("Slef born.");
-            FrameSync.Instance.ResetFrame();
-            Player.Instance.InitRole(msg);
-        }
-        else
-        {
-            Debug.Log("create other player.");
-            BattleManager.Instance.AddNewPlayer(msg);
-        }
-    }
-
+    
     public void RevMsgGSSyncPkgSend(int pid, byte[] msgBuf, int msgSize)
     {
         Stream stream = new MemoryStream(msgBuf);
