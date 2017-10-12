@@ -22,8 +22,8 @@ It has these top-level messages:
 	GS2CChooseRoleRet
 	C2GSStartGame
 	GS2CStartGameRet
-	GSSyncPkgRecv
-	GSSyncPkgSend
+	C2GSSyncPkg
+	GS2CSyncPkg
 */
 package pb
 
@@ -251,7 +251,7 @@ func (m *BornInfo) GetAttr() *BaseAttr {
 
 type FrameRoleData struct {
 	PlayerID         *uint32   `protobuf:"varint,1,req" json:"PlayerID,omitempty"`
-	Hp               *uint32   `protobuf:"varint,2,req" json:"Hp,omitempty"`
+	Attr             *BaseAttr `protobuf:"bytes,2,req" json:"Attr,omitempty"`
 	Move             *RoleMove `protobuf:"bytes,3,req" json:"Move,omitempty"`
 	XXX_unrecognized []byte    `json:"-"`
 }
@@ -267,11 +267,11 @@ func (m *FrameRoleData) GetPlayerID() uint32 {
 	return 0
 }
 
-func (m *FrameRoleData) GetHp() uint32 {
-	if m != nil && m.Hp != nil {
-		return *m.Hp
+func (m *FrameRoleData) GetAttr() *BaseAttr {
+	if m != nil {
+		return m.Attr
 	}
-	return 0
+	return nil
 }
 
 func (m *FrameRoleData) GetMove() *RoleMove {
@@ -546,56 +546,56 @@ func (m *GS2CStartGameRet) GetBuff() []*BuffCN {
 	return nil
 }
 
-type GSSyncPkgRecv struct {
+type C2GSSyncPkg struct {
 	ClientAct        *uint32   `protobuf:"varint,1,opt" json:"ClientAct,omitempty"`
 	Trs              *RoleMove `protobuf:"bytes,2,opt" json:"Trs,omitempty"`
 	Act              *uint32   `protobuf:"varint,3,req" json:"Act,omitempty"`
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *GSSyncPkgRecv) Reset()         { *m = GSSyncPkgRecv{} }
-func (m *GSSyncPkgRecv) String() string { return proto.CompactTextString(m) }
-func (*GSSyncPkgRecv) ProtoMessage()    {}
+func (m *C2GSSyncPkg) Reset()         { *m = C2GSSyncPkg{} }
+func (m *C2GSSyncPkg) String() string { return proto.CompactTextString(m) }
+func (*C2GSSyncPkg) ProtoMessage()    {}
 
-func (m *GSSyncPkgRecv) GetClientAct() uint32 {
+func (m *C2GSSyncPkg) GetClientAct() uint32 {
 	if m != nil && m.ClientAct != nil {
 		return *m.ClientAct
 	}
 	return 0
 }
 
-func (m *GSSyncPkgRecv) GetTrs() *RoleMove {
+func (m *C2GSSyncPkg) GetTrs() *RoleMove {
 	if m != nil {
 		return m.Trs
 	}
 	return nil
 }
 
-func (m *GSSyncPkgRecv) GetAct() uint32 {
+func (m *C2GSSyncPkg) GetAct() uint32 {
 	if m != nil && m.Act != nil {
 		return *m.Act
 	}
 	return 0
 }
 
-type GSSyncPkgSend struct {
+type GS2CSyncPkg struct {
 	Act              *uint32          `protobuf:"varint,1,req" json:"Act,omitempty"`
 	Role             []*FrameRoleData `protobuf:"bytes,2,rep" json:"Role,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *GSSyncPkgSend) Reset()         { *m = GSSyncPkgSend{} }
-func (m *GSSyncPkgSend) String() string { return proto.CompactTextString(m) }
-func (*GSSyncPkgSend) ProtoMessage()    {}
+func (m *GS2CSyncPkg) Reset()         { *m = GS2CSyncPkg{} }
+func (m *GS2CSyncPkg) String() string { return proto.CompactTextString(m) }
+func (*GS2CSyncPkg) ProtoMessage()    {}
 
-func (m *GSSyncPkgSend) GetAct() uint32 {
+func (m *GS2CSyncPkg) GetAct() uint32 {
 	if m != nil && m.Act != nil {
 		return *m.Act
 	}
 	return 0
 }
 
-func (m *GSSyncPkgSend) GetRole() []*FrameRoleData {
+func (m *GS2CSyncPkg) GetRole() []*FrameRoleData {
 	if m != nil {
 		return m.Role
 	}

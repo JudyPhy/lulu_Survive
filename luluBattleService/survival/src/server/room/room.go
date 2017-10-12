@@ -2,7 +2,6 @@ package room
 
 import (
 	"math/rand"
-	"server/frameSync"
 	"server/msgSendHandler"
 	"server/pb"
 	"server/role"
@@ -23,7 +22,7 @@ const (
 type RoomData struct {
 	roomId string
 	mode   pb.GameMode
-	sync   *frameSync.RoomFrameSync
+	sync   *FrameSync
 	Roles  []*role.Role
 	Map    *SceneMap
 }
@@ -56,11 +55,15 @@ func EnterRoom(a gate.Agent, mode pb.GameMode, mapId int32, roleId int32) {
 		mgrRoom.rooms[enterRoom].Roles = make([]*role.Role, 0)
 	}
 	addRoleToRoom(enterRoom, roleId, a)
+
+	//check member count
 	if len(mgrRoom.rooms[enterRoom].Roles) == ROOM_MEMBER_COUNT {
 		log.Debug("Room[%v] prepare start game.", enterRoom)
 		mgrRoom.rooms[enterRoom].Map = &SceneMap{}
 		mgrRoom.rooms[enterRoom].Map.createScene(mapId)
 		mgrRoom.rooms[enterRoom].sendRoomBattleStart(mode, mapId, roleId)
+		mgrRoom.rooms[enterRoom].sync = &FrameSync{}
+		mgrRoom.rooms[enterRoom].sync.start(mgrRoom.rooms[enterRoom])
 	}
 }
 

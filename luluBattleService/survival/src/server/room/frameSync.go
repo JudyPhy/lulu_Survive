@@ -1,4 +1,4 @@
-package frameSync
+package room
 
 import (
 	"server/msgSendHandler"
@@ -11,20 +11,16 @@ import (
 	"github.com/name5566/leaf/log"
 )
 
-type RoomFrameSync struct {
-	roomId           string
+type FrameSync struct {
 	serviceFrameList []*pb.FrameRoleData
 	curFrameIndex    uint32
 }
 
-func SyncStart(roomId string, roleList []*role.Role) {
-	log.Debug("init frame sync, room[%v]", roomId)
-	roomSync := &RoomFrameSync{}
-	roomSync.roomId = roomId
-	go sendFrame(roomSync, roleList)
+func (sync *FrameSync) start(roomData *RoomData) {
+	go sync.sendFrame(roomData)
 }
 
-func sendFrame(roomSync *RoomFrameSync, roleList []*role.Role) {
+func (sync *FrameSync) sendFrame(roomData *RoomData) {
 	timer := time.NewTicker(99 * time.Millisecond)
 	roomSync.curFrameIndex = 1
 	for _ = range timer.C {
