@@ -110,10 +110,43 @@ namespace pb
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"FrameRoleData")]
-  public partial class FrameRoleData : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"FrameData")]
+  public partial class FrameData : global::ProtoBuf.IExtensible
   {
-    public FrameRoleData() {}
+    public FrameData() {}
+    
+    private uint _Index;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"Index", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint Index
+    {
+      get { return _Index; }
+      set { _Index = value; }
+    }
+    private pb.BaseAttr _Attr = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"Attr", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public pb.BaseAttr Attr
+    {
+      get { return _Attr; }
+      set { _Attr = value; }
+    }
+    private pb.RoleMove _Move = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"Move", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public pb.RoleMove Move
+    {
+      get { return _Move; }
+      set { _Move = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SyncRoleData")]
+  public partial class SyncRoleData : global::ProtoBuf.IExtensible
+  {
+    public SyncRoleData() {}
     
     private uint _PlayerID;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"PlayerID", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -122,20 +155,13 @@ namespace pb
       get { return _PlayerID; }
       set { _PlayerID = value; }
     }
-    private uint _Hp;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"Hp", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public uint Hp
+    private readonly global::System.Collections.Generic.List<pb.FrameData> _FrameList = new global::System.Collections.Generic.List<pb.FrameData>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"FrameList", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<pb.FrameData> FrameList
     {
-      get { return _Hp; }
-      set { _Hp = value; }
+      get { return _FrameList; }
     }
-    private pb.RoleMove _Move;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Move", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public pb.RoleMove Move
-    {
-      get { return _Move; }
-      set { _Move = value; }
-    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -400,10 +426,10 @@ namespace pb
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GSSyncPkgRecv")]
-  public partial class GSSyncPkgRecv : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2GSSyncPkg")]
+  public partial class C2GSSyncPkg : global::ProtoBuf.IExtensible
   {
-    public GSSyncPkgRecv() {}
+    public C2GSSyncPkg() {}
     
     private uint _ClientAct = default(uint);
     [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"ClientAct", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -413,13 +439,13 @@ namespace pb
       get { return _ClientAct; }
       set { _ClientAct = value; }
     }
-    private pb.RoleMove _Trs = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"Trs", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    private pb.FrameData _ProcData = null;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"ProcData", DataFormat = global::ProtoBuf.DataFormat.Default)]
     [global::System.ComponentModel.DefaultValue(null)]
-    public pb.RoleMove Trs
+    public pb.FrameData ProcData
     {
-      get { return _Trs; }
-      set { _Trs = value; }
+      get { return _ProcData; }
+      set { _ProcData = value; }
     }
     private uint _Act;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"Act", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -433,10 +459,10 @@ namespace pb
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GSSyncPkgSend")]
-  public partial class GSSyncPkgSend : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GS2CSyncPkg")]
+  public partial class GS2CSyncPkg : global::ProtoBuf.IExtensible
   {
-    public GSSyncPkgSend() {}
+    public GS2CSyncPkg() {}
     
     private uint _Act;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"Act", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -445,11 +471,11 @@ namespace pb
       get { return _Act; }
       set { _Act = value; }
     }
-    private readonly global::System.Collections.Generic.List<pb.FrameRoleData> _Role = new global::System.Collections.Generic.List<pb.FrameRoleData>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"Role", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<pb.FrameRoleData> Role
+    private readonly global::System.Collections.Generic.List<pb.SyncRoleData> _RoleList = new global::System.Collections.Generic.List<pb.SyncRoleData>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"RoleList", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<pb.SyncRoleData> RoleList
     {
-      get { return _Role; }
+      get { return _RoleList; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

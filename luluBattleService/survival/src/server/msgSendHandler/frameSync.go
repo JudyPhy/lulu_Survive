@@ -8,10 +8,10 @@ import (
 	"github.com/name5566/leaf/log"
 )
 
-func SendGSSyncPkgSend(serviceIndex uint32, roleList []*pb.FrameRoleData, a gate.Agent) {
-	log.Debug("GSSyncPkgSend ========>>>>>> act:%v", serviceIndex)
-	data := &pb.GSSyncPkgSend{}
+func SendGS2CSyncPkg(serviceIndex uint32, roleList []*pb.SyncRoleData, a gate.Agent) {
+	log.Debug("GS2CSyncPkg ========>>>>>> act:%v", serviceIndex)
+	data := &pb.GS2CSyncPkg{}
 	data.Act = proto.Uint32(serviceIndex)
-	data.Role = roleList
+	data.RoleList = roleList
 	a.WriteMsg(data)
 }

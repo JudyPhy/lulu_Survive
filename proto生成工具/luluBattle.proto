@@ -46,11 +46,17 @@ message BornInfo
 	required BaseAttr Attr = 6;
 }
 
-message FrameRoleData
+message FrameData
+{	
+	required uint32 Index = 1;
+	optional BaseAttr Attr = 2;
+	optional RoleMove Move = 3;
+}
+
+message SyncRoleData
 {
 	required uint32 PlayerID = 1;
-	required uint32 Hp = 2;
-	required RoleMove Move = 3;
+	repeated FrameData FrameList = 2;
 }
 
 message RoleMove
@@ -114,15 +120,15 @@ message GS2CStartGameRet
 	repeated BuffCN Buff = 5;
 }
 
-message GSSyncPkgRecv
+message C2GSSyncPkg
 {	
 	optional uint32 ClientAct = 1;	//客户端当前操作帧序号
-	optional RoleMove Trs = 2;
-	required uint32 Act = 3;	//已经处理过的最大service帧序号
+	optional FrameData ProcData = 2;
+	required uint32 Act = 3;	//客户端渲染一帧回发一帧
 }
 
-message GSSyncPkgSend
+message GS2CSyncPkg
 {
 	required uint32 Act = 1;	//service帧序号
-	repeated FrameRoleData Role = 2;
+	repeated SyncRoleData RoleList = 2;
 }

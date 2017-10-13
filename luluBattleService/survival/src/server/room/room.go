@@ -16,15 +16,15 @@ import (
 )
 
 const (
-	ROOM_MEMBER_COUNT int = 10
+	ROOM_MEMBER_COUNT int = 1
 )
 
 type RoomData struct {
-	roomId string
-	mode   pb.GameMode
-	sync   *FrameSync
-	Roles  []*role.Role
-	Map    *SceneMap
+	roomId        string
+	mode          pb.GameMode
+	Roles         []*role.Role
+	Map           *SceneMap
+	curFrameIndex uint32
 }
 
 type RoomMgr struct {
@@ -46,8 +46,9 @@ func EnterRoom(a gate.Agent, mode pb.GameMode, mapId int32, roleId int32) {
 		return
 	}
 	enterRoom := reqRoom()
-	log.Debug("Player[%v] enter room[%v].", playerInfo.OID, enterRoom)
-	_, ok := mgrRoom.rooms[enterRoom]
+	playerInfo.RoomID = enterRoom
+	log.Debug("Player[%v] enter room[%v].", playerInfo.OID, playerInfo.RoomID)
+	_, ok = mgrRoom.rooms[enterRoom]
 	if !ok {
 		mgrRoom.rooms[enterRoom] = &RoomData{}
 		mgrRoom.rooms[enterRoom].roomId = enterRoom
@@ -62,8 +63,8 @@ func EnterRoom(a gate.Agent, mode pb.GameMode, mapId int32, roleId int32) {
 		mgrRoom.rooms[enterRoom].Map = &SceneMap{}
 		mgrRoom.rooms[enterRoom].Map.createScene(mapId)
 		mgrRoom.rooms[enterRoom].sendRoomBattleStart(mode, mapId, roleId)
-		mgrRoom.rooms[enterRoom].sync = &FrameSync{}
-		mgrRoom.rooms[enterRoom].sync.start(mgrRoom.rooms[enterRoom])
+		//Frame sync start
+		mgrRoom.rooms[enterRoom].syncStart()
 	}
 }
 
@@ -81,20 +82,20 @@ func (roomData *RoomData) prepareBornInfo() []*pb.BornInfo {
 	for i := 0; i < len(roomData.Roles); i++ {
 		curPlayer := roomData.Roles[i]
 		info := &pb.BornInfo{}
-		info.OID = proto.Uint32(role.PlayerMap[a].OID)
-		info.NickName = proto.String(role.PlayerMap[a].NickName)
+		info.OID = proto.Uint32(role.PlayerMap[curPlayer.A].OID)
+		info.NickName = proto.String(role.PlayerMap[curPlayer.A].NickName)
 		info.RoleID = proto.Int32(curPlayer.RoleType)
-		info.PosX = roomData.Map.BornPos[i][0]
-		info.PosY = roomData.Map.BornPos[i][1]
+		info.PosX = proto.Int32(int32(roomData.Map.BornPos[i][0]))
+		info.PosY = proto.Int32(int32(roomData.Map.BornPos[i][1]))
 		info.Attr = &pb.BaseAttr{}
-		info.Attr.Hp = 1000
+		info.Attr.Hp = proto.Uint32(1000)
 		list = append(list, info)
 	}
 	return list
 }
 
 func (roomData *RoomData) prepareExpInfo() []*pb.ExpCN {
-	list := make([]*pb.BornInfo, 0)
+	list := make([]*pb.ExpCN, 0)
 	for i := 0; i < len(roomData.Map.ExpPos); i++ {
 		pos := &pb.ExpCN{}
 		pos.Status = proto.Uint32(0)
@@ -106,12 +107,12 @@ func (roomData *RoomData) prepareExpInfo() []*pb.ExpCN {
 }
 
 func (roomData *RoomData) prepareBuffInfo() []*pb.BuffCN {
-	list := make([]*pb.BornInfo, 0)
+	list := make([]*pb.BuffCN, 0)
 	for i := 0; i < len(roomData.Map.BuffPos); i++ {
 		pos := &pb.BuffCN{}
 		pos.Status = proto.Uint32(0)
-		pos.PosX = proto.Uint32(roomData.Map.BuffCN[i][0])
-		pos.PosY = proto.Uint32(roomData.Map.BuffCN[i][1])
+		pos.PosX = proto.Uint32(roomData.Map.BuffPos[i][0])
+		pos.PosY = proto.Uint32(roomData.Map.BuffPos[i][1])
 		list = append(list, pos)
 	}
 	return list
@@ -120,18 +121,16 @@ func (roomData *RoomData) prepareBuffInfo() []*pb.BuffCN {
 func addRoleToRoom(roomId string, roleId int32, a gate.Agent) {
 	player := &role.Role{}
 	player.A = a
-	player.Name = role.PlayerMap[a].NickName
 	player.RoleType = roleId
-	player.InitAttr()
-	player.RoomId = roomId
+	player.FrameMap = make(map[uint32]*pb.FrameData)
 	mgrRoom.lock.Lock()
-	mgrRoom.rooms[roomId] = append(mgrRoom.rooms[roomId], player)
+	mgrRoom.rooms[roomId].Roles = append(mgrRoom.rooms[roomId].Roles, player)
 	mgrRoom.lock.Unlock()
 }
 
 func reqRoom() string {
-	for roomId, roleList := range mgrRoom.rooms {
-		count := len(roleList)
+	for roomId, roomData := range mgrRoom.rooms {
+		count := len(roomData.Roles)
 		if count < ROOM_MEMBER_COUNT {
 			return roomId
 		}

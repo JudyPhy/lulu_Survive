@@ -7,12 +7,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 
-public class FramePacket
-{
-    public long frameIndex;
-    public Dictionary<uint, Role> roleDatas = new Dictionary<uint, Role>();   //pos、rotate、buff
-}
-
 public class FrameSync
 {
     private static FrameSync instance;
@@ -33,30 +27,26 @@ public class FrameSync
     //当前锁定帧
     public long LockFrameIndex;
     //当前客户端帧号
-    public long ClientFrameIndex = 0;
+    public uint ClientFrameIndex = 0;
     //下一个客户端帧的帧率
     public float NextFrameTimes = 1;
-    //接收到的服务器帧队列
-    public List<FramePacket> FrameList = new List<FramePacket>();
     
 
     public void ResetFrame()
     {
-        ClientFrameIndex = 0;
-        FrameList.Clear();
+        ClientFrameIndex = 0;        
     }
 
-    public void RecvSyncPkg(pb.GSSyncPkgSend msg)
+    public void RecvSyncPkg(pb.GS2CSyncPkg msg)
     {
-        FramePacket pkg = new FramePacket();
-        pkg.frameIndex = msg.Act;
-        for (int i = 0; i < msg.Role.Count; i++)
+        for (int i = 0; i < msg.RoleList.Count; i++)
         {
-            Role role = new Role();
-            role.UpdateFrameInfo(msg.Role[i]);
-            pkg.roleDatas.Add(msg.Role[i].PlayerID, role);
+            uint plaierOid = msg.RoleList[i].PlayerID;
+            if (BattleManager.Instance.Players.ContainsKey(plaierOid))
+            {
+                BattleManager.Instance.Players[plaierOid].UpdateFrameInfo(msg.RoleList[i].FrameList);
+            }            
         }
-        FrameList.Add(pkg);
         LockFrameIndex = msg.Act;
         if (ClientFrameIndex == 0)
         {
@@ -72,7 +62,7 @@ public class FrameSync
         }
         else if (ClientFrameIndex < LockFrameIndex)
         {
-            NextFrameTimes = FrameList.Count;
+            NextFrameTimes = (LockFrameIndex - ClientFrameIndex);
             if (NextFrameTimes == 0)
             {
                 Debug.LogError("Fatal! ClientFrameIndex < LockFrameIndex, but FrameList.Count=0.");
@@ -81,4 +71,16 @@ public class FrameSync
         }
         Debug.Log("NextFrameTimes:" + NextFrameTimes);
     }
+
+    public void SendCurProcData(uint index)
+    {
+        pb.FrameData data = new pb.FrameData();
+        data.Index = index;
+        data.Attr = Player.Instance.Attr.ToPbAttr();
+        data.Move = new pb.RoleMove();
+        data.Move.Rot = 0;
+        data.Move.Status = pb.MoveStatus.Run;
+        BattleMsgHandler.Instance.SendMsgC2GSSyncPkg(index, data);
+    }
+
 }

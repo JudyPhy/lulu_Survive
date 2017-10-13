@@ -28,6 +28,16 @@ public class BattleMsgHandler
         NetworkManager.Instance.SendToGS((UInt16)MsgDef.C2GSStartGame, msg);
     }
 
+    public void SendMsgC2GSSyncPkg(uint index,pb.FrameData procData)
+    {
+        pb.C2GSSyncPkg msg = new pb.C2GSSyncPkg();
+        msg.Act = index;
+        msg.ClientAct = index;
+        msg.ProcData = procData;
+        Debug.Log("C2GSSyncPkg ============>>>>>>>>>> act:" + msg.Act);
+        NetworkManager.Instance.SendToGS((UInt16)MsgDef.C2GSStartGame, msg);
+    }
+
     #endregion
 
 
@@ -40,6 +50,14 @@ public class BattleMsgHandler
         Debug.Log("GS2CStartGameRet ============>>>>>>>>>> mode:" + msg.Mode + ", mapId:" + msg.MapID +
             ", bornInfo:" + msg.Players.Count + ", expInfo:" + msg.Exp.Count + ", buffInfo:" + msg.Buff.Count);
         BattleManager.Instance.GameStart(msg);
+    }
+
+    public void RevMsgGS2CSyncPkg(int pid, byte[] msgBuf, int msgSize)
+    {
+        Stream stream = new MemoryStream(msgBuf);
+        pb.GS2CSyncPkg msg = ProtoBuf.Serializer.Deserialize<pb.GS2CSyncPkg>(stream);
+        Debug.Log("GS2CSyncPkg ============>>>>>>>>>> act:" + msg.Act + ", time:" + (System.DateTime.Now - new System.DateTime(1970, 1, 1, 8, 0, 0)).TotalMilliseconds);
+        FrameSync.Instance.RecvSyncPkg(msg);
     }
 
     #endregion

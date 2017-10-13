@@ -1,7 +1,9 @@
 package role
 
 import (
-	//"code.google.com/p/goprotobuf/proto"
+	"server/pb"
+
+	"code.google.com/p/goprotobuf/proto"
 	"github.com/name5566/leaf/gate"
 	//"github.com/name5566/leaf/log"
 )
@@ -12,14 +14,22 @@ type RoleAttr struct {
 
 type Role struct {
 	A        gate.Agent
-	Name     string
 	RoleType int32
-	Attr     *RoleAttr
-	RoomId   string
+	BornAttr *pb.BaseAttr
+	FrameMap map[uint32]*pb.FrameData
 }
 
 func (role *Role) InitAttr() {
-	attr := &RoleAttr{}
-	attr.Hp = 1000
-	role.Attr = attr
+	role.BornAttr = &pb.BaseAttr{}
+	role.BornAttr.Hp = proto.Uint32(1000)
+}
+
+func (attr *RoleAttr) ToPbData() *pb.BaseAttr {
+	pbData := &pb.BaseAttr{}
+	pbData.Hp = proto.Uint32(attr.Hp)
+	return pbData
+}
+
+func (attr *RoleAttr) Update(pbData *pb.BaseAttr) {
+	attr.Hp = pbData.GetHp()
 }

@@ -8,8 +8,15 @@ public class Panel_Map : WindowsBasePanel
 
     public override void OnAwake()
     {
-        base.OnAwake();
-                
+        base.OnAwake();        
+    }
+
+    public override void OnStart()
+    {
+        base.OnStart();
+
+        BattleMsgHandler.Instance.SendMsgC2GSStartGame(pb.GameMode.Single, 1, 1);
+        UIManager.Instance.ShowMainWindow<Panel_Loading>(eWindowsID.LoadingUI);
     }
 
     public override void OnRegisterEvent()

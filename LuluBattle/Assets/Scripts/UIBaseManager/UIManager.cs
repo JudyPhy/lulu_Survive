@@ -27,6 +27,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowMainWindow<T>(eWindowsID windowId) where T : WindowsBasePanel
     {
+        //Debug.Log("ShowMainWindow[" + windowId.ToString() + "]");
         this.IsShowingWindow_ = true;
         if (this.CurShowingWindow_ != null)
         {
@@ -65,6 +66,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseMainWindow(eWindowsID windowId)
     {
+        //Debug.Log("CloseMainWindow[" + windowId.ToString() + "]");
         if (this.CurShowingWindow_ == null)
         {
             Debug.LogError("当前没有显示的窗口，严重bug!!!!!!!");

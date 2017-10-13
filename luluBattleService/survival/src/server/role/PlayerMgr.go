@@ -12,6 +12,7 @@ type PlayerInfo struct {
 	OID      uint32
 	NickName string
 	HeadIcon string
+	RoomID   string
 }
 
 var PlayerMap map[gate.Agent]*PlayerInfo
@@ -37,6 +38,7 @@ func PlayerLogin(a gate.Agent, account string, password string) (pb.ErrorCode, *
 		player.OID = 1000
 		player.NickName = ""
 		player.HeadIcon = ""
+		player.RoomID = ""
 		PlayerMap[a] = player
 		return pb.ErrorCode_SUCCESS, nil
 	}

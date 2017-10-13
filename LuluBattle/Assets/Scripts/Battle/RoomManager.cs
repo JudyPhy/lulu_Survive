@@ -23,40 +23,40 @@ public class RoomManager : MonoBehaviour
 
     private void Start()
     {
-        //_selfRole.Born();
+        CreatePlayers();
+    }
+
+    private void CreatePlayers()
+    {
+        List<Role> roles = BattleManager.Instance.GetPlayersData();
+        for (int i = 0; i < roles.Count; i++)
+        {
+            if (roles[i].OID == Player.Instance.OID)
+            {
+                _selfRole.Born(roles[i].BornPos);
+            }
+            else
+            {
+
+            }
+            Debug.Log("Create player" + roles[i].Nickname + " over.");
+        }
     }
 
     private void Update()
     {
+        //客户端收到第一帧信息后才开始正式渲染，启动客户端第一帧
         if (FrameSync.Instance.ClientFrameIndex > 0 && DisplayFrame() && FrameSync.Instance.LockFrameIndex > 0)
         {            
             Debug.Log("ClientFrameIndex:" + FrameSync.Instance.ClientFrameIndex + ", LockFrameIndex:" + FrameSync.Instance.LockFrameIndex);
             FrameSync.Instance.UpdateNextFrameTimes();
-            if (FrameSync.Instance.FrameList.Count > 0)
+            foreach (Role role in BattleManager.Instance.Players.Values)
             {
-                FramePacket curFrameData = FrameSync.Instance.FrameList[0];
-                //Debug.Log("FrameList[0]:" + curFrameData.frameIndex +
-                //    ", FrameList[max]:" + FrameSync.Instance.FrameList[FrameSync.Instance.FrameList.Count - 1].frameIndex);
-                if (curFrameData.frameIndex <= FrameSync.Instance.ClientFrameIndex)
-                {
-                    Debug.Log("Refresh cur frame ui...");
-                    FrameSync.Instance.FrameList.RemoveAt(0);
-                    RefreshCurFrameUI(curFrameData);
-                }
+                Debug.Log("Refresh player " + role.OID);
+                role.RemoveFrame(FrameSync.Instance.ClientFrameIndex);
             }
+            FrameSync.Instance.SendCurProcData(FrameSync.Instance.ClientFrameIndex);
             FrameSync.Instance.ClientFrameIndex++;
-        }
-    }
-
-    private void RefreshCurFrameUI(FramePacket data)
-    {
-        //Debug.Log("RefreshCurFrameUI roleCount:" + data.roleDatas.Count);
-        foreach (uint playerId in data.roleDatas.Keys)
-        {
-            if (BattleManager.Instance.RoomPlayersInfo.ContainsKey(playerId))
-            {
-                BattleManager.Instance.RoomPlayersInfo[playerId].UpdateCurInfo(data.roleDatas[playerId]);
-            }
         }
     }
 

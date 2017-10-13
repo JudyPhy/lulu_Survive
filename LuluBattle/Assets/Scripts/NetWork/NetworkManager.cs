@@ -73,8 +73,8 @@ public class NetworkManager : MonoBehaviour
     {
         RegisterMessageHandler((int)MsgDef.GS2CLoginRet, LoginMsgHandler.Instance.RevMsgGS2CLoginRet);
         RegisterMessageHandler((int)MsgDef.GS2CChooseRoleRet, LoginMsgHandler.Instance.RevMsgGS2CChooseRoleRet);
-        RegisterMessageHandler((int)MsgDef.C2GSStartGame, BattleMsgHandler.Instance.RevMsgGS2CStartGameRet);
-        RegisterMessageHandler((int)MsgDef.GSSyncPkgSend, FrameSyncHandler.Instance.RevMsgGSSyncPkgSend);
+        RegisterMessageHandler((int)MsgDef.GS2CStartGameRet, BattleMsgHandler.Instance.RevMsgGS2CStartGameRet);
+        RegisterMessageHandler((int)MsgDef.GS2CSyncPkg, BattleMsgHandler.Instance.RevMsgGS2CSyncPkg);
     }
 
     private void RegisterMessageHandler(int pid, PacketHandle hander)
@@ -206,6 +206,10 @@ public class NetworkManager : MonoBehaviour
     {
         if (null == this.GameServerTcpConnect_ || !this.GameServerTcpConnect_.IsConnected())
         {
+            if (!this.GameServerTcpConnect_.IsConnected())
+            {
+                Debug.LogError("111111");
+            }
             Debug.LogError(string.Format("游戏服务器连接断开，不能发送消息[msgid:{0}]", id));
             return false;
         }

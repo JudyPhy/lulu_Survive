@@ -24,12 +24,28 @@ public class Role
     private RoleAttr _attr;
     public RoleAttr Attr { get { return _attr; } }
 
-    public void UpdateFrameInfo(pb.FrameRoleData info)
+    private Dictionary<uint, pb.FrameData> _frameList = new Dictionary<uint, pb.FrameData>();
+
+    public void InitAttr(pb.BaseAttr attr)
     {
-        OID = info.PlayerID;
-        _hp = info.Hp;
-        _moveStatus = info.Move.Status;
-        _rot = info.Move.Rot;
+        _attr = new RoleAttr();
+        _attr.InitAttr(attr);
+    }
+
+    public void UpdateFrameInfo(List<pb.FrameData> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (!_frameList.ContainsKey(list[i].Index))
+            {
+                _frameList.Add(list[i].Index, list[i]);
+            }
+        }
+    }
+
+    public void RemoveFrame(uint index)
+    {
+        _frameList.Remove(index);
     }
 
 }
@@ -42,5 +58,12 @@ public class RoleAttr
     public void InitAttr(pb.BaseAttr attr)
     {
         _hp = attr.Hp;
+    }
+
+    public pb.BaseAttr ToPbAttr()
+    {
+        pb.BaseAttr attr = new pb.BaseAttr();
+        attr.Hp = _hp;
+        return attr;
     }
 }

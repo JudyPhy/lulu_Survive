@@ -11,5 +11,10 @@ public class SelfRole : MonoBehaviour
 
     }
 
+    public void Born(Vector2 pos)
+    {
+        Debug.Log("Self born pos:" + pos.x + "," + pos.y);
+        
+    }
 
 }

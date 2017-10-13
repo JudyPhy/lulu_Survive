@@ -75,12 +75,18 @@ public class BattleManager
                 role.Nickname = info.NickName;
             }
             role.RoleType = info.RoleID;
-            role.Attr.InitAttr(info.Attr);
+            role.InitAttr(info.Attr);
             role.BornPos = new Vector2(info.PosX, info.PosY);
             Players.Add(role.OID, role);
         }
 
         _process = BattleProcess.Start;
     }
+
+    public List<Role> GetPlayersData()
+    {
+        return new List<Role>(_players.Values);
+    }
+
 
 }

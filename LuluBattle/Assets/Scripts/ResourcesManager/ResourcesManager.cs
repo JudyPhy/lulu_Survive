@@ -14,11 +14,12 @@ public class ResourcesManager {
         }
     }
 
-    public static string GetCsvConfigFilePath(string csvName) {
-        string path = Application.persistentDataPath + "/lulu/CSVConfig/" + csvName + ".csv";
-        if (!File.Exists(path)) {
-            path = Application.streamingAssetsPath + "/CSVConfig/" + csvName + ".csv";
-        }
+    public static string GetCsvConfigFilePath(string csvName)
+    {
+        //string path = Application.persistentDataPath + "/lulu/CSVConfig/" + csvName + ".csv";
+        //if (!File.Exists(path)) {
+        string path = Application.streamingAssetsPath + "/csv/" + csvName + ".csv";
+        //}
         return path;
     }
 

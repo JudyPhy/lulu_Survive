@@ -5,9 +5,7 @@ import (
 	"server/msgSendHandler"
 	"server/pb"
 	"server/role"
-	"server/room"
 
-	"code.google.com/p/goprotobuf/proto"
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 )
