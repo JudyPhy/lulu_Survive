@@ -31,7 +31,7 @@ func recvC2GSStartGame(args []interface{}) {
 func recvC2GSSyncPkg(args []interface{}) {
 	m := args[0].(*pb.C2GSSyncPkg)
 	a := args[1].(gate.Agent)
-	log.Debug("C2GSStartGame <<<<<<======== clientAct=%v, serviceAct=%v", m.GetClientAct(), m.GetAct())
+	log.Debug("C2GSSyncPkg <<<<<<======== clientAct=%v, serviceAct=%v", m.GetClientAct(), m.GetAct())
 	if m.GetClientAct() != 0 {
 		room.AddNewFrameData(a, m)
 	}

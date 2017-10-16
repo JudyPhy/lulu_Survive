@@ -40,7 +40,7 @@ func RemoveShownedFrameData(a gate.Agent, index uint32) {
 	roomData := mgrRoom.rooms[roomId]
 
 	curPlayer := roomData.getRoleData(a)
-	delete(curPlayer.FrameMap, index)
+	curPlayer.RemoveProcedFrame(index)
 }
 
 func (roomData *RoomData) syncStart() {
@@ -82,7 +82,7 @@ func (roomData *RoomData) getFrameData(index uint32) []*pb.SyncRoleData {
 				frameList = append(frameList, data)
 			}
 		}
-		log.Debug("player[%v] send frameList[%v] to client.", roleData.GetPlayerID(), len(frameList))
+		//log.Debug("player[%v] send frameList[%v] to client.", roleData.GetPlayerID(), len(frameList))
 		roleData.FrameList = frameList
 		list = append(list, roleData)
 	}
