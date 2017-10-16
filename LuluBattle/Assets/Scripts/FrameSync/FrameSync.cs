@@ -62,12 +62,7 @@ public class FrameSync
         }
         else if (ClientFrameIndex < LockFrameIndex)
         {
-            NextFrameTimes = (LockFrameIndex - ClientFrameIndex);
-            if (NextFrameTimes == 0)
-            {
-                Debug.LogError("Fatal! ClientFrameIndex < LockFrameIndex, but FrameList.Count=0.");
-                NextFrameTimes = 1;
-            }
+            NextFrameTimes = LockFrameIndex - ClientFrameIndex + 1;
         }
         Debug.Log("NextFrameTimes:" + NextFrameTimes);
     }

@@ -26,6 +26,7 @@ public sealed class TcpNetworkProcessor
     private string IPAddr_;
     private ushort Port_;
     private int BufferMaxSize = 65535;      //接收/发送缓冲区容量上限(64kb)
+    private bool _sendThreadStop = false;
     //收发线程
     private Thread SendThread_;
     private Thread RecvThread_;
@@ -55,6 +56,7 @@ public sealed class TcpNetworkProcessor
         this.SendThread_.IsBackground = true;
         if (!this.SendThread_.IsAlive)
         {
+            _sendThreadStop = false;
             this.SendThread_.Start();
         }
     }
@@ -64,6 +66,10 @@ public sealed class TcpNetworkProcessor
     {
         while (true)
         {
+            if (_sendThreadStop)
+            {
+                break;
+            }
             DoSend();
             Thread.Sleep(20);
         }
@@ -83,11 +89,11 @@ public sealed class TcpNetworkProcessor
     }
 
     private void DoSend()
-    {
+    {        
         if (!this.IsConnected())
-        {
+        {           
             return;
-        }
+        }        
         if (this.SendQueue_.Count > 100)
         {
             Debug.LogError(string.Format("{0}:{1} 积压的消息包过多！", this.IPAddr_, this.Port_));
@@ -269,10 +275,12 @@ public sealed class TcpNetworkProcessor
                     this.NativeSocket_ = null;
                 }
                 this.RecvThread_ = null;
+                _sendThreadStop = true;
             }
             catch
             {
                 this.RecvThread_ = null;
+                _sendThreadStop = true;
                 this.NativeSocket_ = null;
             }
             this.SocketState_ = e_SocketState.SCK_CLOSED;

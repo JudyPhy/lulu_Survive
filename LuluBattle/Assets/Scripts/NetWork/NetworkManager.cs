@@ -205,11 +205,7 @@ public class NetworkManager : MonoBehaviour
     public bool SendToGS(UInt16 id, System.Object msg)
     {
         if (null == this.GameServerTcpConnect_ || !this.GameServerTcpConnect_.IsConnected())
-        {
-            if (!this.GameServerTcpConnect_.IsConnected())
-            {
-                Debug.LogError("111111");
-            }
+        {                
             Debug.LogError(string.Format("游戏服务器连接断开，不能发送消息[msgid:{0}]", id));
             return false;
         }

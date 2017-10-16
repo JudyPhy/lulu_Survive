@@ -47,7 +47,7 @@ public class RoomManager : MonoBehaviour
     {
         //客户端收到第一帧信息后才开始正式渲染，启动客户端第一帧
         if (FrameSync.Instance.ClientFrameIndex > 0 && DisplayFrame() && FrameSync.Instance.LockFrameIndex > 0)
-        {            
+        {
             Debug.Log("ClientFrameIndex:" + FrameSync.Instance.ClientFrameIndex + ", LockFrameIndex:" + FrameSync.Instance.LockFrameIndex);
             FrameSync.Instance.UpdateNextFrameTimes();
             foreach (Role role in BattleManager.Instance.Players.Values)

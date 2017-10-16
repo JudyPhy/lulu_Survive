@@ -47,7 +47,7 @@ public class LoginMsgHandler  {
     {
         Stream stream = new MemoryStream(msgBuf);
         pb.GS2CLoginRet msg = ProtoBuf.Serializer.Deserialize<pb.GS2CLoginRet>(stream);
-        Debug.Log("GS2CLoginRet ============>>>>>>>>>> errorCode:" + msg.errorCode.ToString());
+        Debug.Log("GS2CLoginRet <<<<<<<<<<============ errorCode:" + msg.errorCode.ToString());
         switch (msg.errorCode)
         {
             case pb.ErrorCode.SUCCESS:
@@ -78,7 +78,7 @@ public class LoginMsgHandler  {
     {
         Stream stream = new MemoryStream(msgBuf);
         pb.GS2CChooseRoleRet msg = ProtoBuf.Serializer.Deserialize<pb.GS2CChooseRoleRet>(stream);
-        Debug.Log("GS2CChooseRoleRet ============>>>>>>>>>> errorCode:" + msg.errorCode.ToString());
+        Debug.Log("GS2CChooseRoleRet <<<<<<<<<<============ errorCode:" + msg.errorCode.ToString());
         switch (msg.errorCode)
         {
             case pb.ErrorCode.SUCCESS:
