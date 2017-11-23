@@ -1,0 +1,4 @@
+﻿怪物ID,怪物名称,描述,生命,攻击,防御,技能
+int32,string,string,int32,int32,int32,int32
+ID,Name,Describe,HP,Atk,Def,Skill
+1001,烟雨庄老奶奶,一个婊子,100,100,100,10011

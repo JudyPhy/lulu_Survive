@@ -1,0 +1,4 @@
+﻿ID,道具1,数量1,道具2,数量2,道具3,数量3,道具4,数量4,道具5,数量5
+int32,int32,int32,int32,int32,int32,int32,int32,int32,int32,int32
+ID,Item1,Num1,Item2,Num2,Item3,Num3,Item4,Num4,Item5,Num5
+1001,1001,1,1001,1,1001,1,1001,1,1001,1

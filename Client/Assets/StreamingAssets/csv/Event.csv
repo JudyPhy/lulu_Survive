@@ -1,0 +1,4 @@
+﻿事件ID,事件名称,事件描述,结果1,奖励1,结果2,奖励2
+int32,string,string,string,int32,string,int32
+ID,Name,Describe,Result1,Reward1,Result2,Reward1
+1001,烟雨庄老奶奶,你匆匆忙忙的碰倒了一个老奶奶。是否要弄死她,弄死！,10011,弄残！,10012
