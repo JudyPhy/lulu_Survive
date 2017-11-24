@@ -1,149 +1,65 @@
-﻿//using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using FairyGUI;
+using System.IO;
 
-//public class UIManager : MonoBehaviour
-//{
-//    public static UIManager Instance;
-//    //UI摄像机
-//    public static Camera UICamera_;
-//    //Center Root
-//    private GameObject _centerRoot;
-//    //当前显示窗口
-//    private WindowsBasePanel CurShowingWindow_;
-//    private bool IsShowingWindow_ = false;
-//    //等待删除的窗口
-//    public Dictionary<eWindowsID, WindowsBasePanel> DeletingWindowsDict_ = new Dictionary<eWindowsID, WindowsBasePanel>();
-//    //当前提示窗口
-//    private Panel_Tips _curTipsWindow;
+public class UIManager : MonoBehaviour
+{
+    public static UIManager Instance;
 
-//    void Awake()
-//    {
-//        Instance = this;
-//        DontDestroyOnLoad(this.gameObject);
-//        UICamera_ = this.transform.FindChild("Camera").GetComponent<Camera>();
-//        _centerRoot = UICamera_.transform.FindChild("CenterAnchor").gameObject;
-//    }
+    private GComponent _mainView;
+    private DialogWindow _mDialogWindow;
 
-//    public void ShowMainWindow<T>(eWindowsID windowId) where T : WindowsBasePanel
-//    {
-//        //Debug.Log("ShowMainWindow[" + windowId.ToString() + "]");
-//        this.IsShowingWindow_ = true;
-//        if (this.CurShowingWindow_ != null)
-//        {
-//            if (this.CurShowingWindow_.WindowID == windowId)
-//            {
-//                this.IsShowingWindow_ = false;
-//                return;
-//            }
-//            else
-//            {
-//                CloseMainWindow(this.CurShowingWindow_.WindowID);
-//            }
-//        }
-//        if (this.DeletingWindowsDict_.ContainsKey(windowId))
-//        {
-//            this.CurShowingWindow_ = this.DeletingWindowsDict_[windowId];
-//            this.CurShowingWindow_.gameObject.SetActive(true);
-//            this.DeletingWindowsDict_.Remove(windowId);
-//        }
-//        else
-//        {
-//            T windowScript = AddChild<T>(_centerRoot);
-//            if (windowScript != null)
-//            {
-//                windowScript.gameObject.SetActive(true);
-//                windowScript.WindowID = windowId;
-//                this.CurShowingWindow_ = windowScript;
-//            }
-//            else
-//            {
-//                Debug.LogError("窗口[" + windowId.ToString() + "] 创建失败，请检查预制路径或实例化是否成功。");
-//            }
-//        }
-//        this.IsShowingWindow_ = false;
-//    }
+    void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
 
-//    public void CloseMainWindow(eWindowsID windowId)
-//    {
-//        //Debug.Log("CloseMainWindow[" + windowId.ToString() + "]");
-//        if (this.CurShowingWindow_ == null)
-//        {
-//            Debug.LogError("当前没有显示的窗口，严重bug!!!!!!!");
-//            return;
-//        }
-//        if (this.CurShowingWindow_.WindowID != windowId)
-//        {
-//            Debug.LogError("当前显示的窗口 [" + this.CurShowingWindow_.WindowID + "] 与想要关闭的窗口 [" + windowId + "] 不一致。");
-//            return;
-//        }
-//        this.CurShowingWindow_.CloseWindow();
-//        this.DeletingWindowsDict_.Add(windowId, this.CurShowingWindow_);
-//    }
+        UIConfig.defaultFont = "Microsoft YaHei";
 
-//    public void ShowTips(TipsType type, params object[] args)
-//    {
-//        if (_curTipsWindow == null)
-//        {
-//            _curTipsWindow = AddChild<Panel_Tips>(_centerRoot);
-//        }
-//        switch (type)
-//        {
-//            case TipsType.text:
-//                _curTipsWindow.ShowTextTips((string)args[0]);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+        UIPackage.AddPackage("UI/survival");
 
-//    private void Update()
-//    {
-//        if (!this.IsShowingWindow_)
-//        {
-//            foreach (eWindowsID id in this.DeletingWindowsDict_.Keys)
-//            {
-//                System.DateTime now = System.DateTime.Now;
-//                if ((now - this.DeletingWindowsDict_[id].CloseTime_).TotalMilliseconds > 10000)
-//                {
-//                    GameObject obj = this.DeletingWindowsDict_[id].gameObject;
-//                    this.DeletingWindowsDict_.Remove(id);
-//                    DestroyImmediate(obj);
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//    public static T AddChild<T>(GameObject parent)
-//    {
-//        string prefabName = typeof(T).Name;
-//        string prefabPath = ResourcesManager.Instance.GetResPath(prefabName);
-//        GameObject obj = ResourcesManager.Instance.GetUIPrefabs(prefabPath);
-//        if (obj != null)
-//        {
-//            obj.AddComponent(typeof(T));
-//            AddGameObject(parent, obj);
-//            return obj.GetComponent<T>();
-//        }
-//        return default(T);
-//    }
+        //UIConfig.verticalScrollBar = "ui://Basics/ScrollBar_VT";
+        //UIConfig.horizontalScrollBar = "ui://Basics/ScrollBar_HZ";
+        //UIConfig.popupMenu = "ui://Basics/PopupMenu";
+        //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");
+    }
 
-//    private static void AddGameObject(GameObject parentObj, GameObject obj)
-//    {
-//        obj.transform.parent = parentObj.transform;
-//        obj.transform.localEulerAngles = Vector3.zero;
-//        obj.transform.localPosition = Vector3.zero;
-//        obj.transform.localScale = Vector3.one;
-//    }
+    void Start()
+    {
+        Application.targetFrameRate = 60;
 
-//    public static GameObject AddGameObject(string prefabPath, GameObject parent)
-//    {
-//        GameObject obj = ResourcesManager.Instance.GetUIPrefabs(prefabPath);
-//        if (obj != null)
-//        {
-//            AddGameObject(parent, obj);
-//        }
-//        return obj;
-//    }
+        _mainView = this.GetComponent<UIPanel>().ui;
 
-//}
+        if (GameSaved.IsFileExists())
+        {
+            Process.Instance.ReqHistoryData();
+        }
+        else
+        {
+            Process.Instance.StartGame();
+        }
+
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        PlayDialog();        
+    }
+
+    private void PlayDialog()
+    {
+        Process.Instance.LoadDialog();
+        if (Process.Instance.CurDialog.Count > 0)
+        {
+            _mDialogWindow = new DialogWindow();
+        }
+    }
+
+    private void Update()
+    {
+    }
+
+}

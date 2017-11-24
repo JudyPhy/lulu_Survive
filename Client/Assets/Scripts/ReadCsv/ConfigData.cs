@@ -6,6 +6,8 @@ public class ConfigData {
 
     //Map
     public Dictionary<int, ConfigMap> CfgMap = new Dictionary<int, ConfigMap>();
+    //Story
+    public Dictionary<int, ConfigStory> CfgStory = new Dictionary<int, ConfigStory>();
     //Event
     public Dictionary<int, ConfigEvent> CfgEvent = new Dictionary<int, ConfigEvent>();
     //EventPackage
@@ -17,10 +19,17 @@ public class ConfigData {
 
     public void LoadConfigs() {
         //Map
-        ReadCsv config = new ReadCsv("Map");
+        ReadCsv config = new ReadCsv("Scene");
         for (int i = 3; i < config.GetRow(); i++) {
             ConfigMap data = new ConfigMap(config, i);
-            this.CfgMap.Add(data._id, data);
+            this.CfgMap.Add(data._id, data);        }
+
+        //Story
+        config = new ReadCsv("Story");
+        for (int i = 3; i < config.GetRow(); i++)
+        {
+            ConfigStory data = new ConfigStory(config, i);
+            this.CfgStory.Add(data._id, data);
         }
 
         //Event
@@ -76,6 +85,23 @@ public class ConfigMap
     }
 }
 
+public class ConfigStory
+{
+    public int _id;
+    public string _desc;
+    public int _sceneId;
+    public int _condition;
+
+    public ConfigStory(ReadCsv config, int row)
+    {
+        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _desc = config.GetDataByRowAndName(row, "Describe");
+        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _condition = int.Parse(config.GetDataByRowAndName(row, "Condition"));
+    }
+}
+
+
 public class ConfigEvent
 {
     public int _id;
@@ -101,6 +127,7 @@ public class ConfigEvent
 public class ConfigEventPackage
 {
     public int _id;
+    public int _packId;
     public string _name;
     public string _desc;
     public string _result1;
@@ -111,6 +138,7 @@ public class ConfigEventPackage
     public ConfigEventPackage(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _packId = int.Parse(config.GetDataByRowAndName(row, "PackID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
         _result1 = config.GetDataByRowAndName(row, "Result1");
