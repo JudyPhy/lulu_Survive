@@ -1,5 +1,5 @@
-﻿事件包ID,类型,事件ID,条件,权重
-int32,int32,int32,int32,int32
-ID,Type,Event,Condition,Weight
-1001,1,1001,1001,100
-1001,2,2001,1001,100
+﻿ID,事件包ID,类型,事件ID,条件,权重
+int32,int32,int32,int32,int32,int32
+ID,PackID,Type,Event,Condition,Weight
+1,1001,1,1001,1001,100
+2,1001,2,2001,1001,100
