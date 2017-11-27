@@ -131,6 +131,45 @@ public class Process
         }
     }
 
+    public void MoveTowards()
+    {
+        if (_player.Energy >= 10)
+        {
+            _player.Energy -= 10;
+            UIManager.Instance.mMainWindow.UpdateEnergy();
+
+            _player.Hungry -= 20;
+            if (_player.Hungry < 0)
+            {
+                _player.Hungry = 0; 
+                _player.Healthy--;
+                UIManager.Instance.mMainWindow.UpdateHealthy();
+                if (_player.Healthy <= 0)
+                {
+                    Debug.LogError("Game Over!");
+                    UIManager.Instance.mMainWindow.Hide();
+                    UIManager.Instance.mLoginWindow.Show();
+                    return;
+                }
+            }
+            UIManager.Instance.mMainWindow.UpdateHungry();
+
+            _distance--;
+            if (_distance <= 0)
+            {
+                Debug.Log("Switch to new scene.");
+                _curScene = _destination;
+                ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
+                _destination = data == null ? 0 : data._destination;
+                _distance = data == null ? 0 : data._distance;
+            }
+            UIManager.Instance.mMainWindow.UpdateScene();
+        }
+        else
+        {
+        }
+    }
+
 
 
 }

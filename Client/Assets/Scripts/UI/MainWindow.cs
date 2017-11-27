@@ -10,6 +10,8 @@ public class MainWindow : Window
     
     GTextField[] mTextValueInRect = new GTextField[6];
 
+
+
     GTextField mTextMoney;
     GButton mBtnNav;
 
@@ -19,23 +21,23 @@ public class MainWindow : Window
         this.Center();
         this.modal = true;
 
-        GList topList = this.contentPane.GetChild("titleList").asList;
-        if (topList != null)
+        GComponent top = this.contentPane.GetChild("titleList").asCom;
+        if (top != null)
         {
             for (int i = 0; i < mTextTop.Length; i++)
             {
-                GComponent item = topList.GetChild("item" + (i + 1).ToString()).asCom;
+                GComponent item = top.GetChild("title" + i.ToString()).asCom;
                 mTextTop[i] = item.GetChild("title").asTextField;
             }
         }
 
-        GList attrList = this.contentPane.GetChild("attbList").asList;
-        if (attrList != null)
+        GComponent attr = this.contentPane.GetChild("attbList").asCom;
+        if (attr != null)
         {
             for (int i = 0; i < mTextValueInRect.Length; i++)
             {
-                GComponent item = attrList.GetChild("attb" + (i + 1).ToString()).asCom;
-                mTextValueInRect[i] = item.GetChild("n2").asTextField;
+                GComponent item = attr.GetChild("attb" + i.ToString()).asCom;
+                mTextValueInRect[i] = item.GetChild("value").asTextField;
             }
         }
     }
@@ -57,10 +59,14 @@ public class MainWindow : Window
         Debug.Log("MainWindow shown");
         UpdateScene();
         UpdateHealthy();
+        UpdateEnergy();
+        UpdateHungry();
+        UpdateBattleAttr();
     }
 
     public void UpdateScene()
     {
+        Debug.Log("UpdateScene");
         ConfigMap curSceneData = ConfigManager.Instance.ReqMapData(Process.Instance.CurScene);
         if (curSceneData != null)
         {
@@ -69,23 +75,26 @@ public class MainWindow : Window
             if (destination != null)
             {
                 mTextTop[1].text = destination._name;
-            }
-            mTextTop[2].text = curSceneData._distance.ToString() + "km";
+            }         
         }
+        mTextTop[2].text = Process.Instance.Distance.ToString() + "km";
     }
 
     public void UpdateHealthy()
     {
+        Debug.Log("UpdateHealthy:" + Process.Instance.Player.Healthy);
         mTextValueInRect[0].text = Process.Instance.Player.Healthy.ToString();
     }
 
     public void UpdateEnergy()
     {
+        Debug.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
         mTextValueInRect[1].text = Process.Instance.Player.Energy.ToString();
     }
 
     public void UpdateHungry()
     {
+        Debug.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
         mTextValueInRect[2].text = Process.Instance.Player.Hungry.ToString();
     }
 

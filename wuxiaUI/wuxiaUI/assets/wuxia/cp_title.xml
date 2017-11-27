@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,86">
+  <displayList>
+    <image id="n0_12fam" name="n0" src="si38b" xy="0,0"/>
+    <component id="n1_12fam" name="title0" src="uto7w" xy="25,12"/>
+    <component id="n2_12fam" name="title1" src="uto7x" xy="295,12">
+      <Label icon="ui://lmcgaigtsi387"/>
+    </component>
+    <component id="n3_12fam" name="title2" src="uto7x" xy="495,12">
+      <Label icon="ui://lmcgaigtsi388"/>
+    </component>
+  </displayList>
+</component>

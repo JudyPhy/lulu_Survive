@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="lmcgaigt" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="si380" name="BG_horn.png" path="/img/"/>
+    <image id="si381" name="button1.png" path="/img/"/>
+    <image id="si382" name="button2.png" path="/img/"/>
+    <image id="si383" name="button3.png" path="/img/"/>
+    <image id="si384" name="button4.png" path="/img/"/>
+    <image id="si385" name="button5.png" path="/img/"/>
+    <image id="si386" name="mainUI_1.png" path="/img/"/>
+    <image id="si387" name="mainUI_2.png" path="/img/"/>
+    <image id="si388" name="mainUI_3.png" path="/img/"/>
+    <image id="si389" name="mainUI_4.png" path="/img/"/>
+    <image id="si38a" name="mainUI_5.png" path="/img/"/>
+    <image id="si38b" name="mainUI_6.png" path="/img/"/>
+    <image id="si38c" name="mainUI_7.png" path="/img/"/>
+    <component id="si38d" name="main.xml" path="/废弃/"/>
+    <component id="si38e" name="tiltle.xml" path="/废弃/"/>
+    <component id="si38f" name="playerinfo.xml" path="/废弃/"/>
+    <component id="si38h" name="btn_go.xml" path="/废弃/"/>
+    <component id="si38i" name="btn_aera.xml" path="/废弃/"/>
+    <component id="si38j" name="login.xml" path="/废弃/"/>
+    <component id="si38k" name="btn_start.xml" path="/废弃/"/>
+    <component id="si38l" name="story.xml" path="/废弃/"/>
+    <component id="si38m" name="battle.xml" path="/废弃/"/>
+    <component id="si38n" name="btn_fight.xml" path="/废弃/"/>
+    <image id="uto7o" name="title.png" path="/img/"/>
+    <component id="uto7p" name="bg_login.xml" path="/"/>
+    <component id="uto7q" name="btnBlack.xml" path="/素材/"/>
+    <component id="uto7r" name="btnWhite.xml" path="/素材/"/>
+    <component id="uto7s" name="btnContinue.xml" path="/素材/"/>
+    <component id="uto7t" name="btnChoose.xml" path="/素材/"/>
+    <component id="uto7u" name="UI_login.xml" path="/" exported="true"/>
+    <component id="uto7v" name="UI_main.xml" path="/" exported="true"/>
+    <component id="uto7w" name="lableTitleA.xml" path="/素材/"/>
+    <component id="uto7x" name="lableTiitleB.xml" path="/素材/"/>
+    <component id="uto7y" name="bg_main.xml" path="/"/>
+    <component id="uto7z" name="lableAttb.xml" path="/素材/"/>
+    <component id="uto710" name="fn_nomal.xml" path="/" exported="true"/>
+    <component id="12fam11" name="cp_attb.xml" path="/"/>
+    <component id="12fam12" name="cp_title.xml" path="/"/>
+    <component id="12fam13" name="cp_btns.xml" path="/"/>
+  </resources>
+  <publish name="wuxia"/>
+</packageDescription>

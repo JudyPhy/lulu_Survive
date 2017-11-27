@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,86">
+  <displayList>
+    <image id="n0_si38" name="n0" src="si38b" xy="0,0"/>
+    <image id="n1_si38" name="n1" src="si386" xy="6,12"/>
+    <text id="n2_si38" name="mapName" xy="74,20" size="77,51" font="微软雅黑" fontSize="36" color="#cccccc" bold="true" text="县城"/>
+    <text id="n3_si38" name="" xy="150,20" size="15,51" font="微软雅黑" fontSize="36" color="#cccccc" bold="true" text="."/>
+    <text id="n4_si38" name="gameDate" xy="164,20" size="107,51" font="微软雅黑" fontSize="36" color="#cccccc" bold="true" text="233天"/>
+    <image id="n5_si38" name="n5" src="si387" xy="275,12"/>
+    <text id="n6_si38" name="textJL" xy="327,20" size="154,51" font="微软雅黑" fontSize="36" color="#cccccc" bold="true" text="100/100"/>
+    <image id="n7_si38" name="n7" src="si388" xy="493,14"/>
+    <text id="n8_si38" name="textJL" xy="563,20" size="154,51" font="微软雅黑" fontSize="36" color="#cccccc" bold="true" text="200/100"/>
+  </displayList>
+</component>

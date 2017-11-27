@@ -1,0 +1,13 @@
+{
+	"codeGeneration":{
+		"classNamePrefix":"UI_",
+		"codePath":"",
+		"getMemberByName":false,
+		"ignoreNoname":false,
+		"memberNamePrefix":"m_",
+		"packageName":"wuxia"
+	},
+	"fileExtension":"",
+	"packageCount":2,
+	"path":"D:\\Project\\lulu_Survival\\Client\\Assets\\Resources"
+}

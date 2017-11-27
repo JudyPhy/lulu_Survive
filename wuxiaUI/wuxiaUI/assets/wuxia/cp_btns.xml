@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="659,290">
+  <displayList>
+    <component id="n0_12fam" name="btn0" src="uto7r" xy="0,0">
+      <Button title="商  店"/>
+    </component>
+    <component id="n1_12fam" name="btn1" src="uto7r" xy="227,0">
+      <Button title="挑  战"/>
+    </component>
+    <component id="n2_12fam" name="btn2" src="uto7r" xy="454,0">
+      <Button title="副  本"/>
+    </component>
+    <component id="n3_12fam" name="btn3" src="uto7r" xy="0,102">
+      <Button title="探  索"/>
+    </component>
+    <component id="n4_12fam" name="btn4" src="uto7r" xy="227,102">
+      <Button title="前  进"/>
+    </component>
+    <component id="n5_12fam" name="btn5" src="uto7r" xy="454,102">
+      <Button title="休  息"/>
+    </component>
+    <component id="n6_12fam" name="btn6" src="uto7r" xy="0,204">
+      <Button title="制  作"/>
+    </component>
+    <component id="n7_12fam" name="btn7" src="uto7r" xy="227,204">
+      <Button title="特  性"/>
+    </component>
+    <component id="n8_12fam" name="btn8" src="uto7r" xy="454,204">
+      <Button title="背  包"/>
+    </component>
+  </displayList>
+</component>

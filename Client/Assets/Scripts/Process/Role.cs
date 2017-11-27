@@ -6,13 +6,13 @@ public class Role
     public int ID { get { return _id; } }
     private int _id;
 
-    public int Healthy { get { return _healthy; } }
+    public int Healthy { set { _healthy = value; } get { return _healthy; } }
     private int _healthy;
 
-    public int Energy { get { return _energy; } }
+    public int Energy { set { _energy = value; } get { return _energy; } }
     private int _energy;
 
-    public int Hungry { get { return _hungry; } }
+    public int Hungry { set { _hungry = value; } get { return _hungry; } }
     private int _hungry;
 
     public int Hp { get { return _hp; } }
