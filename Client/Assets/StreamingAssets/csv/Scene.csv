@@ -1,4 +1,5 @@
-³¡¾°id,³¡¾°Ãû³Æ,³¡¾°ÃèÊö,³¡¾°ÊÂ¼ş°ü,³¡¾°¸±±¾,³¡¾°ÉÌµê
-int32,string,string,int32,int32,int32
-ID,Name,Describe,EventPackage,Stage,Shop
-1001,ÑÌÓê×¯,ÁúÃÃµÄ³öÉúµØ,1001,1001,1
+ï»¿åœºæ™¯id,åœºæ™¯åç§°,åœºæ™¯æè¿°,å»å¾€,è·ç¦»,åœºæ™¯äº‹ä»¶,åœºæ™¯å‰¯æœ¬,åœºæ™¯å•†åº—
+int32,string,string,int32,int32,int32,int32,int32
+ID,Name,Describe,Destination,Distance,EventPackage,Stage,Shop
+1001,çƒŸé›¨åº„,é¾™å¦¹çš„å‡ºç”Ÿåœ°,1002,99,1001,1001,1
+1002,çƒŸé›¨åº„,é¾™å¦¹çš„å‡ºç”Ÿåœ°,1003,200,1002,1002,2

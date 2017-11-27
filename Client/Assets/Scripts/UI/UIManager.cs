@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 
     private GComponent _mainView;
     private DialogWindow _mDialogWindow;
+    private MainWindow _mMainWindow;
 
     void Awake()
     {
@@ -18,12 +19,16 @@ public class UIManager : MonoBehaviour
 
         UIConfig.defaultFont = "Microsoft YaHei";
 
-        UIPackage.AddPackage("UI/survival");
+        UIPackage.AddPackage("wuxia");
+        ConfigManager.Instance.InitConfigs();
 
         //UIConfig.verticalScrollBar = "ui://Basics/ScrollBar_VT";
         //UIConfig.horizontalScrollBar = "ui://Basics/ScrollBar_HZ";
         //UIConfig.popupMenu = "ui://Basics/PopupMenu";
         //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");
+
+        _mDialogWindow = new DialogWindow();
+        _mMainWindow = new MainWindow();
     }
 
     void Start()
@@ -46,16 +51,25 @@ public class UIManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        PlayDialog();        
+        PlayDialog();
+        ShowMainUI();        
     }
 
     private void PlayDialog()
     {
+        Debug.Log("PlayDialog");
         Process.Instance.LoadDialog();
+        Debug.Log("current dialog lines count:" + Process.Instance.CurDialog.Count);
         if (Process.Instance.CurDialog.Count > 0)
         {
-            _mDialogWindow = new DialogWindow();
+            
         }
+    }
+
+    private void ShowMainUI()
+    {
+        Debug.Log("ShowMainUI");
+        _mMainWindow.Show();
     }
 
     private void Update()

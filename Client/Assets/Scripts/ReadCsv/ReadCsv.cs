@@ -9,6 +9,7 @@ public class ReadCsv {
 
     public ReadCsv(string csvName) {
         string filePath = ResourcesManager.GetCsvConfigFilePath(csvName);
+        Debug.Log("Read filePath:" + filePath);
         string[] lineOfArray = File.ReadAllLines(filePath);
         this.Array = new string[lineOfArray.Length][];
         for (int i = 0; i < lineOfArray.Length; i++) {

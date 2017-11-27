@@ -21,11 +21,23 @@ public class DialogWindow : Window
         mCurContextWordIndex = 0;
     }
 
-    private void PlayDialog()
+    override protected void DoShowAnimation()
+    {
+        this.SetScale(0.1f, 0.1f);
+        this.SetPivot(0.5f, 0.5f);
+        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
+    }
+
+    override protected void DoHideAnimation()
+    {
+        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+    }
+
+    protected override void OnShown()
     {
         if (mCurContextIndex < Process.Instance.CurDialog.Count)
         {
-            string context = Process.Instance.CurDialog[mCurContextIndex];            
+            string context = Process.Instance.CurDialog[mCurContextIndex];
             GLabel label = UIPackage.CreateObject("survival", "DialogLabel").asLabel;
             PlayLineAni(label, context);
             this.contentPane.AddChild(label);
@@ -40,15 +52,4 @@ public class DialogWindow : Window
         label.text = context;
     }
 
-    override protected void DoShowAnimation()
-    {
-        this.SetScale(0.1f, 0.1f);
-        this.SetPivot(0.5f, 0.5f);
-        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
-    }
-
-    override protected void DoHideAnimation()
-    {
-        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
-    }
 }

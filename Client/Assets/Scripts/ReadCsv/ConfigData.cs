@@ -74,6 +74,8 @@ public class ConfigMap
     public int _eventPack;
     public int _stage;
     public int _shop;
+    public int _destination;
+    public int _distance;
 
     public ConfigMap(ReadCsv config, int row) {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
@@ -82,6 +84,8 @@ public class ConfigMap
         _eventPack = int.Parse(config.GetDataByRowAndName(row, "EventPackage"));
         _stage = int.Parse(config.GetDataByRowAndName(row, "Stage"));
         _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
+        _destination = int.Parse(config.GetDataByRowAndName(row, "Destination"));
+        _distance = int.Parse(config.GetDataByRowAndName(row, "Distance"));
     }
 }
 
@@ -128,23 +132,19 @@ public class ConfigEventPackage
 {
     public int _id;
     public int _packId;
-    public string _name;
-    public string _desc;
-    public string _result1;
-    public string _result2;
-    public int _reward1;
-    public int _reward2;
+    public int _type;
+    public int _event;
+    public int _condition;
+    public int _weight;
 
     public ConfigEventPackage(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _packId = int.Parse(config.GetDataByRowAndName(row, "PackID"));
-        _name = config.GetDataByRowAndName(row, "Name");
-        _desc = config.GetDataByRowAndName(row, "Describe");
-        _result1 = config.GetDataByRowAndName(row, "Result1");
-        _result2 = config.GetDataByRowAndName(row, "Result2");
-        _reward1 = int.Parse(config.GetDataByRowAndName(row, "Reward1"));
-        _reward2 = int.Parse(config.GetDataByRowAndName(row, "Reward2"));
+        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
+        _event = int.Parse(config.GetDataByRowAndName(row, "Event"));
+        _condition = int.Parse(config.GetDataByRowAndName(row, "Condition"));
+        _weight = int.Parse(config.GetDataByRowAndName(row, "Weight"));
     }
 }
 
@@ -165,8 +165,8 @@ public class ConfigDrop
         for (int i = 0; i < 5; i++)
         {
             DropData data;
-            data._item = int.Parse(config.GetDataByRowAndName(row, "Item" + i.ToString()));
-            data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + i.ToString()));
+            data._item = int.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
+            data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
             _itemList.Add(data);
         }
     }

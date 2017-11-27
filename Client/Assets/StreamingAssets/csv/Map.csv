@@ -1,4 +1,0 @@
-﻿场景id,场景名称,场景描述,场景事件,场景副本,场景商店
-int32,string,string,int32,int32,int32
-ID,Name,Describe,EventPackage,Stage,Shop
-1001,烟雨庄,龙妹的出生地,1001,1001,1

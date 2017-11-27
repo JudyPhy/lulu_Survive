@@ -45,10 +45,10 @@ public class ConfigManager
                 list.Add(data);
             }
         }
-        return null;
+        return list;
     }
 
-    public List<ConfigEventPackage> GetEvents(int sceneId)
+    public List<ConfigEventPackage> ReqEvents(int sceneId)
     {
         List<ConfigEventPackage> list = new List<ConfigEventPackage>();
         if (configData.CfgMap.ContainsKey(sceneId))
@@ -64,4 +64,14 @@ public class ConfigManager
         }
         return list;
     }
+
+    public ConfigMonster ReqMonster(int id)
+    {
+        if (configData.CfgMonster.ContainsKey(id))
+        {
+            return configData.CfgMonster[id];
+        }
+        return null;
+    }
+
 }
