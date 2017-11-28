@@ -105,26 +105,31 @@ public class ConfigStory
     }
 }
 
-
 public class ConfigEvent
 {
+    public struct EventResult
+    {
+        public string resultDesc;
+        public int reward;
+    }
+
     public int _id;
     public string _name;
     public string _desc;
-    public string _result1;
-    public string _result2;
-    public int _reward1;
-    public int _reward2;
+    public List<EventResult> _resultList = new List<EventResult>();
 
     public ConfigEvent(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
-        _result1 = config.GetDataByRowAndName(row, "Result1");
-        _result2 = config.GetDataByRowAndName(row, "Result2");
-        _reward1 = int.Parse(config.GetDataByRowAndName(row, "Reward1"));
-        _reward2 = int.Parse(config.GetDataByRowAndName(row, "Reward2"));
+        for (int i = 0; i < 2; i++)
+        {
+            EventResult data;
+            data.resultDesc = config.GetDataByRowAndName(row, "Result" + (i + 1).ToString());
+            data.reward = int.Parse(config.GetDataByRowAndName(row, "Reward" + (i + 1).ToString()));
+            _resultList.Add(data);
+        }
     }
 }
 

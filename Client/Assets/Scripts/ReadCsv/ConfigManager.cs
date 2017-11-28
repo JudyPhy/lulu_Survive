@@ -65,6 +65,15 @@ public class ConfigManager
         return list;
     }
 
+    public ConfigEvent ReqEvent(int eventId)
+    {
+        if (configData.CfgEvent.ContainsKey(eventId))
+        {
+            return configData.CfgEvent[eventId];
+        }
+        return null;
+    }
+
     public ConfigMonster ReqMonster(int id)
     {
         if (configData.CfgMonster.ContainsKey(id))

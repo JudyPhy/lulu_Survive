@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="668,272">
+  <displayList>
+    <image id="n0_si38" name="n0" src="si38a" xy="0,0"/>
+    <text id="n1_si38" name="n1" xy="40,40" size="65,39" fontSize="30" text="健康"/>
+    <text id="n2_si38" name="healValue" xy="107,40" size="39,39" fontSize="30" text="13"/>
+  </displayList>
+</component>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280">
+  <displayList>
+    <component id="n0_hsco" name="btnChooseA" src="uto7t" xy="55,1016">
+      <Button title="btnChooseA"/>
+    </component>
+    <component id="n1_hsco" name="btnChooseB" src="uto7t" xy="55,1158">
+      <Button title="btnChooseB"/>
+    </component>
+    <text id="n5_hsco" name="textEvent" xy="89,455" size="560,310" fontSize="30" align="center" vAlign="middle" autoSize="none" text="yyoyoyoyoyoy\n&#xA;斯蒂芬森d"/>
+  </displayList>
+</component>

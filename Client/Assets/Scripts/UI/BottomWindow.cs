@@ -7,6 +7,7 @@ using DG.Tweening;
 public class BottomWindow : Window
 {
     GButton[] mBtnList = new GButton[9];
+    GTextField mTextTips;
 
     protected override void OnInit()
     {
@@ -20,20 +21,7 @@ public class BottomWindow : Window
             mBtnList[i] = btnCom.GetChildAt(i).asButton;
             mBtnList[i].onClick.Add(OnClickBtn);
         }
-    }
-
-    override protected void DoShowAnimation()
-    {
-        this.SetPosition(0, 350, 0);
-        this.SetPivot(0.5f, 0.5f);
-        Tweener tween = this.TweenMoveY(0, 0.3f);
-        tween.SetEase(Ease.OutQuad).OnComplete(this.OnShown);
-        tween.SetDelay(0.3f);
-    }
-
-    override protected void DoHideAnimation()
-    {
-        this.TweenMoveY(-350f, 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+        mTextTips = this.contentPane.GetChild("textNormal").asTextField;
     }
 
     private void OnClickBtn(EventContext context)
@@ -52,6 +40,11 @@ public class BottomWindow : Window
             Debug.Log("Move towards.");
             Process.Instance.MoveTowards();
         }
+    }
+
+    public void Tips(string tips)
+    {
+        mTextTips.text = tips;
     }
 
     protected override void OnShown()

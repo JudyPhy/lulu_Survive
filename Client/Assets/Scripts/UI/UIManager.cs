@@ -9,10 +9,13 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     
     private GComponent _mainView;
+
     public DialogWindow mDialogWindow;
     public LoginWindow mLoginWindow;
     public MainWindow mMainWindow;
     public BottomWindow mBottomWindow;
+    public EventWindow mEventWindow;
+    public BattleWindow mBattleWindow;
 
     void Awake()
     {
@@ -32,7 +35,10 @@ public class UIManager : MonoBehaviour
         mDialogWindow = new DialogWindow();
         mLoginWindow = new LoginWindow();
         mMainWindow = new MainWindow();
+
         mBottomWindow = new BottomWindow();
+        mEventWindow = new EventWindow();
+        mBattleWindow = new BattleWindow();
     }
 
     void Start()
@@ -58,11 +64,41 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void MoveTowards()
+    public void UpdateEvent(ConfigEventPackage curEvent)
     {
-        mMainWindow.UpdateScene();
-        mMainWindow.UpdateEnergy();
-        mMainWindow.UpdateHungry();
+        switch (curEvent._type)
+        {
+            case (int)EventType.Normal:
+                {
+                    ConfigEvent eventInfo = ConfigManager.Instance.ReqEvent(curEvent._event);
+                    if (eventInfo != null)
+                    {
+                        mEventWindow.EventInfo = eventInfo;
+                        mEventWindow.Show();
+                    }
+                    else
+                    {
+                        Debug.LogError("Has no this event[" + curEvent._event + "].");
+                    }
+                }
+                break;
+            case (int)EventType.Battle:
+                {
+                    ConfigMonster monster = ConfigManager.Instance.ReqMonster(curEvent._event);
+                    if (monster != null)
+                    {
+                        mBattleWindow.mMonsterInfo = monster;
+                        mBattleWindow.Show();
+                    }
+                    else
+                    {
+                        Debug.LogError("Has no this monster[" + curEvent._event + "].");
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private void Update()

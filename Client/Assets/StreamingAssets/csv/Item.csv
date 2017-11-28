@@ -1,4 +1,4 @@
-锘縄D,鍚嶇О,鎻忚堪,鍥炬爣,鍗曚环
+ID,名称,描述,图标,单价
 int32,string,string,string,int32
 ID,Name,Describe,Icon,Price
-1001,鐗╁搧1,鐗╁搧1,item1,1000
+1001,物品1,物品1,item1,1000

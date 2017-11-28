@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280" bgColorEnabled="true" bgColor="#000000">
+  <displayList>
+    <image id="n0_si38" name="n0" src="si380" xy="0,0"/>
+    <component id="n2_si38" name="n2" src="si38k" xy="277,601"/>
+  </displayList>
+</component>

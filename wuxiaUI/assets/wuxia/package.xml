@@ -40,6 +40,8 @@
     <component id="12fam11" name="cp_attb.xml" path="/"/>
     <component id="12fam12" name="cp_title.xml" path="/"/>
     <component id="12fam13" name="cp_btns.xml" path="/"/>
+    <component id="hscom14" name="fn_event.xml" path="/" exported="true"/>
+    <component id="hscom15" name="fn_moster.xml" path="/" exported="true"/>
   </resources>
   <publish name="wuxia"/>
 </packageDescription>

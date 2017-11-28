@@ -15,7 +15,7 @@ public class Role
     public int Hungry { set { _hungry = value; } get { return _hungry; } }
     private int _hungry;
 
-    public int Hp { get { return _hp; } }
+    public int Hp { set { _hp = value; } get { return _hp; } }
     private int _hp;
 
     public int Def { get { return _def; } }
@@ -45,6 +45,17 @@ public class Role
         _hp = hp;
         _def = atk;
         _atk = def;
+    }
+
+    public void BeAtc(int atk)
+    {
+        _hp -= atk;
+        _hp = _hp < 0 ? 0 : _hp;
+        if (_hp == 0)
+        {
+            _healthy--;
+        }
+        Process.Instance.UpdateAttr();
     }
 
 }

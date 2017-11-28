@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280">
+  <displayList>
+    <text id="n11_uto7" name="textNormal" xy="76,475" size="560,310" fontSize="30" align="center" vAlign="middle" autoSize="none" text="啊啊啊啊啊啊啊啊哦哦哦哦哦哦哦哦哦哦呵呵呵呵呵呵呵呵呵&#xA;"/>
+    <component id="n12_12fam" name="btnList" src="12fam13" xy="30,955"/>
+  </displayList>
+</component>

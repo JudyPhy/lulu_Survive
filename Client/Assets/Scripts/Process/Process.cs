@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
 
+public enum EventType
+{
+    Idle = 0,
+    Normal,
+    Battle,
+}
+
 public class SavedData
 {
     public int curScene;
@@ -58,14 +65,9 @@ public class Process
     public void StartGame()
     {
         Debug.Log("StartGame=>");
-        _player = new Role(999);
-        _curScene = 1001;
-        ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
-        _destination = data == null ? 0 : data._destination;
-        _distance = data == null ? 0 : data._distance;
-        _curStage = 0;
+        _player = new Role(69999);
+        UpdateScene(1001);
         _lastStoryId = 0;
-        _curSceneEvents = ConfigManager.Instance.ReqEvents(_curScene);
 
         Saved();
     }
@@ -133,41 +135,107 @@ public class Process
 
     public void MoveTowards()
     {
-        if (_player.Energy >= 10)
+        Debug.Log("MoveTowards");
+        //energy
+        int energy = _player.Energy - 10;
+        if (energy >= 0)
         {
-            _player.Energy -= 10;
+            _player.Energy = energy;
             UIManager.Instance.mMainWindow.UpdateEnergy();
 
-            _player.Hungry -= 20;
-            if (_player.Hungry < 0)
+            //hungry
+            int hungry = _player.Hungry - 20;
+            if (hungry >= 0)
             {
-                _player.Hungry = 0; 
+                _player.Hungry = hungry;                
+            }
+            else
+            {
+                _player.Hungry = 0;
                 _player.Healthy--;
                 UIManager.Instance.mMainWindow.UpdateHealthy();
-                if (_player.Healthy <= 0)
-                {
-                    Debug.LogError("Game Over!");
-                    UIManager.Instance.mMainWindow.Hide();
-                    UIManager.Instance.mLoginWindow.Show();
-                    return;
-                }
             }
             UIManager.Instance.mMainWindow.UpdateHungry();
 
-            _distance--;
-            if (_distance <= 0)
+            //scene
+            if (_player.Healthy <= 0)
             {
-                Debug.Log("Switch to new scene.");
-                _curScene = _destination;
-                ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
-                _destination = data == null ? 0 : data._destination;
-                _distance = data == null ? 0 : data._distance;
+                GameOver();
             }
-            UIManager.Instance.mMainWindow.UpdateScene();
+            else
+            {
+                _distance--;
+                if (_distance <= 0)
+                {
+                    Debug.Log("Switch to new scene.");
+                    UpdateScene(_destination);
+                }
+                UIManager.Instance.mMainWindow.UpdateScene();
+            }
+
+            //event
+            UpdateEvent();
         }
         else
         {
+            UIManager.Instance.mBottomWindow.Tips("精力不足");
         }
+    }
+
+    private void UpdateScene(int sceneId)
+    {
+        _curScene = sceneId;
+        ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
+        _destination = data == null ? 0 : data._destination;
+        _distance = data == null ? 0 : data._distance;
+        _curSceneEvents = ConfigManager.Instance.ReqEvents(_curScene);
+        _curStage = 0;      
+    }
+
+    private void UpdateEvent()
+    {
+        List<int> sampleList = new List<int>();
+        for (int i = 0; i < _curSceneEvents.Count; i++)
+        {
+            int eventId = _curSceneEvents[i]._event;
+            int weight = _curSceneEvents[i]._weight;
+            for (int n = 0; n < weight * 10; n++)
+            {
+                sampleList.Add(eventId);
+            }
+        }
+        Debug.Log("sampleList length=" + sampleList.Count);
+        int index = Random.Range(0, sampleList.Count);
+        Debug.Log("event id=" + sampleList[index]);
+        for (int i = 0; i < _curSceneEvents.Count; i++)
+        {
+            if (_curSceneEvents[i]._event == sampleList[index])
+            {
+                UIManager.Instance.UpdateEvent(_curSceneEvents[i]);
+                break;
+            }
+        }        
+    }
+
+    public void UpdateAttr()
+    {
+        UIManager.Instance.mMainWindow.UpdateBattleAttr();
+        UIManager.Instance.mMainWindow.UpdateHealthy();
+        if (_player.Healthy <= 0)
+        {
+            GameOver();
+        }
+    }
+
+    public void GameOver()
+    {
+        Debug.LogError("Game Over!");
+        UIManager.Instance.mDialogWindow.Hide();
+        UIManager.Instance.mMainWindow.Hide();
+        UIManager.Instance.mBottomWindow.Hide();
+        UIManager.Instance.mEventWindow.Hide();
+        UIManager.Instance.mBattleWindow.Hide();
+        UIManager.Instance.mLoginWindow.Show();
     }
 
 

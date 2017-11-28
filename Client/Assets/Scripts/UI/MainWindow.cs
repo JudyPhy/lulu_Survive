@@ -83,7 +83,7 @@ public class MainWindow : Window
     public void UpdateHealthy()
     {
         Debug.Log("UpdateHealthy:" + Process.Instance.Player.Healthy);
-        mTextValueInRect[0].text = Process.Instance.Player.Healthy.ToString();
+        mTextValueInRect[0].text = Process.Instance.Player.Healthy < 0 ? "0" : Process.Instance.Player.Healthy.ToString();
     }
 
     public void UpdateEnergy()
@@ -95,7 +95,7 @@ public class MainWindow : Window
     public void UpdateHungry()
     {
         Debug.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
-        mTextValueInRect[2].text = Process.Instance.Player.Hungry.ToString();
+        mTextValueInRect[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
     }
 
     public void UpdateBattleAttr()
