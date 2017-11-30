@@ -7,8 +7,9 @@ using SimpleJSON;
 public enum EventType
 {
     Idle = 0,
-    Normal,
+    Event,
     Battle,
+    Drop,
 }
 
 public class SavedData
@@ -174,7 +175,11 @@ public class Process
             }
 
             //event
-            UpdateEvent();
+            ConfigEventPackage curEvent = GetRandomEvent(_curSceneEvents);
+            if (curEvent != null)
+            {
+                UIManager.Instance.UpdateEvent(curEvent);
+            }
         }
         else
         {
@@ -188,17 +193,17 @@ public class Process
         ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
         _destination = data == null ? 0 : data._destination;
         _distance = data == null ? 0 : data._distance;
-        _curSceneEvents = ConfigManager.Instance.ReqEvents(_curScene);
+        _curSceneEvents = ConfigManager.Instance.ReqEvents(data._eventPack);
         _curStage = 0;      
     }
 
-    private void UpdateEvent()
+    public ConfigEventPackage GetRandomEvent(List<ConfigEventPackage> packList)
     {
         List<int> sampleList = new List<int>();
-        for (int i = 0; i < _curSceneEvents.Count; i++)
+        for (int i = 0; i < packList.Count; i++)
         {
-            int eventId = _curSceneEvents[i]._event;
-            int weight = _curSceneEvents[i]._weight;
+            int eventId = packList[i]._event;
+            int weight = packList[i]._weight;
             for (int n = 0; n < weight * 10; n++)
             {
                 sampleList.Add(eventId);
@@ -207,14 +212,14 @@ public class Process
         Debug.Log("sampleList length=" + sampleList.Count);
         int index = Random.Range(0, sampleList.Count);
         Debug.Log("event id=" + sampleList[index]);
-        for (int i = 0; i < _curSceneEvents.Count; i++)
+        for (int i = 0; i < packList.Count; i++)
         {
-            if (_curSceneEvents[i]._event == sampleList[index])
+            if (packList[i]._event == sampleList[index])
             {
-                UIManager.Instance.UpdateEvent(_curSceneEvents[i]);
-                break;
+                return packList[i];
             }
-        }        
+        }
+        return null;
     }
 
     public void UpdateAttr()

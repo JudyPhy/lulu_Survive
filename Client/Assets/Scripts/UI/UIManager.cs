@@ -68,8 +68,9 @@ public class UIManager : MonoBehaviour
     {
         switch (curEvent._type)
         {
-            case (int)EventType.Normal:
+            case (int)EventType.Event:
                 {
+                    mBottomWindow.Hide();
                     ConfigEvent eventInfo = ConfigManager.Instance.ReqEvent(curEvent._event);
                     if (eventInfo != null)
                     {
@@ -84,6 +85,7 @@ public class UIManager : MonoBehaviour
                 break;
             case (int)EventType.Battle:
                 {
+                    mBottomWindow.Hide();
                     ConfigMonster monster = ConfigManager.Instance.ReqMonster(curEvent._event);
                     if (monster != null)
                     {
@@ -96,8 +98,81 @@ public class UIManager : MonoBehaviour
                     }
                 }
                 break;
+            case (int)EventType.Drop:
+                DropEvent(curEvent);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void DropEvent(ConfigEventPackage curEvent)
+    {
+        mBottomWindow.Show();
+        ConfigDrop drop = ConfigManager.Instance.ReqDrop(curEvent._event);
+        if (drop != null)
+        {
+            List<string> get = new List<string>();
+            List<string> loss = new List<string>();
+            for (int i = 0; i < drop._itemList.Count; i++)
+            {
+                int itemId = drop._itemList[i]._item;
+                ConfigItem item = ConfigManager.Instance.ReqItem(itemId);
+                if (item != null)
+                {
+                    string itemDesc = "";
+                    switch (drop._itemList[i]._item)
+                    {
+                        case 1001:
+                            itemDesc = Mathf.Abs(drop._itemList[i]._count) + "文钱";
+                            break;
+                        default:
+                            itemDesc = item._name + "×" + Mathf.Abs(drop._itemList[i]._count);
+                            break;
+                    }
+                    if (drop._itemList[i]._count >= 0)
+                    {
+                        get.Add(itemDesc);
+                    }
+                    else
+                    {
+                        loss.Add(itemDesc);
+                    }
+                }
+            }
+            string text = "";
+            if (get.Count > 0)
+            {
+                text += "获得：";
+                for (int i = 0; i < get.Count; i++)
+                {
+                    text += i == get.Count - 1 ? get[i] + "." : get[i] + ", ";
+                }
+                if (loss.Count > 0)
+                {
+                    text += " 失去：";
+                    for (int i = 0; i < loss.Count; i++)
+                    {
+                        text += i == loss.Count - 1 ? loss[i] + "." : loss[i] + ", ";
+                    }
+                }                
+            }
+            else
+            {
+                if (loss.Count > 0)
+                {
+                    text += "失去：";
+                    for (int i = 0; i < loss.Count; i++)
+                    {
+                        text += i == loss.Count - 1 ? loss[i] + "." : loss[i] + ", ";
+                    }
+                }
+            }
+            mBottomWindow.Tips(text);
+        }
+        else
+        {
+            Debug.LogError("Has no this drop[" + curEvent._event + "].");
         }
     }
 

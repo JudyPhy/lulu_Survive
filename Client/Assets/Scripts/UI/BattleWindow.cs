@@ -20,7 +20,7 @@ public class BattleWindow : Window
 
     protected override void OnInit()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "fn_nomal").asCom;
+        this.contentPane = UIPackage.CreateObject("wuxia", "fn_monster").asCom;
         this.Center();
         this.modal = true;
 

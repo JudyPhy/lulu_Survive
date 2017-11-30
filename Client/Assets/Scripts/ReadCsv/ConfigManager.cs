@@ -48,19 +48,15 @@ public class ConfigManager
         return list;
     }
 
-    public List<ConfigEventPackage> ReqEvents(int sceneId)
+    public List<ConfigEventPackage> ReqEvents(int eventPackId)
     {
         List<ConfigEventPackage> list = new List<ConfigEventPackage>();
-        if (configData.CfgMap.ContainsKey(sceneId))
+        foreach (ConfigEventPackage data in configData.CfgEventPackage.Values)
         {
-            int eventPackId = configData.CfgMap[sceneId]._eventPack;
-            foreach(ConfigEventPackage data in configData.CfgEventPackage.Values)
+            if (data._packId == eventPackId)
             {
-                if (data._packId == eventPackId)
-                {
-                    list.Add(data);
-                }
-            }           
+                list.Add(data);
+            }
         }
         return list;
     }
@@ -79,6 +75,24 @@ public class ConfigManager
         if (configData.CfgMonster.ContainsKey(id))
         {
             return configData.CfgMonster[id];
+        }
+        return null;
+    }
+
+    public ConfigDrop ReqDrop(int id)
+    {
+        if (configData.CfgDrop.ContainsKey(id))
+        {
+            return configData.CfgDrop[id];
+        }
+        return null;
+    }
+
+    public ConfigItem ReqItem(int id)
+    {
+        if (configData.CfgItem.ContainsKey(id))
+        {
+            return configData.CfgItem[id];
         }
         return null;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280">
+<component size="720,1280" pivot="-0.3,0">
   <displayList>
     <text id="n0_hsco" name="textEvent" xy="89,495" size="560,310" fontSize="30" align="center" vAlign="middle" autoSize="none" text="yyoyoyoyoyoy\n&#xA;斯蒂芬森d"/>
     <text id="n1_hsco" name="textMonsterName" xy="89,388" size="560,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text="怪物名字LV7"/>

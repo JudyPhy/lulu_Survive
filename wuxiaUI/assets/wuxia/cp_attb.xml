@@ -19,10 +19,10 @@
       <Label title="生命"/>
     </component>
     <component id="n6_12fam" name="attb6" src="uto7z" xy="24,173">
-      <Label title="离家"/>
+      <Label title="去往" titleColor="#ff9900"/>
     </component>
     <component id="n7_12fam" name="attb7" src="uto7z" xy="234,173">
-      <Label title="伤药"/>
+      <Label title="距离&#xD;"/>
     </component>
     <component id="n8_12fam" name="attb8" src="uto7z" xy="444,173">
       <Label title="食物"/>

@@ -8,7 +8,7 @@ public class MainWindow : Window
 {
     GTextField[] mTextTop = new GTextField[3];
     
-    GTextField[] mTextValueInRect = new GTextField[6];
+    GTextField[] mTextValueInRect = new GTextField[9];
 
 
 
@@ -62,6 +62,7 @@ public class MainWindow : Window
         UpdateEnergy();
         UpdateHungry();
         UpdateBattleAttr();
+        UpdateGold();
     }
 
     public void UpdateScene()
@@ -74,10 +75,10 @@ public class MainWindow : Window
             ConfigMap destination = ConfigManager.Instance.ReqMapData(curSceneData._destination);
             if (destination != null)
             {
-                mTextTop[1].text = destination._name;
+                mTextValueInRect[6].text = destination._name;
             }         
         }
-        mTextTop[2].text = Process.Instance.Distance.ToString() + "km";
+        mTextValueInRect[7].text = Process.Instance.Distance.ToString() + "km";
     }
 
     public void UpdateHealthy()
@@ -89,20 +90,26 @@ public class MainWindow : Window
     public void UpdateEnergy()
     {
         Debug.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
-        mTextValueInRect[1].text = Process.Instance.Player.Energy.ToString();
+        mTextTop[1].text = Process.Instance.Player.Energy.ToString();
     }
 
     public void UpdateHungry()
     {
         Debug.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
-        mTextValueInRect[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
+        mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
     }
 
     public void UpdateBattleAttr()
     {
-        mTextValueInRect[3].text = Process.Instance.Player.Hp.ToString();
-        mTextValueInRect[4].text = Process.Instance.Player.Atk.ToString();
-        mTextValueInRect[5].text = Process.Instance.Player.Def.ToString();
+        mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
+        mTextValueInRect[3].text = Process.Instance.Player.Atk.ToString();
+        mTextValueInRect[4].text = Process.Instance.Player.Def.ToString();
+    }
+
+    public void UpdateGold()
+    {
+        Debug.Log("UpdateGold:" + Process.Instance.Player.Gold);
+        mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
     }
 
 }

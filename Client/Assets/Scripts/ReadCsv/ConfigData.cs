@@ -12,6 +12,8 @@ public class ConfigData {
     public Dictionary<int, ConfigEvent> CfgEvent = new Dictionary<int, ConfigEvent>();
     //EventPackage
     public Dictionary<int, ConfigEventPackage> CfgEventPackage = new Dictionary<int, ConfigEventPackage>();
+    //Item
+    public Dictionary<int, ConfigItem> CfgItem = new Dictionary<int, ConfigItem>();
     //Drop
     public Dictionary<int, ConfigDrop> CfgDrop = new Dictionary<int, ConfigDrop>();
     //Monster
@@ -46,6 +48,14 @@ public class ConfigData {
         {
             ConfigEventPackage data = new ConfigEventPackage(config, i);
             this.CfgEventPackage.Add(data._id, data);
+        }
+
+        //Item
+        config = new ReadCsv("Item");
+        for (int i = 3; i < config.GetRow(); i++)
+        {
+            ConfigItem data = new ConfigItem(config, i);
+            this.CfgItem.Add(data._id, data);
         }
 
         //Drop
@@ -128,7 +138,10 @@ public class ConfigEvent
             EventResult data;
             data.resultDesc = config.GetDataByRowAndName(row, "Result" + (i + 1).ToString());
             data.reward = int.Parse(config.GetDataByRowAndName(row, "Reward" + (i + 1).ToString()));
-            _resultList.Add(data);
+            if (!string.IsNullOrEmpty(data.resultDesc))
+            {
+                _resultList.Add(data);
+            }           
         }
     }
 }
@@ -174,6 +187,24 @@ public class ConfigDrop
             data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
             _itemList.Add(data);
         }
+    }
+}
+
+public class ConfigItem
+{
+    public int _id;
+    public string _name;
+    public string _desc;
+    public string _icon;
+    public int _price;
+
+    public ConfigItem(ReadCsv config, int row)
+    {
+        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _name = config.GetDataByRowAndName(row, "Name");
+        _desc = config.GetDataByRowAndName(row, "Describe");
+        _icon = config.GetDataByRowAndName(row, "Icon");
+        _price = int.Parse(config.GetDataByRowAndName(row, "Price"));
     }
 }
 

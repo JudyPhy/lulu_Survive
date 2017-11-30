@@ -24,6 +24,9 @@ public class Role
     public int Atk { get { return _atk; } }
     private int _atk;
 
+    public int Gold { get { return _glod; } }
+    private int _glod;
+
     public Role(int id)
     {
         _id = id;
@@ -34,6 +37,7 @@ public class Role
         _hp = player._hp;
         _def = player._def;
         _atk = player._atk;
+        _glod = 0;
     }
 
     public Role(int healthy, int energy, int hungry, int hp, int atk, int def)
@@ -45,6 +49,7 @@ public class Role
         _hp = hp;
         _def = atk;
         _atk = def;
+        _glod = 0;
     }
 
     public void BeAtc(int atk)
