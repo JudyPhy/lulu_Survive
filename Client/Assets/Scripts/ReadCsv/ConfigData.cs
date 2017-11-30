@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ConfigData {
+public class ConfigData
+{
 
     //Map
     public Dictionary<int, ConfigMap> CfgMap = new Dictionary<int, ConfigMap>();
@@ -19,12 +20,15 @@ public class ConfigData {
     //Monster
     public Dictionary<int, ConfigMonster> CfgMonster = new Dictionary<int, ConfigMonster>();
 
-    public void LoadConfigs() {
+    public void LoadConfigs()
+    {
         //Map
         ReadCsv config = new ReadCsv("Scene");
-        for (int i = 3; i < config.GetRow(); i++) {
+        for (int i = 3; i < config.GetRow(); i++)
+        {
             ConfigMap data = new ConfigMap(config, i);
-            this.CfgMap.Add(data._id, data);        }
+            this.CfgMap.Add(data._id, data);
+        }
 
         //Story
         config = new ReadCsv("Story");
@@ -101,9 +105,19 @@ public class ConfigMap
 
 public class ConfigStory
 {
+    public struct StoryOption
+    {
+        public string option;
+        public int result;
+    }
+
     public int _id;
     public string _desc;
     public int _sceneId;
+    public int _type;
+    public int _prevId;
+    public int _nextId;
+    public List<StoryOption> _optionList;
     public int _condition;
 
     public ConfigStory(ReadCsv config, int row)
@@ -111,6 +125,19 @@ public class ConfigStory
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _desc = config.GetDataByRowAndName(row, "Describe");
         _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
+        _prevId = int.Parse(config.GetDataByRowAndName(row, "PrevID"));
+        _nextId = int.Parse(config.GetDataByRowAndName(row, "NextID"));
+        if (_type == 2)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                StoryOption data;
+                data.option = config.GetDataByRowAndName(row, "Option" + (i + 1).ToString());
+                data.result = int.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
+                _optionList.Add(data);
+            }
+        }
         _condition = int.Parse(config.GetDataByRowAndName(row, "Condition"));
     }
 }

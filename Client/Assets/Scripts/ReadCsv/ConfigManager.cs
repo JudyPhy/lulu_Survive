@@ -35,18 +35,27 @@ public class ConfigManager
         return null;
     }
 
-    public List<ConfigStory> ReqStory(int sceneId)
+    public ConfigStory ReqStory(int id)
     {
-        List<ConfigStory> list = new List<ConfigStory>();
-        foreach (ConfigStory data in configData.CfgStory.Values)
+        if (configData.CfgStory.ContainsKey(id))
         {
-            if (data._sceneId == sceneId)
-            {
-                list.Add(data);
-            }
+            return configData.CfgStory[id];
         }
-        return list;
+        return null;
     }
+
+    //public List<ConfigStory> ReqStory(int sceneId)
+    //{
+    //    List<ConfigStory> list = new List<ConfigStory>();
+    //    foreach (ConfigStory data in configData.CfgStory.Values)
+    //    {
+    //        if (data._sceneId == sceneId)
+    //        {
+    //            list.Add(data);
+    //        }
+    //    }
+    //    return list;
+    //}
 
     public List<ConfigEventPackage> ReqEventList(int eventPackId)
     {

@@ -6,49 +6,118 @@ using DG.Tweening;
 
 public class DialogWindow : Window
 {
-    private int mCurContextIndex;
-    private int mCurContextWordIndex;
-    private float mYStart = 0;
+    private GButton mBtn1;
+    private GButton mBtn2;
+    private List<GTextField> mTextFiledList = new List<GTextField>();
+
+    public ConfigStory mStoryInfo;
+
+    private List<string> mDialogList = new List<string>();
+    private int mCurDialogIndex;
+    private int mCurWordCount;
+    private float mYStart = 50;
     private float mYSpace = 30;
 
     protected override void OnInit()
     {
-        this.contentPane = UIPackage.CreateObject("survival", "Dialog").asCom;
+        this.contentPane = UIPackage.CreateObject("wuxia", "UI_dialog").asCom;
         this.Center();
         this.modal = true;
 
-        mCurContextIndex = 0;
-        mCurContextWordIndex = 0;
+        mBtn1 = this.contentPane.GetChild("n1").asButton;
+        mBtn1.onClick.Add(OnClickBtn);
+        mBtn1.visible = false;
+        mBtn2 = this.contentPane.GetChild("n2").asButton;
+        mBtn2.onClick.Add(OnClickBtn);
+        mBtn2.visible = false;
     }
 
-    override protected void DoShowAnimation()
+    private void OnClickBtn(EventContext context)
     {
-        this.SetScale(0.1f, 0.1f);
-        this.SetPivot(0.5f, 0.5f);
-        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
+        int nextDialogId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
+        if (nextDialogId != 0)
+        {
+
+        }
     }
 
-    override protected void DoHideAnimation()
+    private void HideAllText()
     {
-        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+        for (int i = 0; i < mTextFiledList.Count; i++)
+        {
+            mTextFiledList[i].visible = false;
+        }
+    }
+
+    private GTextField GetTextField(int index)
+    {
+        if (index < mTextFiledList.Count)
+        {
+            return mTextFiledList[index];
+        }
+        GTextField textField = UIPackage.CreateObject("wuxia", "cp_dialogText").asTextField;
+        mTextFiledList.Add(textField);
+        return textField;
     }
 
     protected override void OnShown()
     {
-        if (mCurContextIndex < Process.Instance.CurDialog.Count)
+        mDialogList.Clear();
+        int startIndex = 0;
+        for (int i = 0; i < mStoryInfo._desc.Length; i++)
         {
-            string context = Process.Instance.CurDialog[mCurContextIndex];
-            GLabel label = UIPackage.CreateObject("survival", "DialogLabel").asLabel;
-            PlayLineAni(label, context);
-            this.contentPane.AddChild(label);
-            label.position = new Vector3(0, mYStart - mCurContextIndex * mYSpace, 0);
-            mCurContextIndex++;
+            if (mStoryInfo._desc[i] == '|')
+            {
+                string str = mStoryInfo._desc.Substring(startIndex, i - startIndex);
+                mDialogList.Add(str);
+                startIndex = i + 1;
+            }
+        }
+        mCurDialogIndex = 0;
+        mCurWordCount = 1;
+        Timers.inst.Add(1f, 1, UpdateDialog);
+    }
+
+    private void UpdateDialog(object param)
+    {
+        if (mCurWordCount > mDialogList[mCurDialogIndex].Length)
+        {
+            mCurDialogIndex++;
+            mCurWordCount = 1;         
+        }
+        if (mCurDialogIndex >= mDialogList.Count)
+        {
+            Debug.Log("Dialog over");
+            if (mStoryInfo._type == 2)
+            {
+                ShowBtns();
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+            string str = mDialogList[mCurDialogIndex].Substring(0, mCurWordCount);
+            mCurWordCount++;
+            GTextField textField = GetTextField(mCurDialogIndex);
+            textField.visible = true;
+            textField.text = str;
+            textField.SetPosition(0, mYStart + mYSpace * mCurDialogIndex, 0);
         }
     }
 
-    private void PlayLineAni(GLabel label, string context)
+    private void ShowBtns()
     {
-        //Timers.inst.Add(0.001f, 0, () => { label.text = context; });
+        mBtn1.visible = true;
+        mBtn1.text = mStoryInfo._optionList[0].option;
+        mBtn2.visible = true;
+        mBtn2.text = mStoryInfo._optionList[1].option;
+    }
+
+    private void ShowDialog(GLabel label, string context)
+    {
         label.text = context;
     }
 

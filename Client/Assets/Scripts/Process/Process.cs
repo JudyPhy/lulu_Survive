@@ -37,8 +37,8 @@ public class Process
     public int CurStage { get { return _curStage; } }
     private int _curStage;
 
-    public int LastStoryID { get { return _lastStoryId; } }
-    private int _lastStoryId;
+    public int NextStoryID { get { return _nextStoryId; } }
+    private int _nextStoryId;
 
     public Role Player { get { return _player; } }
     private Role _player;
@@ -52,7 +52,7 @@ public class Process
         Debug.Log("StartGame=>");
         _player = new Role(69999);
         UpdateScene(1001);
-        _lastStoryId = 0;
+        _nextStoryId = 100101;
 
         Saved();
     }
@@ -64,7 +64,7 @@ public class Process
         data.destination = _destination;
         data.distance = _distance;
         data.curStage = _curStage;
-        data.lastStoryId = _lastStoryId;
+        data.nextStoryId = _nextStoryId;
         data.gold = _player.Gold;
 
         data.role = new RoleAttr();
@@ -87,44 +87,14 @@ public class Process
         _destination = data.destination;
         _distance = data.distance;
         _curStage = data.curStage;
-        _lastStoryId = data.lastStoryId;
+        _nextStoryId = data.nextStoryId;
         _player = new Role(data.role, data.itemList, data.gold);   
-        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage + ", _lastStoryId:" + _lastStoryId);
+        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage + ", _nextStoryId:" + _nextStoryId);
         Debug.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
         Debug.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
 
         ConfigMap sceneCfg = ConfigManager.Instance.ReqMapData(_curScene);
         _curSceneEvents = ConfigManager.Instance.ReqEventList(sceneCfg._eventPack);
-    }
-
-    public void LoadDialog()
-    {
-        List<ConfigStory> storyList = ConfigManager.Instance.ReqStory(_curScene);
-        storyList.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
-        if (storyList.Count > 0)
-        {
-            for (int i = 0; i < storyList.Count; i++)
-            {
-                if (_curStage >= storyList[i]._condition && storyList[i]._id > _lastStoryId)
-                {
-                    Debug.Log("curStory id=" + storyList[i]._id);
-                    List<string> strs = new List<string>();
-                    int startIndex = 0;
-                    for (int j = 0; j < storyList[i]._desc.Length; j++)
-                    {
-                        if (storyList[i]._desc[i] == '|')
-                        {
-                            string context = storyList[i]._desc.Substring(startIndex, i - startIndex);
-                            Debug.Log("context:" + context);
-                            strs.Add(context);
-                            startIndex = i + 1;
-                        }
-                    }
-                    CurDialog = strs;
-                    break;
-                }
-            }
-        }
     }
 
     public void MoveTowards()
@@ -188,7 +158,7 @@ public class Process
         _destination = data == null ? 0 : data._destination;
         _distance = data == null ? 0 : data._distance;
         _curSceneEvents = ConfigManager.Instance.ReqEventList(data._eventPack);
-        _curStage = 0;      
+        _curStage = 0;
     }
 
     public ConfigEventPackage GetRandomEvent(List<ConfigEventPackage> packList)

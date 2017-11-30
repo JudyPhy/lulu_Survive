@@ -42,6 +42,8 @@
     <component id="12fam13" name="cp_btns.xml" path="/"/>
     <component id="hscom14" name="fn_event.xml" path="/" exported="true"/>
     <component id="hscom15" name="fn_monster.xml" path="/" exported="true"/>
+    <component id="cxt4m17" name="cp_dialogText.xml" path="/" exported="true"/>
+    <component id="cxt4m18" name="UI_dialog.xml" path="/" exported="true"/>
   </resources>
   <publish name="wuxia"/>
 </packageDescription>

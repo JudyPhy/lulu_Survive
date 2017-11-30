@@ -51,11 +51,13 @@ public class UIManager : MonoBehaviour
     public void UpdateUI()
     {
         Debug.Log("PlayDialog");
-        Process.Instance.LoadDialog();
-        Debug.Log("current dialog lines count:" + Process.Instance.CurDialog.Count);
-        if (Process.Instance.CurDialog.Count > 0)
+        ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
+        if (curStory != null && curStory._prevId != 0)
         {
-
+            mDialogWindow.mStoryInfo = curStory;
+            mMainWindow.Hide();
+            mBottomWindow.Hide();            
+            mDialogWindow.Show();
         }
         else
         {
