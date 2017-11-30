@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Role
 {
@@ -24,12 +25,19 @@ public class Role
     public int Atk { get { return _atk; } }
     private int _atk;
 
-    public int Gold { get { return _glod; } }
-    private int _glod;
+    public int Status { get { return _status; } }
+    private int _status;    
+
+    public int Gold { set { _gold = value; } get { return _gold; } }
+    private int _gold;
+
+    public List<ItemCountData> Items { get { return _items; } }
+    private List<ItemCountData> _items;
 
     public Role(int id)
     {
         _id = id;
+
         ConfigMonster player = ConfigManager.Instance.ReqMonster(_id);
         _healthy = 30;
         _energy = 100;
@@ -37,19 +45,26 @@ public class Role
         _hp = player._hp;
         _def = player._def;
         _atk = player._atk;
-        _glod = 0;
+        _status = 0;
+
+        _gold = 0;
+        _items = new List<ItemCountData>();
     }
 
-    public Role(int healthy, int energy, int hungry, int hp, int atk, int def)
+    public Role(RoleAttr roleAttr, List<ItemCountData> items,int gold)
     {
-        _id = 999;
-        _healthy = healthy;
-        _energy = energy;
-        _hungry = hungry;
-        _hp = hp;
-        _def = atk;
-        _atk = def;
-        _glod = 0;
+        _id = 69999;
+
+        _healthy = roleAttr.healthy;
+        _energy = roleAttr.energy;
+        _hungry = roleAttr.hungry;
+        _hp = roleAttr.hp;
+        _def = roleAttr.def;
+        _atk = roleAttr.atk;
+        _status = 0;
+
+        _gold = gold;
+        _items = items;
     }
 
     public void BeAtc(int atk)
@@ -61,6 +76,18 @@ public class Role
             _healthy--;
         }
         Process.Instance.UpdateAttr();
+    }
+
+    public void GoToNextStatus()
+    {
+        _status++;
+        _status = _status >= 3 ? 0 : _status;
+    }
+
+    public void UpdateGold(int gold)
+    {
+        _gold = gold <= 0 ? 0 : gold;
+        UIManager.Instance.mMainWindow.UpdateGold();
     }
 
 }

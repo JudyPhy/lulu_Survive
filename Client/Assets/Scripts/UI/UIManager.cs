@@ -112,68 +112,80 @@ public class UIManager : MonoBehaviour
         ConfigDrop drop = ConfigManager.Instance.ReqDrop(curEvent._event);
         if (drop != null)
         {
-            List<string> get = new List<string>();
-            List<string> loss = new List<string>();
+            Dictionary<ConfigItem, int> get = new Dictionary<ConfigItem, int>();
+            Dictionary<ConfigItem, int> loss = new Dictionary<ConfigItem, int>();
             for (int i = 0; i < drop._itemList.Count; i++)
             {
                 int itemId = drop._itemList[i]._item;
                 ConfigItem item = ConfigManager.Instance.ReqItem(itemId);
                 if (item != null)
-                {
-                    string itemDesc = "";
-                    switch (drop._itemList[i]._item)
-                    {
-                        case 1001:
-                            itemDesc = Mathf.Abs(drop._itemList[i]._count) + "文钱";
-                            break;
-                        default:
-                            itemDesc = item._name + "×" + Mathf.Abs(drop._itemList[i]._count);
-                            break;
-                    }
+                {                    
                     if (drop._itemList[i]._count >= 0)
                     {
-                        get.Add(itemDesc);
+                        get.Add(item, drop._itemList[i]._count);
                     }
                     else
                     {
-                        loss.Add(itemDesc);
+                        int count = Process.Instance.GetItemCount(drop._itemList[i]._item);
+                        loss.Add(item, Mathf.Min(count, Mathf.Abs(drop._itemList[i]._count)));
                     }
                 }
             }
-            string text = "";
-            if (get.Count > 0)
-            {
-                text += "获得：";
-                for (int i = 0; i < get.Count; i++)
-                {
-                    text += i == get.Count - 1 ? get[i] + "." : get[i] + ", ";
-                }
-                if (loss.Count > 0)
-                {
-                    text += " 失去：";
-                    for (int i = 0; i < loss.Count; i++)
-                    {
-                        text += i == loss.Count - 1 ? loss[i] + "." : loss[i] + ", ";
-                    }
-                }                
-            }
-            else
-            {
-                if (loss.Count > 0)
-                {
-                    text += "失去：";
-                    for (int i = 0; i < loss.Count; i++)
-                    {
-                        text += i == loss.Count - 1 ? loss[i] + "." : loss[i] + ", ";
-                    }
-                }
-            }
-            mBottomWindow.Tips(text);
+            Process.Instance.UpdateItems(get, loss);
+            ShowDropDesc(get, loss);            
         }
         else
         {
             Debug.LogError("Has no this drop[" + curEvent._event + "].");
         }
+    }
+
+    private void ShowDropDesc(Dictionary<ConfigItem, int> get, Dictionary<ConfigItem, int> loss)
+    {
+        string text = "";
+        if (get.Count > 0)
+        {
+            text += "获得：";
+            foreach (ConfigItem item in get.Keys)
+            {
+                text += GetItemText(item, get[item]) + ", ";
+            }
+            text = text.Substring(0, text.Length - 2) + ". ";
+            if (loss.Count > 0)
+            {
+                text += " 失去：";
+                foreach (ConfigItem item in loss.Keys)
+                {
+                    text += GetItemText(item, loss[item]) + ", ";
+                }
+                text = text.Substring(0, text.Length - 2) + ". ";
+            }
+        }
+        else
+        {
+            if (loss.Count > 0)
+            {
+                text += " 失去：";
+                foreach (ConfigItem item in loss.Keys)
+                {
+                    text += GetItemText(item, loss[item]) + ", ";
+                }
+                text = text.Substring(0, text.Length - 2) + ". ";
+            }
+        }
+        mBottomWindow.Tips(text);
+    }
+
+    private string GetItemText(ConfigItem item, int count)
+    {
+        switch (item._id)
+        {
+            case 1001:
+                return Mathf.Abs(count) + "文钱";
+            default:
+                break;
+        }
+        return item._name + "×" + count;
     }
 
     private void Update()

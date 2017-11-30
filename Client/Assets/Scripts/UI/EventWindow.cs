@@ -19,16 +19,17 @@ public class EventWindow : Window
         this.modal = true;
 
         mBtn1 = this.contentPane.GetChild("btnChooseA").asButton;
-        mBtn1.onClick.Add(OnClickBtnA);
+        mBtn1.onClick.Add(OnClickBtn);
         mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
-        mBtn1.onClick.Add(OnClickBtnB);
+        mBtn2.onClick.Add(OnClickBtn);
         mText = this.contentPane.GetChild("textEvent").asTextField;
     }
 
-    private void OnClickBtnA(EventContext context)
+    private void OnClickBtn(EventContext context)
     {
+        int eventPackId = 0;
+        eventPackId = context.sender == mBtn1 ? EventInfo._resultList[0].reward : EventInfo._resultList[1].reward;
         Hide();
-        int eventPackId = EventInfo._resultList[0].reward;
         if (eventPackId == 0)
         {            
             UIManager.Instance.mBottomWindow.Show();
@@ -36,18 +37,13 @@ public class EventWindow : Window
         }
         else
         {
-            List<ConfigEventPackage> packList = ConfigManager.Instance.ReqEvents(eventPackId);
+            List<ConfigEventPackage> packList = ConfigManager.Instance.ReqEventList(eventPackId);
             ConfigEventPackage eventInfo = Process.Instance.GetRandomEvent(packList);
             if (eventInfo != null)
             {
                 UIManager.Instance.UpdateEvent(eventInfo);
             }
         }
-    }
-
-    private void OnClickBtnB(EventContext context)
-    {
-        
     }
 
     protected override void OnShown()

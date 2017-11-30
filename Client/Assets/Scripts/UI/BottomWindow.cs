@@ -22,6 +22,7 @@ public class BottomWindow : Window
             mBtnList[i].onClick.Add(OnClickBtn);
         }
         mTextTips = this.contentPane.GetChild("textNormal").asTextField;
+        mTextTips.text = "";
     }
 
     private void OnClickBtn(EventContext context)
@@ -37,7 +38,6 @@ public class BottomWindow : Window
         }
         else if (btn == mBtnList[4])
         {
-            Debug.Log("Move towards.");
             Process.Instance.MoveTowards();
         }
     }

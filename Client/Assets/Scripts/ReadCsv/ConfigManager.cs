@@ -48,8 +48,9 @@ public class ConfigManager
         return list;
     }
 
-    public List<ConfigEventPackage> ReqEvents(int eventPackId)
+    public List<ConfigEventPackage> ReqEventList(int eventPackId)
     {
+        Debug.Log("ReqEvents:" + eventPackId);
         List<ConfigEventPackage> list = new List<ConfigEventPackage>();
         foreach (ConfigEventPackage data in configData.CfgEventPackage.Values)
         {
