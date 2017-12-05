@@ -10,8 +10,6 @@ public class MainWindow : Window
     
     GTextField[] mTextValueInRect = new GTextField[9];
 
-
-
     GTextField mTextMoney;
     GButton mBtnNav;
 

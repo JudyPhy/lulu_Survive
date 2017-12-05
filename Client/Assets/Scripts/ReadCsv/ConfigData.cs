@@ -117,7 +117,7 @@ public class ConfigStory
     public int _type;
     public int _prevId;
     public int _nextId;
-    public List<StoryOption> _optionList;
+    public List<StoryOption> _optionList = new List<StoryOption>();
     public int _condition;
 
     public ConfigStory(ReadCsv config, int row)

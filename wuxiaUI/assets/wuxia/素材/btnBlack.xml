@@ -9,5 +9,5 @@
       <relation target="" sidePair="width-width,height-height"/>
     </text>
   </displayList>
-  <Button downEffect="dark" downEffectValue="0.80"/>
+  <Button downEffect="scale" downEffectValue="0.90"/>
 </component>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280">
+  <displayList>
+    <component id="n0_p8fr" name="btnChooseA" src="uto7t" xy="68,985"/>
+    <component id="n1_p8fr" name="btnChooseB" src="uto7t" xy="68,1110"/>
+  </displayList>
+</component>

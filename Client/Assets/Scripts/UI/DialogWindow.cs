@@ -16,28 +16,42 @@ public class DialogWindow : Window
     private int mCurDialogIndex;
     private int mCurWordCount;
     private float mYStart = 50;
-    private float mYSpace = 30;
+    private float mYSpace = 60;
 
     protected override void OnInit()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_dialog").asCom;
+        this.contentPane = UIPackage.CreateObject("wuxia", "UI_story").asCom;
         this.Center();
         this.modal = true;
 
-        mBtn1 = this.contentPane.GetChild("n1").asButton;
+        mBtn1 = this.contentPane.GetChild("btnChooseA").asButton;
         mBtn1.onClick.Add(OnClickBtn);
-        mBtn1.visible = false;
-        mBtn2 = this.contentPane.GetChild("n2").asButton;
+        //mBtn1.visible = false;
+        mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
         mBtn2.onClick.Add(OnClickBtn);
-        mBtn2.visible = false;
+        //mBtn2.visible = false;
     }
 
     private void OnClickBtn(EventContext context)
     {
+        Debug.Log("OnClickBtn");
         int nextDialogId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
+        Debug.Log("nextDialogId=" + nextDialogId);
         if (nextDialogId != 0)
         {
-
+            //to next dialog
+            Process.Instance.TurnToNextDialog(nextDialogId);
+            ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
+            if (curStory != null)
+            {
+                OnShown();
+            }         
+        }
+        else
+        {
+            //to main ui
+            Hide();
+            UIManager.Instance.mMainWindow.Show();
         }
     }
 
@@ -55,7 +69,9 @@ public class DialogWindow : Window
         {
             return mTextFiledList[index];
         }
-        GTextField textField = UIPackage.CreateObject("wuxia", "cp_dialogText").asTextField;
+        GComponent com = UIPackage.CreateObject("wuxia", "textBox").asCom;
+        this.contentPane.AddChild(com);
+        GTextField textField = com.GetChild("n0").asTextField;
         mTextFiledList.Add(textField);
         return textField;
     }
@@ -63,6 +79,7 @@ public class DialogWindow : Window
     protected override void OnShown()
     {
         mDialogList.Clear();
+        HideAllText();
         int startIndex = 0;
         for (int i = 0; i < mStoryInfo._desc.Length; i++)
         {
@@ -75,19 +92,15 @@ public class DialogWindow : Window
         }
         mCurDialogIndex = 0;
         mCurWordCount = 1;
-        Timers.inst.Add(1f, 1, UpdateDialog);
+        Timers.inst.Add(0.1f, 0, UpdateDialog);
     }
 
     private void UpdateDialog(object param)
     {
-        if (mCurWordCount > mDialogList[mCurDialogIndex].Length)
-        {
-            mCurDialogIndex++;
-            mCurWordCount = 1;         
-        }
         if (mCurDialogIndex >= mDialogList.Count)
         {
             Debug.Log("Dialog over");
+            Timers.inst.Remove(UpdateDialog);
             if (mStoryInfo._type == 2)
             {
                 ShowBtns();
@@ -100,11 +113,17 @@ public class DialogWindow : Window
         else
         {
             string str = mDialogList[mCurDialogIndex].Substring(0, mCurWordCount);
+            //Debug.LogError("UpdateDialog: str=" + str);
             mCurWordCount++;
             GTextField textField = GetTextField(mCurDialogIndex);
             textField.visible = true;
             textField.text = str;
             textField.SetPosition(0, mYStart + mYSpace * mCurDialogIndex, 0);
+            if (mCurWordCount > mDialogList[mCurDialogIndex].Length)
+            {
+                mCurDialogIndex++;
+                mCurWordCount = 1;
+            }
         }
     }
 

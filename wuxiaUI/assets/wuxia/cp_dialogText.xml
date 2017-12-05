@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280">
   <displayList>
-    <text id="n0_cxt4" name="n0" xy="360,500" pivot="0.5,0.5" size="10,21" fontSize="12" align="center" vAlign="middle" text="&#xA;"/>
+    <text id="n0_cxt4" name="n0" xy="5,482" pivot="0.5,0.5" size="720,56" fontSize="40" color="#ffffff" align="center" vAlign="middle" autoSize="none" text="&#xA;"/>
   </displayList>
 </component>

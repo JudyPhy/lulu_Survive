@@ -263,6 +263,12 @@ public class Process
         return 0;
     }
 
+    public void TurnToNextDialog(int nextStoryId)
+    {
+        _nextStoryId = nextStoryId;
+        Saved();
+    }
+
     public void GameOver()
     {
         Debug.LogError("Game Over!");

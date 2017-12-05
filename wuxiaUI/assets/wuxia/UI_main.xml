@@ -3,5 +3,6 @@
   <displayList>
     <component id="n24_12fam" name="titleList" src="12fam12" xy="0,0"/>
     <component id="n25_12fam" name="attbList" src="12fam11" xy="26,98"/>
+    <component id="n26_hsco" name="n26" src="hscom15" xy="0,0"/>
   </displayList>
 </component>
