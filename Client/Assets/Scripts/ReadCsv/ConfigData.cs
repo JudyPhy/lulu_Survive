@@ -112,21 +112,17 @@ public class ConfigStory
     }
 
     public int _id;
-    public string _desc;
-    public int _sceneId;
+    public string _desc;    
     public int _type;
-    public int _prevId;
     public int _nextId;
     public List<StoryOption> _optionList = new List<StoryOption>();
-    public int _condition;
+    public int _sceneId;
 
     public ConfigStory(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
-        _desc = config.GetDataByRowAndName(row, "Describe");
-        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _desc = config.GetDataByRowAndName(row, "Describe");        
         _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
-        _prevId = int.Parse(config.GetDataByRowAndName(row, "PrevID"));
         _nextId = int.Parse(config.GetDataByRowAndName(row, "NextID"));
         if (_type == 2)
         {
@@ -138,7 +134,7 @@ public class ConfigStory
                 _optionList.Add(data);
             }
         }
-        _condition = int.Parse(config.GetDataByRowAndName(row, "Condition"));
+        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
     }
 }
 

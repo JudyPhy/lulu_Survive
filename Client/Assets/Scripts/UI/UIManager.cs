@@ -48,15 +48,16 @@ public class UIManager : MonoBehaviour
         mLoginWindow.Show();
     }
 
-    public void UpdateUI()
+    public void EnterGame()
     {
         Debug.Log("PlayDialog");
+       
         ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
-        if (curStory != null && curStory._prevId != 0)
+        if (curStory != null && curStory._sceneId == Process.Instance.CurScene)
         {
             mDialogWindow.mStoryInfo = curStory;
             mMainWindow.Hide();
-            mBottomWindow.Hide();            
+            mBottomWindow.Hide();
             mDialogWindow.Show();
         }
         else

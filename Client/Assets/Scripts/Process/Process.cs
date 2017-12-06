@@ -37,6 +37,9 @@ public class Process
     public int CurStage { get { return _curStage; } }
     private int _curStage;
 
+    public int LastStoryID { get { return _lastStoryId; } }
+    private int _lastStoryId;
+
     public int NextStoryID { get { return _nextStoryId; } }
     private int _nextStoryId;
 
@@ -52,7 +55,7 @@ public class Process
         Debug.Log("StartGame=>");
         _player = new Role(69999);
         UpdateScene(1001);
-        _nextStoryId = 100101;
+        _lastStoryId = 0;
 
         Saved();
     }
@@ -64,7 +67,7 @@ public class Process
         data.destination = _destination;
         data.distance = _distance;
         data.curStage = _curStage;
-        data.nextStoryId = _nextStoryId;
+        data.lastStoryId = _lastStoryId;
         data.gold = _player.Gold;
 
         data.role = new RoleAttr();
@@ -87,14 +90,37 @@ public class Process
         _destination = data.destination;
         _distance = data.distance;
         _curStage = data.curStage;
-        _nextStoryId = data.nextStoryId;
+        _lastStoryId = data.lastStoryId;
         _player = new Role(data.role, data.itemList, data.gold);   
-        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage + ", _nextStoryId:" + _nextStoryId);
+        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage + ", _lastStoryId:" + _lastStoryId);
         Debug.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
         Debug.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
 
         ConfigMap sceneCfg = ConfigManager.Instance.ReqMapData(_curScene);
         _curSceneEvents = ConfigManager.Instance.ReqEventList(sceneCfg._eventPack);
+    }
+
+    public bool NeedShowDialog()
+    {
+        ConfigStory lastStory = ConfigManager.Instance.ReqStory(_lastStoryId);
+        if (lastStory == null)
+        {
+            Debug.Log("First story");
+            _nextStoryId = 100101;
+            return true;
+        }
+        else
+        {
+            if (lastStory._type == 2)
+            {
+                _nextStoryId = _lastStoryId;
+                return true;
+            }
+            else
+            {
+                
+            }
+        }
     }
 
     public void MoveTowards()

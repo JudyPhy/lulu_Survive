@@ -8,6 +8,8 @@ public class DialogWindow : Window
 {
     private GButton mBtn1;
     private GButton mBtn2;
+    private GButton mBtnOver;
+    private GButton mBtnSkip;
     private List<GTextField> mTextFiledList = new List<GTextField>();
 
     public ConfigStory mStoryInfo;
@@ -25,18 +27,54 @@ public class DialogWindow : Window
         this.modal = true;
 
         mBtn1 = this.contentPane.GetChild("btnChooseA").asButton;
-        mBtn1.onClick.Add(OnClickBtn);
-        //mBtn1.visible = false;
+        mBtn1.onClick.Add(OnClickOptionBtn);       
         mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
-        mBtn2.onClick.Add(OnClickBtn);
-        //mBtn2.visible = false;
+        mBtn2.onClick.Add(OnClickOptionBtn);
+
+        mBtnOver = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtnOver.onClick.Add(OnClickBtnOver);
+        mBtnSkip = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtnSkip.onClick.Add(OnClickBtnSkip);
     }
 
-    private void OnClickBtn(EventContext context)
-    {
+    private void OnClickOptionBtn(EventContext context)
+    {       
         Debug.Log("OnClickBtn");
         int nextDialogId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
-        Debug.Log("nextDialogId=" + nextDialogId);
+        TurnToNext(nextDialogId);
+    }
+
+    private void OnClickBtnOver(EventContext context)
+    {        
+        Debug.Log("OnClickBtnOver");
+        TurnToNext(mStoryInfo._nextId);
+    }
+
+    private void OnClickBtnSkip(EventContext context)
+    {
+        Debug.Log("OnClickBtnSkip");
+        HideAllText();
+        for (int i = 0; i < mDialogList.Count; i++)
+        {
+            GTextField textField = GetTextField(i);
+            textField.visible = true;
+            textField.text = mDialogList[i];
+            textField.SetPosition(0, mYStart + mYSpace * i, 0);
+        }
+        mBtnSkip.visible = false;
+        if (mStoryInfo._type == 2)
+        {
+            ShowOptionBtns();
+        }
+        else
+        {
+            mBtnOver.visible = true;
+        }
+    }
+
+    private void TurnToNext(int nextDialogId)
+    {
+        Debug.Log("TurnToNext: nextDialogId=" + nextDialogId);
         if (nextDialogId != 0)
         {
             //to next dialog
@@ -44,8 +82,9 @@ public class DialogWindow : Window
             ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
             if (curStory != null)
             {
+                mStoryInfo = curStory;
                 OnShown();
-            }         
+            }
         }
         else
         {
@@ -80,6 +119,8 @@ public class DialogWindow : Window
     {
         mDialogList.Clear();
         HideAllText();
+        HideBtns();
+        //split dialog
         int startIndex = 0;
         for (int i = 0; i < mStoryInfo._desc.Length; i++)
         {
@@ -90,10 +131,12 @@ public class DialogWindow : Window
                 startIndex = i + 1;
             }
         }
+        mDialogList.Add(mStoryInfo._desc.Substring(startIndex));
         mCurDialogIndex = 0;
         mCurWordCount = 1;
         Timers.inst.Add(0.1f, 0, UpdateDialog);
-    }
+        mBtnSkip.visible = true;
+    }    
 
     private void UpdateDialog(object param)
     {
@@ -103,11 +146,7 @@ public class DialogWindow : Window
             Timers.inst.Remove(UpdateDialog);
             if (mStoryInfo._type == 2)
             {
-                ShowBtns();
-            }
-            else
-            {
-
+                ShowOptionBtns();
             }
         }
         else
@@ -127,7 +166,7 @@ public class DialogWindow : Window
         }
     }
 
-    private void ShowBtns()
+    private void ShowOptionBtns()
     {
         mBtn1.visible = true;
         mBtn1.text = mStoryInfo._optionList[0].option;
@@ -135,9 +174,11 @@ public class DialogWindow : Window
         mBtn2.text = mStoryInfo._optionList[1].option;
     }
 
-    private void ShowDialog(GLabel label, string context)
+    private void HideBtns()
     {
-        label.text = context;
+        mBtn1.visible = false;
+        mBtn2.visible = false;
+        mBtnOver.visible = false;
+        mBtnSkip.visible = false;
     }
-
 }

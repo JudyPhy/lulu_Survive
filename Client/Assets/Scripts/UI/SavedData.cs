@@ -10,7 +10,7 @@ public class SavedData
     public int destination;
     public int distance;
     public int curStage;
-    public int nextStoryId;
+    public int lastStoryId;
 
     public RoleAttr role;
 

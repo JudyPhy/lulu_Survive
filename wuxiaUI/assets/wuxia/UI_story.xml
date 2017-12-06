@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280">
+<component size="720,1280" bgColorEnabled="true" bgColor="#000000">
   <displayList>
-    <component id="n0_p8fr" name="btnChooseA" src="uto7t" xy="68,985"/>
-    <component id="n1_p8fr" name="btnChooseB" src="uto7t" xy="68,1110"/>
+    <component id="n2_z2ph" name="btnBreak" src="uto7s" xy="553,1202"/>
+    <component id="n3_z2ph" name="btnOver" src="uto7q" xy="277,1062"/>
   </displayList>
 </component>

@@ -37,14 +37,14 @@ public class LoginWindow : Window
     {
         Process.Instance.StartGame();
         this.Hide();
-        UIManager.Instance.UpdateUI();
+        UIManager.Instance.EnterGame();
     }
 
     private void OnClickContinue(EventContext context)
     {
         Process.Instance.ReqHistoryData();
         this.Hide();
-        UIManager.Instance.UpdateUI();
+        UIManager.Instance.EnterGame();
     }
 
     protected override void OnShown()
