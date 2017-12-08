@@ -31,9 +31,9 @@ public class DialogWindow : Window
         mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
         mBtn2.onClick.Add(OnClickOptionBtn);
 
-        mBtnOver = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtnOver = this.contentPane.GetChild("btnOver").asButton;
         mBtnOver.onClick.Add(OnClickBtnOver);
-        mBtnSkip = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtnSkip = this.contentPane.GetChild("btnSkip").asButton;
         mBtnSkip.onClick.Add(OnClickBtnSkip);
     }
 

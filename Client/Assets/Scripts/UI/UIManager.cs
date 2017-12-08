@@ -51,14 +51,20 @@ public class UIManager : MonoBehaviour
     public void EnterGame()
     {
         Debug.Log("PlayDialog");
-       
-        ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
-        if (curStory != null && curStory._sceneId == Process.Instance.CurScene)
+        if (Process.Instance.NeedShowDialog())
         {
-            mDialogWindow.mStoryInfo = curStory;
-            mMainWindow.Hide();
-            mBottomWindow.Hide();
-            mDialogWindow.Show();
+            ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
+            if (curStory != null)
+            {
+                mDialogWindow.mStoryInfo = curStory;
+                mMainWindow.Hide();
+                mBottomWindow.Hide();
+                mDialogWindow.Show();
+            }
+            else
+            {
+                Debug.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
+            }
         }
         else
         {

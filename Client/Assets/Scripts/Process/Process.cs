@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
+using Log;
 
 public enum EventType
 {
@@ -56,6 +57,7 @@ public class Process
         _player = new Role(69999);
         UpdateScene(1001);
         _lastStoryId = 0;
+        _nextStoryId = 100101;
 
         Saved();
     }
@@ -66,9 +68,11 @@ public class Process
         data.curScene = _curScene;
         data.destination = _destination;
         data.distance = _distance;
-        data.curStage = _curStage;
-        data.lastStoryId = _lastStoryId;
+        data.curStage = _curStage;        
         data.gold = _player.Gold;
+
+        data.lastStoryId = _lastStoryId;
+        data.nextStoryId = _nextStoryId;
 
         data.role = new RoleAttr();
         data.role.healthy = _player.Healthy;
@@ -86,13 +90,15 @@ public class Process
     public void ReqHistoryData()
     {
         SavedData data = GameSaved.GetData();
-        _curScene = data.curScene;        
+        _curScene = data.curScene;
         _destination = data.destination;
         _distance = data.distance;
         _curStage = data.curStage;
         _lastStoryId = data.lastStoryId;
-        _player = new Role(data.role, data.itemList, data.gold);   
-        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage + ", _lastStoryId:" + _lastStoryId);
+        _nextStoryId = data.nextStoryId;
+        _player = new Role(data.role, data.itemList, data.gold);
+        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage +
+            ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
         Debug.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
         Debug.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
 
@@ -102,12 +108,18 @@ public class Process
 
     public bool NeedShowDialog()
     {
+        if (_nextStoryId != 0)
+        {
+            return true;
+        }
+        else
+        {
+            MyLog.Log("current scene switch dialog has played over.");
+        }
         ConfigStory lastStory = ConfigManager.Instance.ReqStory(_lastStoryId);
         if (lastStory == null)
         {
-            Debug.Log("First story");
-            _nextStoryId = 100101;
-            return true;
+            return false;
         }
         else
         {
@@ -118,8 +130,26 @@ public class Process
             }
             else
             {
-                
-            }
+                int last_nextId = lastStory._nextId;
+                if (last_nextId == 0)
+                {
+                    int toSceneId = lastStory._sceneId;
+                    if (_curScene == toSceneId)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        
+                        return true;
+                    }
+                }
+                else
+                {
+                    _nextStoryId = last_nextId;
+                    return true;
+                }
+            }            
         }
     }
 
@@ -291,6 +321,7 @@ public class Process
 
     public void TurnToNextDialog(int nextStoryId)
     {
+        _lastStoryId = _nextStoryId;
         _nextStoryId = nextStoryId;
         Saved();
     }

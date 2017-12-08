@@ -1,0 +1,9 @@
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\MyLog.dll
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\MyLog.pdb
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\UnityEngine.dll
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\obj\Debug\MyLog.csprojResolveAssemblyReference.cache
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\obj\Debug\MyLog.dll
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\obj\Debug\MyLog.pdb
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\System.Net.Http.dll
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\System.Net.Http.xml
+C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\zh-Hans\System.Net.Http.resources.dll
