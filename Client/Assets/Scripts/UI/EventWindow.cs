@@ -48,7 +48,7 @@ public class EventWindow : Window
 
     protected override void OnShown()
     {
-        Debug.Log("EventWindow shown=> eventId:" + EventInfo._id);
+        MyLog.Log("EventWindow shown=> eventId:" + EventInfo._id);
         mText.text = EventInfo._desc;
         bool showBtns = EventInfo._resultList.Count == 2;
         mBtn1.visible = showBtns;

@@ -54,7 +54,7 @@ public class MainWindow : Window
 
     protected override void OnShown()
     {
-        Debug.Log("MainWindow shown");
+        MyLog.Log("MainWindow shown");
         UpdateScene();
         UpdateHealthy();
         UpdateEnergy();
@@ -65,7 +65,7 @@ public class MainWindow : Window
 
     public void UpdateScene()
     {
-        Debug.Log("UpdateScene");
+        MyLog.Log("UpdateScene");
         ConfigMap curSceneData = ConfigManager.Instance.ReqMapData(Process.Instance.CurScene);
         if (curSceneData != null)
         {
@@ -81,24 +81,25 @@ public class MainWindow : Window
 
     public void UpdateHealthy()
     {
-        Debug.Log("UpdateHealthy:" + Process.Instance.Player.Healthy);
+        MyLog.Log("UpdateHealthy:" + Process.Instance.Player.Healthy);
         mTextValueInRect[0].text = Process.Instance.Player.Healthy < 0 ? "0" : Process.Instance.Player.Healthy.ToString();
     }
 
     public void UpdateEnergy()
     {
-        Debug.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
+        MyLog.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
         mTextTop[1].text = Process.Instance.Player.Energy.ToString();
     }
 
     public void UpdateHungry()
     {
-        Debug.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
+        MyLog.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
         mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
     }
 
     public void UpdateBattleAttr()
     {
+        MyLog.Log("UpdateBattleAttr: Hp=" + Process.Instance.Player.Hp + ", Atk=" + Process.Instance.Player.Atk + ", Def=" + Process.Instance.Player.Def);
         mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
         mTextValueInRect[3].text = Process.Instance.Player.Atk.ToString();
         mTextValueInRect[4].text = Process.Instance.Player.Def.ToString();
@@ -106,7 +107,7 @@ public class MainWindow : Window
 
     public void UpdateGold()
     {
-        Debug.Log("UpdateGold:" + Process.Instance.Player.Gold);
+        MyLog.Log("UpdateGold:" + Process.Instance.Player.Gold);
         mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
     }
 

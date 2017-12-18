@@ -53,6 +53,7 @@ public class DialogWindow : Window
     private void OnClickBtnSkip(EventContext context)
     {
         MyLog.Log("OnClickBtnSkip");
+        Timers.inst.Remove(UpdateDialog);
         HideAllText();
         for (int i = 0; i < mDialogList.Count; i++)
         {
@@ -90,6 +91,7 @@ public class DialogWindow : Window
             //to main ui
             Hide();
             UIManager.Instance.mMainWindow.Show();
+            UIManager.Instance.mBottomWindow.Show();
         }
     }
 

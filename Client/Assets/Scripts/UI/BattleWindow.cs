@@ -20,7 +20,7 @@ public class BattleWindow : Window
 
     protected override void OnInit()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "fn_monster").asCom;
+        this.contentPane = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
         this.Center();
         this.modal = true;
 
@@ -65,7 +65,7 @@ public class BattleWindow : Window
         int atk = Process.Instance.Player.Atk - mMonsterInfo._def;
         atk = atk < 0 ? 0 : atk;        
         hp -= atk;
-        Debug.Log("Monster be attacked, lost hp:" + atk + ", left hp:" + hp);
+        MyLog.Log("Monster be attacked, lost hp:" + atk + ", left hp:" + hp);
         mMonsterHp.text = hp.ToString();
         if (hp <= 0)
         {
@@ -103,7 +103,7 @@ public class BattleWindow : Window
 
     protected override void OnShown()
     {
-        Debug.Log("BattleWindow shown");
+        MyLog.Log("BattleWindow shown");
         mMonsterName.text = mMonsterInfo._name;
         mMonsterHp.text = "HP:" + mMonsterInfo._hp.ToString();
         mDesc.text = mMonsterInfo._desc;

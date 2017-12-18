@@ -30,11 +30,11 @@ public class BottomWindow : Window
         GButton btn = (GButton)context.sender;
         if (btn == mBtnList[0])
         {
-            Debug.Log("Click shop.");
+            MyLog.Log("Click shop.");
         }
         else if (btn == mBtnList[1])
         {
-            Debug.Log("Click challenge.");
+            MyLog.Log("Click challenge.");
         }
         else if (btn == mBtnList[4])
         {
