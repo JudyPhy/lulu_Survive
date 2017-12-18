@@ -7,3 +7,9 @@ C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\obj\Debug\MyLog.pd
 C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\System.Net.Http.dll
 C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\System.Net.Http.xml
 C:\Users\PJ\Documents\Visual Studio 2015\Projects\MyLog\MyLog\bin\Debug\zh-Hans\System.Net.Http.resources.dll
+D:\Project\lulu_Survival\MyLog\MyLog\bin\Debug\MyLog.dll
+D:\Project\lulu_Survival\MyLog\MyLog\bin\Debug\MyLog.pdb
+D:\Project\lulu_Survival\MyLog\MyLog\bin\Debug\UnityEngine.dll
+D:\Project\lulu_Survival\MyLog\MyLog\obj\Debug\MyLog.csprojResolveAssemblyReference.cache
+D:\Project\lulu_Survival\MyLog\MyLog\obj\Debug\MyLog.dll
+D:\Project\lulu_Survival\MyLog\MyLog\obj\Debug\MyLog.pdb

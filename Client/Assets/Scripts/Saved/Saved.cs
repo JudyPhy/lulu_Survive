@@ -7,6 +7,11 @@ using SimpleJSON;
 public class GameSaved {
 
     private static string _fileName = Path.Combine(Application.persistentDataPath, "saved.json");
+
+    public static bool HasHistory()
+    {
+        return File.Exists(_fileName);
+    }
     
     public static void SetData(object pObject)
     {

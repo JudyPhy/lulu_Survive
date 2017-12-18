@@ -18,6 +18,7 @@ public class LoginWindow : Window
         mBtnNew = this.contentPane.GetChild("btnNewGame").asButton;
         mBtnNew.onClick.Add(OnClickNew);
         mBtnContinue = this.contentPane.GetChild("btnLoadGame").asButton;
+        mBtnContinue.visible = GameSaved.HasHistory();
         mBtnContinue.onClick.Add(OnClickContinue);
     }
 

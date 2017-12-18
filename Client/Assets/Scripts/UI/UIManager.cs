@@ -50,9 +50,10 @@ public class UIManager : MonoBehaviour
 
     public void EnterGame()
     {
-        Debug.Log("PlayDialog");
+        MyLog.Log("EnterGame");
         if (Process.Instance.NeedShowDialog())
         {
+            MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
             ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
             if (curStory != null)
             {
@@ -63,7 +64,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
+                MyLog.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
             }
         }
         else
@@ -88,7 +89,7 @@ public class UIManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("Has no this event[" + curEvent._event + "].");
+                        MyLog.LogError("Has no this event[" + curEvent._event + "].");
                     }
                 }
                 break;
@@ -103,7 +104,7 @@ public class UIManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("Has no this monster[" + curEvent._event + "].");
+                        MyLog.LogError("Has no this monster[" + curEvent._event + "].");
                     }
                 }
                 break;
@@ -145,7 +146,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Has no this drop[" + curEvent._event + "].");
+            MyLog.LogError("Has no this drop[" + curEvent._event + "].");
         }
     }
 

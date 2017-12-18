@@ -1,5 +1,4 @@
 {
-	"hidden_packages": [],
 	"docs": [
 		"lmcgaigt",
 		"uto7v",
@@ -36,6 +35,7 @@
 		"lmcgaigt",
 		"p8frm17"
 	],
+	"hidden_packages": [],
 	"expanded_nodes": [
 		"lmcgaigt",
 		"/"

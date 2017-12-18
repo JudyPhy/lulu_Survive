@@ -22,7 +22,7 @@ public class DialogWindow : Window
 
     protected override void OnInit()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_story").asCom;
+        this.contentPane = UIPackage.CreateObject("wuxia", "UI_storyA").asCom;
         this.Center();
         this.modal = true;
 
@@ -39,20 +39,20 @@ public class DialogWindow : Window
 
     private void OnClickOptionBtn(EventContext context)
     {       
-        Debug.Log("OnClickBtn");
+        MyLog.Log("OnClickBtn");
         int nextDialogId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
         TurnToNext(nextDialogId);
     }
 
     private void OnClickBtnOver(EventContext context)
     {        
-        Debug.Log("OnClickBtnOver");
+        MyLog.Log("OnClickBtnOver");
         TurnToNext(mStoryInfo._nextId);
     }
 
     private void OnClickBtnSkip(EventContext context)
     {
-        Debug.Log("OnClickBtnSkip");
+        MyLog.Log("OnClickBtnSkip");
         HideAllText();
         for (int i = 0; i < mDialogList.Count; i++)
         {
@@ -60,8 +60,7 @@ public class DialogWindow : Window
             textField.visible = true;
             textField.text = mDialogList[i];
             textField.SetPosition(0, mYStart + mYSpace * i, 0);
-        }
-        mBtnSkip.visible = false;
+        }        
         if (mStoryInfo._type == 2)
         {
             ShowOptionBtns();
@@ -74,7 +73,7 @@ public class DialogWindow : Window
 
     private void TurnToNext(int nextDialogId)
     {
-        Debug.Log("TurnToNext: nextDialogId=" + nextDialogId);
+        MyLog.Log("TurnToNext: nextDialogId=" + nextDialogId);
         if (nextDialogId != 0)
         {
             //to next dialog
@@ -142,7 +141,7 @@ public class DialogWindow : Window
     {
         if (mCurDialogIndex >= mDialogList.Count)
         {
-            Debug.Log("Dialog over");
+            MyLog.Log("Dialog over");
             Timers.inst.Remove(UpdateDialog);
             if (mStoryInfo._type == 2)
             {
@@ -152,7 +151,7 @@ public class DialogWindow : Window
         else
         {
             string str = mDialogList[mCurDialogIndex].Substring(0, mCurWordCount);
-            //Debug.LogError("UpdateDialog: str=" + str);
+            //MyLog.LogError("UpdateDialog: str=" + str);
             mCurWordCount++;
             GTextField textField = GetTextField(mCurDialogIndex);
             textField.visible = true;
@@ -168,6 +167,7 @@ public class DialogWindow : Window
 
     private void ShowOptionBtns()
     {
+        mBtnSkip.visible = false;
         mBtn1.visible = true;
         mBtn1.text = mStoryInfo._optionList[0].option;
         mBtn2.visible = true;

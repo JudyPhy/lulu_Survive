@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
-using Log;
 
 public enum EventType
 {
@@ -52,8 +51,8 @@ public class Process
     public List<string> CurDialog = new List<string>();
 
     public void StartGame()
-    {
-        Debug.Log("StartGame=>");
+    {        
+        MyLog.Log("StartGame=>");
         _player = new Role(69999);
         UpdateScene(1001);
         _lastStoryId = 0;
@@ -97,10 +96,10 @@ public class Process
         _lastStoryId = data.lastStoryId;
         _nextStoryId = data.nextStoryId;
         _player = new Role(data.role, data.itemList, data.gold);
-        Debug.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage +
+        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage +
             ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
-        Debug.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
-        Debug.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
+        MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
+        MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
 
         ConfigMap sceneCfg = ConfigManager.Instance.ReqMapData(_curScene);
         _curSceneEvents = ConfigManager.Instance.ReqEventList(sceneCfg._eventPack);
@@ -114,11 +113,12 @@ public class Process
         }
         else
         {
-            MyLog.Log("current scene switch dialog has played over.");
+            MyLog.Log("Switched dialog of current scene  has played over.");
         }
         ConfigStory lastStory = ConfigManager.Instance.ReqStory(_lastStoryId);
         if (lastStory == null)
         {
+            MyLog.LogError("lastStory[" + lastStory + "] is null.");
             return false;
         }
         else
@@ -133,15 +133,14 @@ public class Process
                 int last_nextId = lastStory._nextId;
                 if (last_nextId == 0)
                 {
-                    int toSceneId = lastStory._sceneId;
-                    if (_curScene == toSceneId)
+                    if (_curScene == lastStory._sceneId)
                     {
                         return false;
                     }
                     else
                     {
-                        
-                        return true;
+                        _nextStoryId = GetSwitchDialog(_curScene);
+                        return _nextStoryId != 0;
                     }
                 }
                 else
@@ -153,9 +152,21 @@ public class Process
         }
     }
 
+    private int GetSwitchDialog(int newSceneId)
+    {
+        MyLog.Log("GetSwitchDialog: newSceneId=" + newSceneId);
+        List<ConfigStory> list = ConfigManager.Instance.ReqSceneStory(newSceneId);
+        list.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
+        if (list.Count > 0)
+        {
+            return list[0]._id;
+        }
+        return 0;
+    }
+
     public void MoveTowards()
     {
-        Debug.Log("MoveTowards");
+        MyLog.Log("MoveTowards");
         //energy
         int energy = _player.Energy - 10;
         if (energy >= 0)
@@ -187,7 +198,7 @@ public class Process
                 _distance--;
                 if (_distance <= 0)
                 {
-                    Debug.Log("Switch to new scene.");
+                    MyLog.Log("Switch to new scene.");
                     UpdateScene(_destination);
                 }
                 UIManager.Instance.mMainWindow.UpdateScene();
@@ -219,7 +230,7 @@ public class Process
 
     public ConfigEventPackage GetRandomEvent(List<ConfigEventPackage> packList)
     {
-        //Debug.LogError("GetRandomEvent packList count:" + packList.Count);
+        //MyLog.LogError("GetRandomEvent packList count:" + packList.Count);
         List<int> sampleList = new List<int>();
         for (int i = 0; i < packList.Count; i++)
         {
@@ -247,7 +258,7 @@ public class Process
         {
             if (item._id == 1001)
             {
-                Debug.Log("add gold:" + get[item]);
+                MyLog.Log("add gold:" + get[item]);
                 _player.UpdateGold(_player.Gold + get[item]);
             }
             else
@@ -275,7 +286,7 @@ public class Process
         {
             if (item._id == 1001)
             {
-                Debug.Log("lost gold:" + loss[item]);
+                MyLog.Log("lost gold:" + loss[item]);
                 _player.UpdateGold(_player.Gold - loss[item]);
             }
             else
@@ -328,7 +339,7 @@ public class Process
 
     public void GameOver()
     {
-        Debug.LogError("Game Over!");
+        MyLog.LogError("Game Over!");
         UIManager.Instance.mDialogWindow.Hide();
         UIManager.Instance.mMainWindow.Hide();
         UIManager.Instance.mBottomWindow.Hide();

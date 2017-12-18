@@ -2,6 +2,7 @@
 	"codeGeneration":{
 		"classNamePrefix":"UI_",
 		"codePath":"",
+		"codeType":"",
 		"getMemberByName":false,
 		"ignoreNoname":false,
 		"memberNamePrefix":"m_",
