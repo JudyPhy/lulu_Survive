@@ -20,9 +20,21 @@ public class BottomWindow : Window
         {
             mBtnList[i] = btnCom.GetChildAt(i).asButton;
             mBtnList[i].onClick.Add(OnClickBtn);
+            mBtnList[i].visible = false;
         }
         mTextTips = this.contentPane.GetChild("textNormal").asTextField;
         mTextTips.text = "";
+
+        UpdateBtns();
+    }
+
+    private void UpdateBtns()
+    {
+        ConfigMap data = ConfigManager.Instance.ReqMapData(Process.Instance.CurScene);
+        if (data != null)
+        {
+            mBtnList[0].visible = true;
+        }
     }
 
     private void OnClickBtn(EventContext context)

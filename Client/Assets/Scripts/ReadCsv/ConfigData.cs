@@ -7,6 +7,8 @@ public class ConfigData
 
     //Map
     public Dictionary<int, ConfigMap> CfgMap = new Dictionary<int, ConfigMap>();
+    //Scene
+    public Dictionary<int, ConfigScene> CfgScene = new Dictionary<int, ConfigScene>();
     //Story
     public Dictionary<int, ConfigStory> CfgStory = new Dictionary<int, ConfigStory>();
     //Event
@@ -22,8 +24,16 @@ public class ConfigData
 
     public void LoadConfigs()
     {
+        //Scene
+        ReadCsv config = new ReadCsv("Scene2");
+        for (int i = 3; i < config.GetRow(); i++)
+        {
+            ConfigScene data = new ConfigScene(config, i);
+            this.CfgScene.Add(data._id, data);
+        }
+
         //Map
-        ReadCsv config = new ReadCsv("Scene");
+        config = new ReadCsv("Scene");
         for (int i = 3; i < config.GetRow(); i++)
         {
             ConfigMap data = new ConfigMap(config, i);
@@ -76,6 +86,43 @@ public class ConfigData
         {
             ConfigMonster data = new ConfigMonster(config, i);
             this.CfgMonster.Add(data._id, data);
+        }
+    }
+}
+
+public class ConfigScene
+{
+    public int _id;
+    public string _name;
+    public string _desc;
+    public int _eventPack;
+    public int _stage;
+    public int _shop;
+    public Vector2 _pos;
+    public Dictionary<int, Vector2> _outList = new Dictionary<int, Vector2>();
+
+    public ConfigScene(ReadCsv config, int row)
+    {
+        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _name = config.GetDataByRowAndName(row, "Name");
+        _desc = config.GetDataByRowAndName(row, "Describe");
+        _eventPack = int.Parse(config.GetDataByRowAndName(row, "EventPackage"));
+        _stage = int.Parse(config.GetDataByRowAndName(row, "Stage"));
+        _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
+
+        string pos = config.GetDataByRowAndName(row, "Pos");
+        string[] strs1 = pos.Split(',');
+        _pos = new Vector2(int.Parse(strs1[0]), int.Parse(strs1[1]));
+
+        for (int i = 0; i < 3; i++)
+        {
+            int outId = int.Parse(config.GetDataByRowAndName(row, "Out" + (i + 1).ToString()));
+            if (outId != 0 && !_outList.ContainsKey(outId))
+            {
+                string outPos = config.GetDataByRowAndName(row, "OutPos" + (i + 1).ToString());
+                string[] strs2 = outPos.Split(',');
+                _outList.Add(outId, new Vector2(int.Parse(strs2[0]), int.Parse(strs2[1])));
+            }
         }
     }
 }
