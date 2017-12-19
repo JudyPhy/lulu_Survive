@@ -7,9 +7,7 @@ using System.IO;
 public class SavedData
 {
     public int curScene;
-    public int destination;
-    public int distance;
-    public int curStage;
+    public int[] curPos;
 
     public int lastStoryId;
     public int nextStoryId;
@@ -35,4 +33,16 @@ public class ItemCountData
 {
     public int id;
     public int count;
+}
+
+public class EventData
+{
+    public EventType _type;
+    public int _id;
+
+    public EventData(EventType type, int id)
+    {
+        _type = type;
+        _id = id;
+    }
 }

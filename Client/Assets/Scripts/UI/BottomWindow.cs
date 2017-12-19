@@ -30,10 +30,15 @@ public class BottomWindow : Window
 
     private void UpdateBtns()
     {
-        ConfigMap data = ConfigManager.Instance.ReqMapData(Process.Instance.CurScene);
-        if (data != null)
+        ConfigScene scene = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
+        if (scene != null)
         {
-            mBtnList[0].visible = true;
+            bool inScene = Process.Instance.InCurScene(scene, Process.Instance.CurPos);
+            mBtnList[0].visible = inScene && scene._shop != 0;
+            mBtnList[0].text = "商店";
+
+            mBtnList[3].visible = inScene && scene._shop != 0;
+            mBtnList[3].text = "探索";
         }
     }
 

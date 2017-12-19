@@ -1,4 +1,12 @@
 {
+	"expanded_nodes": [
+		"lmcgaigt",
+		"/"
+	],
+	"active_doc": [
+		"lmcgaigt",
+		"uto710"
+	],
 	"docs": [
 		"lmcgaigt",
 		"uto7v",
@@ -31,13 +39,5 @@
 		"lmcgaigt",
 		"hva5m18"
 	],
-	"active_doc": [
-		"lmcgaigt",
-		"p8frm17"
-	],
-	"hidden_packages": [],
-	"expanded_nodes": [
-		"lmcgaigt",
-		"/"
-	]
+	"hidden_packages": []
 }

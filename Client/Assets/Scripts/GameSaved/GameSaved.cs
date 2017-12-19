@@ -28,9 +28,9 @@ public class GameSaved {
         JsonData jsonData = GetJsonData();
         SavedData data = new SavedData();
         data.curScene = int.Parse(jsonData["curScene"].ToString());
-        data.destination = int.Parse(jsonData["destination"].ToString());
-        data.distance = int.Parse(jsonData["distance"].ToString());
-        data.curStage = int.Parse(jsonData["curStage"].ToString());
+        data.curPos = new int[2];
+        data.curPos[0] = int.Parse(jsonData["curPos"][0].ToString());
+        data.curPos[1] = int.Parse(jsonData["curPos"][1].ToString());
         data.lastStoryId = int.Parse(jsonData["nextStoryId"].ToString());
         data.gold = int.Parse(jsonData["gold"].ToString());
         

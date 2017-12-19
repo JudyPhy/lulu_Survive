@@ -26,11 +26,11 @@ public class ConfigManager
         configData.LoadConfigs();
     }
 
-    public ConfigMap ReqMapData(int id)
+    public ConfigScene ReqSceneData(int id)
     {
-        if (configData.CfgMap.ContainsKey(id))
+        if (configData.CfgScene.ContainsKey(id))
         {
-            return configData.CfgMap[id];
+            return configData.CfgScene[id];
         }
         return null;
     }
@@ -57,13 +57,41 @@ public class ConfigManager
         return list;
     }
 
-    public List<ConfigEventPackage> ReqEventList(int eventPackId)
+    public List<ConfigEvent> ReqEventList(int sceneId)
     {
-        Debug.Log("ReqEvents:" + eventPackId);
-        List<ConfigEventPackage> list = new List<ConfigEventPackage>();
-        foreach (ConfigEventPackage data in configData.CfgEventPackage.Values)
+        Debug.Log("ReqEventList: sceneId=" + sceneId);
+        List<ConfigEvent> list = new List<ConfigEvent>();
+        foreach (ConfigEvent data in configData.CfgEvent.Values)
         {
-            if (data._packId == eventPackId)
+            if (data._sceneId == sceneId)
+            {
+                list.Add(data);
+            }
+        }
+        return list;
+    }
+
+    public List<ConfigMonster> ReqMonsterList(int sceneId)
+    {
+        Debug.Log("ReqMonsterList: sceneId=" + sceneId);
+        List<ConfigMonster> list = new List<ConfigMonster>();
+        foreach (ConfigMonster data in configData.CfgMonster.Values)
+        {
+            if (data._sceneId == sceneId)
+            {
+                list.Add(data);
+            }
+        }
+        return list;
+    }
+
+    public List<ConfigDrop> ReqDropList(int sceneId)
+    {
+        Debug.Log("ReqDropList: sceneId=" + sceneId);
+        List<ConfigDrop> list = new List<ConfigDrop>();
+        foreach (ConfigDrop data in configData.CfgDrop.Values)
+        {
+            if (data._sceneId == sceneId)
             {
                 list.Add(data);
             }

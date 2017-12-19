@@ -1,5 +1,6 @@
-﻿场景id,场景名称,场景描述,去往,距离,场景事件,场景副本,场景商店
-int32,string,string,int32,int32,int32,int32,int32
-ID,Name,Describe,Destination,Distance,EventPackage,Stage,Shop
-1001,出生地,出生地,1002,78,2001,1001,1
-1002,噜霸天山庄,噜霸天的居所,1003,200,2002,1002,2
+﻿场景id,场景名称,场景描述,坐标,场景副本,场景商店,场景范围,出口1,出口1坐标,出口2,出口2坐标,出口3,出口3坐标
+int32,string,string,string,int32,int32,string,int32,string,int32,string,int32,string
+ID,Name,Describe,Pos,Stage,Shop,InnerRange,Out1,OutPos1,Out2,OutPos2,Out3,OutPos3
+1001,出生地,出生地,"50,50",,1,"20,30,40,50",1002,"100,120",,,,
+1002,噜城,噜霸天的地盘,"105,145",10001,2,"110,130,140,150",1003,"250,300",1004,"300,600",,
+10001,藏兵隔,噜霸天收藏兵器的地方,,,,,,,,,,

@@ -55,7 +55,7 @@ public class MainWindow : Window
     protected override void OnShown()
     {
         MyLog.Log("MainWindow shown");
-        UpdateScene();
+        UpdateSceneInfo();
         UpdateHealthy();
         UpdateEnergy();
         UpdateHungry();
@@ -63,20 +63,25 @@ public class MainWindow : Window
         UpdateGold();
     }
 
-    public void UpdateScene()
+    public void UpdateSceneInfo()
     {
-        MyLog.Log("UpdateScene");
-        ConfigMap curSceneData = ConfigManager.Instance.ReqMapData(Process.Instance.CurScene);
+        MyLog.Log("UpdateSceneInfo");
+        ConfigScene curSceneData = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
         if (curSceneData != null)
         {
             mTextTop[0].text = curSceneData._name;
-            ConfigMap destination = ConfigManager.Instance.ReqMapData(curSceneData._destination);
-            if (destination != null)
+            if (curSceneData._outList.Count == 1)
             {
-                mTextValueInRect[6].text = destination._name;
-            }         
+                List<int> list = new List<int>(curSceneData._outList.Keys);
+                ConfigScene outSceneData = ConfigManager.Instance.ReqSceneData(list[0]);
+                mTextValueInRect[6].text = outSceneData != null ? outSceneData._name : "未知";
+            }
+            else
+            {
+                mTextValueInRect[6].text = "";
+
+            }
         }
-        mTextValueInRect[7].text = Process.Instance.Distance.ToString() + "km";
     }
 
     public void UpdateHealthy()

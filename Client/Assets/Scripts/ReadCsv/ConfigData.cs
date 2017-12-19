@@ -4,17 +4,12 @@ using System.Collections.Generic;
 
 public class ConfigData
 {
-
-    //Map
-    public Dictionary<int, ConfigMap> CfgMap = new Dictionary<int, ConfigMap>();
     //Scene
     public Dictionary<int, ConfigScene> CfgScene = new Dictionary<int, ConfigScene>();
     //Story
     public Dictionary<int, ConfigStory> CfgStory = new Dictionary<int, ConfigStory>();
     //Event
     public Dictionary<int, ConfigEvent> CfgEvent = new Dictionary<int, ConfigEvent>();
-    //EventPackage
-    public Dictionary<int, ConfigEventPackage> CfgEventPackage = new Dictionary<int, ConfigEventPackage>();
     //Item
     public Dictionary<int, ConfigItem> CfgItem = new Dictionary<int, ConfigItem>();
     //Drop
@@ -32,14 +27,6 @@ public class ConfigData
             this.CfgScene.Add(data._id, data);
         }
 
-        //Map
-        config = new ReadCsv("Scene");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigMap data = new ConfigMap(config, i);
-            this.CfgMap.Add(data._id, data);
-        }
-
         //Story
         config = new ReadCsv("Story");
         for (int i = 3; i < config.GetRow(); i++)
@@ -54,14 +41,6 @@ public class ConfigData
         {
             ConfigEvent data = new ConfigEvent(config, i);
             this.CfgEvent.Add(data._id, data);
-        }
-
-        //EventPackage
-        config = new ReadCsv("EventPackage");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigEventPackage data = new ConfigEventPackage(config, i);
-            this.CfgEventPackage.Add(data._id, data);
         }
 
         //Item
@@ -95,10 +74,10 @@ public class ConfigScene
     public int _id;
     public string _name;
     public string _desc;
-    public int _eventPack;
     public int _stage;
     public int _shop;
     public Vector2 _pos;
+    public Vector4 _range;
     public Dictionary<int, Vector2> _outList = new Dictionary<int, Vector2>();
 
     public ConfigScene(ReadCsv config, int row)
@@ -106,7 +85,6 @@ public class ConfigScene
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
-        _eventPack = int.Parse(config.GetDataByRowAndName(row, "EventPackage"));
         _stage = int.Parse(config.GetDataByRowAndName(row, "Stage"));
         _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
 
@@ -114,39 +92,20 @@ public class ConfigScene
         string[] strs1 = pos.Split(',');
         _pos = new Vector2(int.Parse(strs1[0]), int.Parse(strs1[1]));
 
+        string range = config.GetDataByRowAndName(row, "InnerRange");
+        string[] strs2 = range.Split(',');
+        _range = new Vector4(int.Parse(strs2[0]), int.Parse(strs2[1]), int.Parse(strs2[2]), int.Parse(strs2[3]));
+
         for (int i = 0; i < 3; i++)
         {
             int outId = int.Parse(config.GetDataByRowAndName(row, "Out" + (i + 1).ToString()));
             if (outId != 0 && !_outList.ContainsKey(outId))
             {
                 string outPos = config.GetDataByRowAndName(row, "OutPos" + (i + 1).ToString());
-                string[] strs2 = outPos.Split(',');
-                _outList.Add(outId, new Vector2(int.Parse(strs2[0]), int.Parse(strs2[1])));
+                string[] strs3 = outPos.Split(',');
+                _outList.Add(outId, new Vector2(int.Parse(strs3[0]), int.Parse(strs3[1])));
             }
         }
-    }
-}
-
-public class ConfigMap
-{
-    public int _id;
-    public string _name;
-    public string _desc;
-    public int _eventPack;
-    public int _stage;
-    public int _shop;
-    public int _destination;
-    public int _distance;
-
-    public ConfigMap(ReadCsv config, int row) {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
-        _name = config.GetDataByRowAndName(row, "Name");
-        _desc = config.GetDataByRowAndName(row, "Describe");
-        _eventPack = int.Parse(config.GetDataByRowAndName(row, "EventPackage"));
-        _stage = int.Parse(config.GetDataByRowAndName(row, "Stage"));
-        _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
-        _destination = int.Parse(config.GetDataByRowAndName(row, "Destination"));
-        _distance = int.Parse(config.GetDataByRowAndName(row, "Distance"));
     }
 }
 
@@ -190,12 +149,15 @@ public class ConfigEvent
     public struct EventResult
     {
         public string resultDesc;
-        public int reward;
+        public int type;
+        public int result;
     }
 
     public int _id;
     public string _name;
     public string _desc;
+    public int _sceneId;
+    public int _rate;
     public List<EventResult> _resultList = new List<EventResult>();
 
     public ConfigEvent(ReadCsv config, int row)
@@ -203,36 +165,19 @@ public class ConfigEvent
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
+        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
         for (int i = 0; i < 2; i++)
         {
             EventResult data;
-            data.resultDesc = config.GetDataByRowAndName(row, "Result" + (i + 1).ToString());
-            data.reward = int.Parse(config.GetDataByRowAndName(row, "Reward" + (i + 1).ToString()));
+            data.resultDesc = config.GetDataByRowAndName(row, "ResultDesc" + (i + 1).ToString());
+            data.type = int.Parse(config.GetDataByRowAndName(row, "Type" + (i + 1).ToString()));
+            data.result = int.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
             if (!string.IsNullOrEmpty(data.resultDesc))
             {
                 _resultList.Add(data);
             }           
         }
-    }
-}
-
-public class ConfigEventPackage
-{
-    public int _id;
-    public int _packId;
-    public int _type;
-    public int _event;
-    public int _condition;
-    public int _weight;
-
-    public ConfigEventPackage(ReadCsv config, int row)
-    {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
-        _packId = int.Parse(config.GetDataByRowAndName(row, "PackID"));
-        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
-        _event = int.Parse(config.GetDataByRowAndName(row, "Event"));
-        _condition = int.Parse(config.GetDataByRowAndName(row, "Condition"));
-        _weight = int.Parse(config.GetDataByRowAndName(row, "Weight"));
     }
 }
 
@@ -245,12 +190,18 @@ public class ConfigDrop
     }
 
     public int _id;
+    public int _sceneId;
+    public int _rate;
+    public int _gold;
     public List<DropData> _itemList = new List<DropData>();
 
     public ConfigDrop(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
-        for (int i = 0; i < 5; i++)
+        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
+        _gold = int.Parse(config.GetDataByRowAndName(row, "Gold"));
+        for (int i = 0; i < 4; i++)
         {
             DropData data;
             data._item = int.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
@@ -287,6 +238,8 @@ public class ConfigMonster
     public int _atk;
     public int _def;
     public int _skill;
+    public int _sceneId;
+    public int _rate;
 
     public ConfigMonster(ReadCsv config, int row)
     {
@@ -297,5 +250,7 @@ public class ConfigMonster
         _atk = int.Parse(config.GetDataByRowAndName(row, "Atk"));
         _def = int.Parse(config.GetDataByRowAndName(row, "Def"));
         _skill = int.Parse(config.GetDataByRowAndName(row, "Skill"));
+        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
     }
 }

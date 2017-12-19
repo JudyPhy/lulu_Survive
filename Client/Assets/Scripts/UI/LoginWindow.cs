@@ -36,14 +36,14 @@ public class LoginWindow : Window
 
     private void OnClickNew(EventContext context)
     {
-        Process.Instance.StartGame();
+        Process.Instance.StartNewGame();
         this.Hide();
         UIManager.Instance.EnterGame();
     }
 
     private void OnClickContinue(EventContext context)
     {
-        Process.Instance.ReqHistoryData();
+        Process.Instance.StartHistoryGame();
         this.Hide();
         UIManager.Instance.EnterGame();
     }

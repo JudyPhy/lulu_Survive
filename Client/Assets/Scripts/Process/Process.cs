@@ -28,14 +28,19 @@ public class Process
     public int CurScene { get { return _curScene; } }
     private int _curScene;
 
-    public int Destination { get { return _destination; } }
-    private int _destination;
+    private Vector2 _bornPos;
 
-    public int Distance { get { return _distance; } }
-    private int _distance;
+    public Vector2 CurPos { get { return _curPos; } }
+    private Vector2 _curPos;
 
-    public int CurStage { get { return _curStage; } }
-    private int _curStage;
+    public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
+    private List<ConfigEvent> _curSceneEvents = new List<ConfigEvent>();
+
+    public List<ConfigMonster> CurSceneMonsters { get { return _curSceneMonsters; } }
+    private List<ConfigMonster> _curSceneMonsters = new List<ConfigMonster>();
+
+    public List<ConfigDrop> CurSceneDrops { get { return _curSceneDrops; } }
+    private List<ConfigDrop> _curSceneDrops = new List<ConfigDrop>();
 
     public int LastStoryID { get { return _lastStoryId; } }
     private int _lastStoryId;
@@ -44,30 +49,53 @@ public class Process
     private int _nextStoryId;
 
     public Role Player { get { return _player; } }
-    private Role _player;
-
-    List<ConfigEventPackage> _curSceneEvents;
+    private Role _player;   
 
     public List<string> CurDialog = new List<string>();
 
-    public void StartGame()
+    public void StartNewGame()
     {        
-        MyLog.Log("StartGame=>");
+        MyLog.Log("StartNewGame=>");
         _player = new Role(69999);
-        UpdateScene(1001);
+        SwitchScene(1001);
         _lastStoryId = 0;
         _nextStoryId = 100101;
-
         Saved();
+    }    
+
+    public void StartHistoryGame()
+    {
+        SavedData data = GameSaved.GetData();
+        _curScene = data.curScene;
+        _curPos = new Vector2(data.curPos[0], data.curPos[1]);
+        _lastStoryId = data.lastStoryId;
+        _nextStoryId = data.nextStoryId;
+        _player = new Role(data.role, data.itemList, data.gold);
+        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _curPos:" + _curPos + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
+        MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
+        MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
+
+        ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
+        if (scene != null)
+        {
+            _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
+            _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
+            _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
+        }
+        else
+        {
+            MyLog.LogError("Scene[" + _curScene + "] not exist.");
+            GameOver();
+        }
     }
 
     public void Saved()
     {
         SavedData data = new SavedData();
         data.curScene = _curScene;
-        data.destination = _destination;
-        data.distance = _distance;
-        data.curStage = _curStage;        
+        data.curPos = new int[2];
+        data.curPos[0] = (int)_curPos.x;
+        data.curPos[1] = (int)_curPos.y;
         data.gold = _player.Gold;
 
         data.lastStoryId = _lastStoryId;
@@ -86,23 +114,23 @@ public class Process
         GameSaved.SetData(data);
     }
 
-    public void ReqHistoryData()
+    private void SwitchScene(int toSceneId)
     {
-        SavedData data = GameSaved.GetData();
-        _curScene = data.curScene;
-        _destination = data.destination;
-        _distance = data.distance;
-        _curStage = data.curStage;
-        _lastStoryId = data.lastStoryId;
-        _nextStoryId = data.nextStoryId;
-        _player = new Role(data.role, data.itemList, data.gold);
-        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _destination:" + _destination + ", _distance:" + _distance + ", _curStage:" + _curStage +
-            ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
-        MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
-        MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
-
-        ConfigMap sceneCfg = ConfigManager.Instance.ReqMapData(_curScene);
-        _curSceneEvents = ConfigManager.Instance.ReqEventList(sceneCfg._eventPack);
+        _curScene = toSceneId;
+        ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
+        if (scene != null)
+        {
+            _bornPos = scene._pos;
+            _curPos = scene._pos;
+            _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
+            _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
+            _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
+        }
+        else
+        {
+            MyLog.LogError("Scene[" + _curScene + "] not exist.");
+            GameOver();
+        }
     }
 
     public bool NeedShowDialog()
@@ -164,6 +192,17 @@ public class Process
         return 0;
     }
 
+    public bool InCurScene(ConfigScene curSceneData, Vector2 curPos)
+    {
+        Vector2 deltaX = curPos - _bornPos;
+        if ((curPos.x <= _bornPos.x && Mathf.Abs(deltaX.x) <= curSceneData._range.x) && (curPos.x >= _bornPos.x && Mathf.Abs(deltaX.x) <= curSceneData._range.y)
+            && (curPos.y >= _bornPos.y && Mathf.Abs(deltaX.y) <= curSceneData._range.z) && (curPos.y <= _bornPos.y && Mathf.Abs(deltaX.y) <= curSceneData._range.w))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public void MoveTowards()
     {
         MyLog.Log("MoveTowards");
@@ -199,9 +238,9 @@ public class Process
                 if (_distance <= 0)
                 {
                     MyLog.Log("Switch to new scene.");
-                    UpdateScene(_destination);
+                    SwitchScene(_destination);
                 }
-                UIManager.Instance.mMainWindow.UpdateScene();
+                UIManager.Instance.mMainWindow.UpdateSceneInfo();
             }
 
             //event
@@ -216,40 +255,52 @@ public class Process
         {
             UIManager.Instance.mBottomWindow.Tips("精力不足");
         }
+    }    
+
+    private EventType GetCurEventType()
+    {
+        return (EventType)Random.Range(1, 4);
     }
 
-    private void UpdateScene(int sceneId)
+    public EventData GetRandomEvent()
     {
-        _curScene = sceneId;
-        ConfigMap data = ConfigManager.Instance.ReqMapData(_curScene);
-        _destination = data == null ? 0 : data._destination;
-        _distance = data == null ? 0 : data._distance;
-        _curSceneEvents = ConfigManager.Instance.ReqEventList(data._eventPack);
-        _curStage = 0;
-    }
-
-    public ConfigEventPackage GetRandomEvent(List<ConfigEventPackage> packList)
-    {
-        //MyLog.LogError("GetRandomEvent packList count:" + packList.Count);
+        EventType type = GetCurEventType();
         List<int> sampleList = new List<int>();
-        for (int i = 0; i < packList.Count; i++)
+        switch (type)
         {
-            int eventId = packList[i]._event;
-            int weight = packList[i]._weight;
-            for (int n = 0; n < weight * 10; n++)
-            {
-                sampleList.Add(eventId);
-            }
+            case EventType.Event:
+                for (int i = 0; i < _curSceneEvents.Count; i++)
+                {
+                    for (int n = 0; n < _curSceneEvents[i]._rate; n++)
+                    {
+                        sampleList.Add(_curSceneEvents[i]._id);
+                    }
+                }
+                break;
+            case EventType.Battle:
+                for (int i = 0; i < _curSceneMonsters.Count; i++)
+                {
+                    for (int n = 0; n < _curSceneMonsters[i]._rate; n++)
+                    {
+                        sampleList.Add(_curSceneMonsters[i]._id);
+                    }
+                }
+                break;
+            case EventType.Drop:
+                for (int i = 0; i < _curSceneDrops.Count; i++)
+                {
+                    for (int n = 0; n < _curSceneDrops[i]._rate; n++)
+                    {
+                        sampleList.Add(_curSceneDrops[i]._id);
+                    }
+                }
+                break;
+            default:
+                return null;
         }
-        int index = Random.Range(0, sampleList.Count);
-        for (int i = 0; i < packList.Count; i++)
-        {
-            if (packList[i]._event == sampleList[index])
-            {
-                return packList[i];
-            }
-        }
-        return null;
+        int m = Random.Range(0, sampleList.Count);
+        EventData result = new EventData(type, sampleList[m]);
+        return result;
     }
 
     public void UpdateItems(Dictionary<ConfigItem, int> get, Dictionary<ConfigItem, int> loss)
