@@ -37,17 +37,47 @@ public class DialogWindow : Window
         mBtnSkip.onClick.Add(OnClickBtnSkip);
     }
 
+    protected override void OnShown()
+    {
+        HideAllText();
+        HideBtns();
+        mStoryInfo = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
+        if (mStoryInfo != null)
+        {
+            mDialogList.Clear();
+            SplitDialog(mStoryInfo._desc);
+            mCurDialogIndex = 0;
+            mCurWordCount = 1;
+            Timers.inst.Add(0.1f, 0, UpdateDialog);
+        }
+        else
+        {
+            MyLog.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
+            UIManager.Instance.SwitchToUI(UIType.Main);
+        }
+    }
+
     private void OnClickOptionBtn(EventContext context)
     {       
-        MyLog.Log("OnClickBtn");
-        int nextDialogId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
-        TurnToNext(nextDialogId);
+        MyLog.Log("OnClickOptionBtn");
+        int resultType = context.sender == mBtn1 ? mStoryInfo._optionList[0].type : mStoryInfo._optionList[1].type;
+        int resultId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
+        switch (resultType)
+        {
+            case 1:
+                Process.Instance.TurnToNextDialog(resultId);
+                OnShown();
+                break;
+            default:
+                UIManager.Instance.SwitchToUI(UIType.Main);
+                break;
+        }
     }
 
     private void OnClickBtnOver(EventContext context)
     {        
         MyLog.Log("OnClickBtnOver");
-        TurnToNext(mStoryInfo._nextId);
+        UIManager.Instance.SwitchToUI(UIType.Main);
     }
 
     private void OnClickBtnSkip(EventContext context)
@@ -61,37 +91,22 @@ public class DialogWindow : Window
             textField.visible = true;
             textField.text = mDialogList[i];
             textField.SetPosition(0, mYStart + mYSpace * i, 0);
-        }        
-        if (mStoryInfo._type == 2)
-        {
-            ShowOptionBtns();
         }
-        else
+        switch (mStoryInfo._type)
         {
-            mBtnOver.visible = true;
-        }
-    }
-
-    private void TurnToNext(int nextDialogId)
-    {
-        MyLog.Log("TurnToNext: nextDialogId=" + nextDialogId);
-        if (nextDialogId != 0)
-        {
-            //to next dialog
-            Process.Instance.TurnToNextDialog(nextDialogId);
-            ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
-            if (curStory != null)
-            {
-                mStoryInfo = curStory;
+            case 1:
+                Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
                 OnShown();
-            }
-        }
-        else
-        {
-            //to main ui
-            Hide();
-            UIManager.Instance.mMainWindow.Show();
-            UIManager.Instance.mBottomWindow.Show();
+                break;
+            case 2:
+                ShowOptionBtns();
+                break;
+            case 3:
+                mBtnOver.visible = true;
+                mBtnSkip.visible = false;
+                break;
+            default:
+                break;
         }
     }
 
@@ -114,30 +129,22 @@ public class DialogWindow : Window
         GTextField textField = com.GetChild("n0").asTextField;
         mTextFiledList.Add(textField);
         return textField;
-    }
+    }    
 
-    protected override void OnShown()
+    private void SplitDialog(string fullContent)
     {
-        mDialogList.Clear();
-        HideAllText();
-        HideBtns();
-        //split dialog
         int startIndex = 0;
-        for (int i = 0; i < mStoryInfo._desc.Length; i++)
+        for (int i = 0; i < fullContent.Length; i++)
         {
-            if (mStoryInfo._desc[i] == '|')
+            if (fullContent[i] == '|')
             {
-                string str = mStoryInfo._desc.Substring(startIndex, i - startIndex);
+                string str = fullContent.Substring(startIndex, i - startIndex);
                 mDialogList.Add(str);
                 startIndex = i + 1;
             }
         }
-        mDialogList.Add(mStoryInfo._desc.Substring(startIndex));
-        mCurDialogIndex = 0;
-        mCurWordCount = 1;
-        Timers.inst.Add(0.1f, 0, UpdateDialog);
-        mBtnSkip.visible = true;
-    }    
+        mDialogList.Add(fullContent.Substring(startIndex));
+    }
 
     private void UpdateDialog(object param)
     {
@@ -154,7 +161,7 @@ public class DialogWindow : Window
         {
             string str = mDialogList[mCurDialogIndex].Substring(0, mCurWordCount);
             //MyLog.LogError("UpdateDialog: str=" + str);
-            mCurWordCount++;
+            mCurWordCount++;            
             GTextField textField = GetTextField(mCurDialogIndex);
             textField.visible = true;
             textField.text = str;
@@ -164,16 +171,18 @@ public class DialogWindow : Window
                 mCurDialogIndex++;
                 mCurWordCount = 1;
             }
+            mBtnSkip.visible = mCurWordCount > 1;
         }
     }
 
     private void ShowOptionBtns()
-    {
-        mBtnSkip.visible = false;
+    {        
         mBtn1.visible = true;
         mBtn1.text = mStoryInfo._optionList[0].option;
         mBtn2.visible = true;
         mBtn2.text = mStoryInfo._optionList[1].option;
+        mBtnSkip.visible = false;
+        mBtnOver.visible = false;
     }
 
     private void HideBtns()

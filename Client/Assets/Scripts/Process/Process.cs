@@ -33,6 +33,9 @@ public class Process
     public Vector2 CurPos { get { return _curPos; } }
     private Vector2 _curPos;
 
+    public Vector2 CurOutPos { get { return _curOutPos; } }
+    private Vector2 _curOutPos;
+
     public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
     private List<ConfigEvent> _curSceneEvents = new List<ConfigEvent>();
 
@@ -49,9 +52,10 @@ public class Process
     private int _nextStoryId;
 
     public Role Player { get { return _player; } }
-    private Role _player;   
+    private Role _player;
 
-    public List<string> CurDialog = new List<string>();
+    public EventType CurEventType { get { return _curEventType; } }
+    private EventType _curEventType;
 
     public void StartNewGame()
     {        
@@ -125,6 +129,12 @@ public class Process
             _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
             _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
             _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
+            //out
+            if (scene._outList.Count > 0)
+            {
+                List<Vector2> outPosList = new List<Vector2>(scene._outList.Values);
+                _curOutPos = outPosList[0];
+            }
         }
         else
         {
@@ -151,33 +161,28 @@ public class Process
         }
         else
         {
-            if (lastStory._type == 2)
+            switch (lastStory._type)
             {
-                _nextStoryId = _lastStoryId;
-                return true;
-            }
-            else
-            {
-                int last_nextId = lastStory._nextId;
-                if (last_nextId == 0)
-                {
-                    if (_curScene == lastStory._sceneId)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        _nextStoryId = GetSwitchDialog(_curScene);
-                        return _nextStoryId != 0;
-                    }
-                }
-                else
-                {
-                    _nextStoryId = last_nextId;
+                case 1:
+                    //跳转下一个剧情
+                    _nextStoryId = lastStory._nextId; ;
                     return true;
-                }
-            }            
-        }
+                case 2:
+                    //未选择就退出，重新选择
+                    _nextStoryId = _lastStoryId;
+                    return true;
+                case 3:
+                    //跳转场景
+                    if (lastStory._nextId != _curScene)
+                    {
+                        SwitchScene(lastStory._nextId);
+                    }                 
+                    _nextStoryId = 0;
+                    return false;
+                default:
+                    return false;
+            }
+        }       
     }
 
     private int GetSwitchDialog(int newSceneId)
@@ -207,24 +212,20 @@ public class Process
     {
         MyLog.Log("MoveTowards");
         //energy
-        int energy = _player.Energy - 10;
+        int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
         if (energy >= 0)
         {
             _player.Energy = energy;
             UIManager.Instance.mMainWindow.UpdateEnergy();
 
             //hungry
-            int hungry = _player.Hungry - 20;
-            if (hungry >= 0)
+            int hungry = _player.Hungry - GameConfig.COST_HUNGRY_ONCE;
+            if (_player.Hungry > 0 && hungry < 0)
             {
-                _player.Hungry = hungry;                
-            }
-            else
-            {
-                _player.Hungry = 0;
                 _player.Healthy--;
                 UIManager.Instance.mMainWindow.UpdateHealthy();
             }
+            _player.Hungry = hungry;
             UIManager.Instance.mMainWindow.UpdateHungry();
 
             //scene
@@ -234,13 +235,8 @@ public class Process
             }
             else
             {
-                _distance--;
-                if (_distance <= 0)
-                {
-                    MyLog.Log("Switch to new scene.");
-                    SwitchScene(_destination);
-                }
-                UIManager.Instance.mMainWindow.UpdateSceneInfo();
+                _curPos = GetNewPos();
+                MyLog.Log("Move to pos[" + _curPos + "]");
             }
 
             //event
@@ -253,9 +249,35 @@ public class Process
         }
         else
         {
-            UIManager.Instance.mBottomWindow.Tips("精力不足");
+            UIManager.Instance.mMainWindow.Tips("精力不足");
         }
-    }    
+    }
+
+    private Vector2 GetNewPos()
+    {
+        Vector2 pos = _curPos;
+        ConfigScene curSceneData = ConfigManager.Instance.ReqSceneData(_curScene);
+        if (curSceneData != null)
+        {
+            Vector2 delta = _curOutPos - _curPos;
+            if (delta.x != 0)
+            {
+                pos.x = delta.x > 0 ? _curPos.x++ : _curPos.x--;
+            }
+            else
+            {
+                if (delta.y != 0)
+                {
+                    pos.y = delta.y > 0 ? _curPos.y++ : _curPos.y--;
+                }
+                else
+                {
+                    MyLog.Log("Current pos == out pos");
+                }
+            }
+        }
+        return pos;
+    }
 
     private EventType GetCurEventType()
     {
@@ -391,12 +413,7 @@ public class Process
     public void GameOver()
     {
         MyLog.LogError("Game Over!");
-        UIManager.Instance.mDialogWindow.Hide();
-        UIManager.Instance.mMainWindow.Hide();
-        UIManager.Instance.mBottomWindow.Hide();
-        UIManager.Instance.mEventWindow.Hide();
-        UIManager.Instance.mBattleWindow.Hide();
-        UIManager.Instance.mLoginWindow.Show();
+        UIManager.Instance.SwitchToUI(UIType.Login);
     }
 
 

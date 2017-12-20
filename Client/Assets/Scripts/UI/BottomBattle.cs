@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class BattleWindow : Window
+public class BottomBattle : BottomUI
 {
+    GComponent mObj;
+
     GButton mBtnStatus;
     GButton mBtnFight;
     GButton mBtnRun;
@@ -18,24 +20,22 @@ public class BattleWindow : Window
     public ConfigMonster mMonsterInfo;
     private int hp;
 
-    protected override void OnInit()
+    public BottomBattle()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
-        this.Center();
-        this.modal = true;
+        mObj = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
 
-        mBtnStatus = this.contentPane.GetChild("n5").asButton;
+        mBtnStatus = this.mObj.GetChild("n5").asButton;
         mBtnStatus.onClick.Add(OnClickStatus);
         UpdateStatusBtn();
-        mBtnFight = this.contentPane.GetChild("n3").asButton;
+        mBtnFight = this.mObj.GetChild("n3").asButton;
         mBtnFight.onClick.Add(OnClickFight);
-        mBtnRun = this.contentPane.GetChild("n4").asButton;
+        mBtnRun = this.mObj.GetChild("n4").asButton;
         mBtnRun.onClick.Add(OnClickRun);
 
-        mMonsterName = this.contentPane.GetChild("textMonsterName").asTextField;
-        mMonsterHp = this.contentPane.GetChild("textMosterHp").asTextField;
-        mDesc = this.contentPane.GetChild("textEvent").asTextField;
-        mRunRate = this.contentPane.GetChild("textRunPro").asTextField;
+        mMonsterName = this.mObj.GetChild("textMonsterName").asTextField;
+        mMonsterHp = this.mObj.GetChild("textMosterHp").asTextField;
+        mDesc = this.mObj.GetChild("textEvent").asTextField;
+        mRunRate = this.mObj.GetChild("textRunPro").asTextField;
     }
 
     private void UpdateStatusBtn()

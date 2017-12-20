@@ -13,6 +13,10 @@ public class MainWindow : Window
     GTextField mTextMoney;
     GButton mBtnNav;
 
+    BottomNormal mBottomNormal;
+    BottomBattle mBottomBattle;
+    BottomEvent mBottomEvent;
+
     protected override void OnInit()
     {
         this.contentPane = UIPackage.CreateObject("wuxia", "UI_main").asCom;
@@ -38,6 +42,10 @@ public class MainWindow : Window
                 mTextValueInRect[i] = item.GetChild("value").asTextField;
             }
         }
+
+        mBottomNormal = new BottomNormal();
+        mBottomBattle = new BottomBattle();
+        mBottomEvent = new BottomEvent();
     }
 
     override protected void DoShowAnimation()
@@ -55,6 +63,12 @@ public class MainWindow : Window
     protected override void OnShown()
     {
         MyLog.Log("MainWindow shown");
+        UpdateTop();
+        BottomShown(Process.Instance.CurEventType);
+    }
+
+    private void UpdateTop()
+    {
         UpdateSceneInfo();
         UpdateHealthy();
         UpdateEnergy();
@@ -90,6 +104,11 @@ public class MainWindow : Window
         mTextValueInRect[0].text = Process.Instance.Player.Healthy < 0 ? "0" : Process.Instance.Player.Healthy.ToString();
     }
 
+    private void TweenBackText()
+    {
+        
+    }
+
     public void UpdateEnergy()
     {
         MyLog.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
@@ -100,6 +119,7 @@ public class MainWindow : Window
     {
         MyLog.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
         mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
+        mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.black;
     }
 
     public void UpdateBattleAttr()
@@ -114,6 +134,19 @@ public class MainWindow : Window
     {
         MyLog.Log("UpdateGold:" + Process.Instance.Player.Gold);
         mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
+    }
+
+    private void BottomShown(EventType type)
+    {
+        mBottomNormal.Show(type == EventType.Idle);
+        mBottomEvent.Show(type == EventType.Event);
+        mBottomBattle.Show(type == EventType.Battle);
+    }
+
+    public void Tips(string content)
+    {
+        BottomShown(EventType.Idle);
+        mBottomNormal.Tips(content);
     }
 
 }

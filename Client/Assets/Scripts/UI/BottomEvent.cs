@@ -4,25 +4,24 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class EventWindow : Window
+public class BottomEvent : BottomUI
 {
+    GComponent mObj;
     GButton mBtn1;
     GButton mBtn2;
     GTextField mText;
 
     public ConfigEvent EventInfo;
 
-    protected override void OnInit()
+    public BottomEvent()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "fn_event").asCom;
-        this.Center();
-        this.modal = true;
+        mObj = UIPackage.CreateObject("wuxia", "fn_event").asCom;
 
-        mBtn1 = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtn1 = mObj.GetChild("btnChooseA").asButton;
         mBtn1.onClick.Add(OnClickBtn);
-        mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
+        mBtn2 = mObj.GetChild("btnChooseB").asButton;
         mBtn2.onClick.Add(OnClickBtn);
-        mText = this.contentPane.GetChild("textEvent").asTextField;
+        mText = mObj.GetChild("textEvent").asTextField;
     }
 
     private void OnClickBtn(EventContext context)

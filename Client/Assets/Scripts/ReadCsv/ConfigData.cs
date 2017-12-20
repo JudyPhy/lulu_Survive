@@ -114,6 +114,7 @@ public class ConfigStory
     public struct StoryOption
     {
         public string option;
+        public int type;
         public int result;
     }
 
@@ -136,6 +137,7 @@ public class ConfigStory
             {
                 StoryOption data;
                 data.option = config.GetDataByRowAndName(row, "Option" + (i + 1).ToString());
+                data.type = int.Parse(config.GetDataByRowAndName(row, "ResultType" + (i + 1).ToString()));
                 data.result = int.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
                 _optionList.Add(data);
             }

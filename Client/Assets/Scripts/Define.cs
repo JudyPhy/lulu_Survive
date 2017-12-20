@@ -46,3 +46,17 @@ public class EventData
         _id = id;
     }
 }
+
+public enum UIType
+{
+    Idle,
+    Login,
+    Main,
+    Dialog,
+}
+
+public class GameConfig
+{
+    public static int COST_ENERGY_ONCE = 10;
+    public static int COST_HUNGRY_ONCE = 10;
+}

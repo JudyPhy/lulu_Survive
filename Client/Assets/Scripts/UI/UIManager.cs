@@ -10,12 +10,10 @@ public class UIManager : MonoBehaviour
     
     private GComponent _mainView;
 
-    public DialogWindow mDialogWindow;
+ 
     public LoginWindow mLoginWindow;
+    public DialogWindow mDialogWindow;
     public MainWindow mMainWindow;
-    public BottomWindow mBottomWindow;
-    public EventWindow mEventWindow;
-    public BattleWindow mBattleWindow;
 
     void Awake()
     {
@@ -35,10 +33,6 @@ public class UIManager : MonoBehaviour
         mDialogWindow = new DialogWindow();
         mLoginWindow = new LoginWindow();
         mMainWindow = new MainWindow();
-
-        mBottomWindow = new BottomWindow();
-        mEventWindow = new EventWindow();
-        mBattleWindow = new BattleWindow();
     }
 
     void Start()
@@ -54,23 +48,33 @@ public class UIManager : MonoBehaviour
         if (Process.Instance.NeedShowDialog())
         {
             MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
-            ConfigStory curStory = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
-            if (curStory != null)
-            {
-                mDialogWindow.mStoryInfo = curStory;
-                mMainWindow.Hide();
-                mBottomWindow.Hide();
-                mDialogWindow.Show();
-            }
-            else
-            {
-                MyLog.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
-            }
+            SwitchToUI(UIType.Dialog);
         }
         else
         {
-            mMainWindow.Show();
-            mBottomWindow.Show();
+            SwitchToUI(UIType.Main);
+        }
+    }
+
+    public void SwitchToUI(UIType type)
+    {
+        switch (type)
+        {
+            case UIType.Dialog:
+                mLoginWindow.Hide();
+                mMainWindow.Hide();
+                mDialogWindow.Show();
+                break;
+            case UIType.Login:
+                mLoginWindow.Show();
+                mMainWindow.Hide();
+                mDialogWindow.Hide();
+                break;
+            case UIType.Main:
+                mLoginWindow.Hide();
+                mMainWindow.Show();
+                mDialogWindow.Hide();
+                break;
         }
     }
 
