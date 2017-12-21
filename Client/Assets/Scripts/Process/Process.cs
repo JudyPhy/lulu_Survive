@@ -35,6 +35,7 @@ public class Process
 
     public Vector2 CurOutPos { get { return _curOutPos; } }
     private Vector2 _curOutPos;
+    private int _curOutId;
 
     public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
     private List<ConfigEvent> _curSceneEvents = new List<ConfigEvent>();
@@ -54,18 +55,18 @@ public class Process
     public Role Player { get { return _player; } }
     private Role _player;
 
-    public EventType CurEventType { get { return _curEventType; } }
-    private EventType _curEventType;
+    public EventData CurEventData { set { _curEventData = value; } get { return _curEventData; } }
+    private EventData _curEventData;
 
     public void StartNewGame()
-    {        
+    {
         MyLog.Log("StartNewGame=>");
         _player = new Role(69999);
         SwitchScene(1001);
         _lastStoryId = 0;
         _nextStoryId = 100101;
         Saved();
-    }    
+    }
 
     public void StartHistoryGame()
     {
@@ -132,9 +133,14 @@ public class Process
             //out
             if (scene._outList.Count > 0)
             {
-                List<Vector2> outPosList = new List<Vector2>(scene._outList.Values);
-                _curOutPos = outPosList[0];
+                foreach (int id in scene._outList.Keys)
+                {
+                    _curOutId = id;
+                    _curOutPos = scene._outList[id];
+                }
             }
+            //event
+            _curEventData = null;
         }
         else
         {
@@ -176,13 +182,13 @@ public class Process
                     if (lastStory._nextId != _curScene)
                     {
                         SwitchScene(lastStory._nextId);
-                    }                 
+                    }
                     _nextStoryId = 0;
                     return false;
                 default:
                     return false;
             }
-        }       
+        }
     }
 
     private int GetSwitchDialog(int newSceneId)
@@ -210,23 +216,25 @@ public class Process
 
     public void MoveTowards()
     {
-        MyLog.Log("MoveTowards");
+        MyLog.Log("MoveTowards:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")); //80
         //energy
         int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
         if (energy >= 0)
         {
             _player.Energy = energy;
-            UIManager.Instance.mMainWindow.UpdateEnergy();
+            //UIManager.Instance.mMainWindow.UpdateEnergy();
+            MyLog.Log("MoveTowards2:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")); //80
 
             //hungry
             int hungry = _player.Hungry - GameConfig.COST_HUNGRY_ONCE;
             if (_player.Hungry > 0 && hungry < 0)
             {
                 _player.Healthy--;
-                UIManager.Instance.mMainWindow.UpdateHealthy();
+                //UIManager.Instance.mMainWindow.UpdateHealthy();
             }
             _player.Hungry = hungry;
-            UIManager.Instance.mMainWindow.UpdateHungry();
+            //UIManager.Instance.mMainWindow.UpdateHungry();
+            MyLog.Log("MoveTowards3:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
             //scene
             if (_player.Healthy <= 0)
@@ -237,20 +245,27 @@ public class Process
             {
                 _curPos = GetNewPos();
                 MyLog.Log("Move to pos[" + _curPos + "]");
+                MyLog.Log("MoveTowards4:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                if (_curPos == _curOutPos)
+                {
+                    MyLog.Log("Switch scene.");
+                    SwitchScene(_curOutId);
+                }
+                else
+                {
+                    //event
+                    _curEventData = GetRandomEvent();
+                }
+                UIManager.Instance.mMainWindow.UpdateUI();
+                MyLog.Log("MoveTowards5:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                Saved();
             }
-
-            //event
-            ConfigEventPackage curEvent = GetRandomEvent(_curSceneEvents);
-            if (curEvent != null)
-            {
-                UIManager.Instance.UpdateEvent(curEvent);
-            }
-            Saved();
         }
         else
         {
             UIManager.Instance.mMainWindow.Tips("精力不足");
         }
+        Debug.LogError("move over:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
     }
 
     private Vector2 GetNewPos()

@@ -5,7 +5,7 @@ using FairyGUI;
 
 public class BottomUI
 {
-    GComponent mObj;
+    public GComponent mObj;
 
     public virtual void Show(bool show)
     {

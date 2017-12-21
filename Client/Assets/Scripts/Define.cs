@@ -39,11 +39,13 @@ public class EventData
 {
     public EventType _type;
     public int _id;
+    public string _desc;
 
-    public EventData(EventType type, int id)
+    public EventData(EventType type, int id, string desc = "")
     {
         _type = type;
         _id = id;
+        _desc = desc;
     }
 }
 

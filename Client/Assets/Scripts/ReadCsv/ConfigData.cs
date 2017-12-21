@@ -20,7 +20,7 @@ public class ConfigData
     public void LoadConfigs()
     {
         //Scene
-        ReadCsv config = new ReadCsv("Scene2");
+        ReadCsv config = new ReadCsv("Scene");
         for (int i = 3; i < config.GetRow(); i++)
         {
             ConfigScene data = new ConfigScene(config, i);
@@ -85,16 +85,23 @@ public class ConfigScene
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
+        string str = config.GetDataByRowAndName(row, "Stage");
         _stage = int.Parse(config.GetDataByRowAndName(row, "Stage"));
         _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
 
         string pos = config.GetDataByRowAndName(row, "Pos");
-        string[] strs1 = pos.Split(',');
-        _pos = new Vector2(int.Parse(strs1[0]), int.Parse(strs1[1]));
+        if (!string.IsNullOrEmpty(pos))
+        {
+            string[] strs1 = pos.Split(',');
+            _pos = new Vector2(int.Parse(strs1[0]), int.Parse(strs1[1]));
+        }
 
         string range = config.GetDataByRowAndName(row, "InnerRange");
-        string[] strs2 = range.Split(',');
-        _range = new Vector4(int.Parse(strs2[0]), int.Parse(strs2[1]), int.Parse(strs2[2]), int.Parse(strs2[3]));
+        if (!string.IsNullOrEmpty(pos))
+        {
+            string[] strs2 = range.Split(',');
+            _range = new Vector4(int.Parse(strs2[0]), int.Parse(strs2[1]), int.Parse(strs2[2]), int.Parse(strs2[3]));
+        }
 
         for (int i = 0; i < 3; i++)
         {
@@ -187,7 +194,7 @@ public class ConfigDrop
 {
     public struct DropData
     {
-        public int _item;
+        public int _itemId;
         public int _count;
     }
 
@@ -206,9 +213,12 @@ public class ConfigDrop
         for (int i = 0; i < 4; i++)
         {
             DropData data;
-            data._item = int.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
-            data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
-            _itemList.Add(data);
+            data._itemId = int.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
+            if (data._itemId > 0)
+            {
+                data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
+                _itemList.Add(data);
+            }
         }
     }
 }
@@ -249,7 +259,7 @@ public class ConfigMonster
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
         _hp = int.Parse(config.GetDataByRowAndName(row, "HP"));
-        _atk = int.Parse(config.GetDataByRowAndName(row, "Atk"));
+        _atk = int.Parse(config.GetDataByRowAndName(row, "Atk"));        
         _def = int.Parse(config.GetDataByRowAndName(row, "Def"));
         _skill = int.Parse(config.GetDataByRowAndName(row, "Skill"));
         _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));

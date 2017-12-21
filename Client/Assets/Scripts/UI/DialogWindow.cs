@@ -77,7 +77,15 @@ public class DialogWindow : Window
     private void OnClickBtnOver(EventContext context)
     {        
         MyLog.Log("OnClickBtnOver");
-        UIManager.Instance.SwitchToUI(UIType.Main);
+        if (mStoryInfo._type == 1)
+        {
+            Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
+            OnShown();
+        }
+        else
+        {
+            UIManager.Instance.SwitchToUI(UIType.Main);
+        }
     }
 
     private void OnClickBtnSkip(EventContext context)
@@ -92,22 +100,7 @@ public class DialogWindow : Window
             textField.text = mDialogList[i];
             textField.SetPosition(0, mYStart + mYSpace * i, 0);
         }
-        switch (mStoryInfo._type)
-        {
-            case 1:
-                Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
-                OnShown();
-                break;
-            case 2:
-                ShowOptionBtns();
-                break;
-            case 3:
-                mBtnOver.visible = true;
-                mBtnSkip.visible = false;
-                break;
-            default:
-                break;
-        }
+        DialogOver();
     }
 
     private void HideAllText()
@@ -146,16 +139,30 @@ public class DialogWindow : Window
         mDialogList.Add(fullContent.Substring(startIndex));
     }
 
+    private void DialogOver()
+    {
+        switch (mStoryInfo._type)
+        {
+            case 1:
+            case 3:
+                mBtnOver.visible = true;
+                mBtnSkip.visible = false;
+                break;
+            case 2:
+                ShowOptionBtns();
+                break;            
+            default:
+                break;
+        }
+    }
+
     private void UpdateDialog(object param)
     {
         if (mCurDialogIndex >= mDialogList.Count)
         {
             MyLog.Log("Dialog over");
             Timers.inst.Remove(UpdateDialog);
-            if (mStoryInfo._type == 2)
-            {
-                ShowOptionBtns();
-            }
+            DialogOver();
         }
         else
         {
@@ -171,7 +178,7 @@ public class DialogWindow : Window
                 mCurDialogIndex++;
                 mCurWordCount = 1;
             }
-            mBtnSkip.visible = mCurWordCount > 1;
+            mBtnSkip.visible = true;
         }
     }
 

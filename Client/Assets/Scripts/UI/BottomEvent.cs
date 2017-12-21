@@ -4,14 +4,20 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
+public enum EventResultType
+{
+    Idle,
+    Battle,
+    Drop,
+}
+
 public class BottomEvent : BottomUI
 {
-    GComponent mObj;
     GButton mBtn1;
     GButton mBtn2;
     GTextField mText;
 
-    public ConfigEvent EventInfo;
+    private ConfigEvent mEventInfo;
 
     public BottomEvent()
     {
@@ -24,38 +30,48 @@ public class BottomEvent : BottomUI
         mText = mObj.GetChild("textEvent").asTextField;
     }
 
-    private void OnClickBtn(EventContext context)
+    public void UpdateUI(int eventId)
     {
-        int eventPackId = 0;
-        eventPackId = context.sender == mBtn1 ? EventInfo._resultList[0].reward : EventInfo._resultList[1].reward;
-        Hide();
-        if (eventPackId == 0)
-        {            
-            UIManager.Instance.mBottomWindow.Show();
-            UIManager.Instance.mBottomWindow.Tips("");
+        MyLog.Log("Update event ui:" + eventId);
+        mEventInfo = ConfigManager.Instance.ReqEvent(eventId);
+        if (mEventInfo != null)
+        {
+            mText.text = mEventInfo._desc;
+            mBtn1.text = mEventInfo._resultList[0].resultDesc;
+            mBtn2.text = mEventInfo._resultList[1].resultDesc;
         }
         else
         {
-            List<ConfigEventPackage> packList = ConfigManager.Instance.ReqEventList(eventPackId);
-            ConfigEventPackage eventInfo = Process.Instance.GetRandomEvent(packList);
-            if (eventInfo != null)
-            {
-                UIManager.Instance.UpdateEvent(eventInfo);
-            }
+            MyLog.LogError("Event " + eventId + " not exist.");
         }
     }
 
-    protected override void OnShown()
+    private void OnClickBtn(EventContext context)
     {
-        MyLog.Log("EventWindow shown=> eventId:" + EventInfo._id);
-        mText.text = EventInfo._desc;
-        bool showBtns = EventInfo._resultList.Count == 2;
-        mBtn1.visible = showBtns;
-        mBtn2.visible = showBtns;
-        if (showBtns)
+        EventResultType resultType = EventResultType.Idle;
+        int resultId = 0;
+        if (context.sender == mBtn1)
         {
-            mBtn1.text = EventInfo._resultList[0].resultDesc;
-            mBtn2.text = EventInfo._resultList[1].resultDesc;
-        }       
+            resultType = (EventResultType)mEventInfo._resultList[0].type;
+            resultId = mEventInfo._resultList[0].result;
+        }
+        else if (context.sender == mBtn2)
+        {
+            resultType = (EventResultType)mEventInfo._resultList[1].type;
+            resultId = mEventInfo._resultList[1].result;
+        }
+        switch (resultType)
+        {
+            case EventResultType.Battle:
+                Process.Instance.CurEventData = new EventData(EventType.Battle, resultId);
+                break;
+            case EventResultType.Drop:
+                Process.Instance.CurEventData = new EventData(EventType.Drop, resultId);
+                break;
+            default:
+                Process.Instance.CurEventData = null;
+                break;
+        }
+        UIManager.Instance.mMainWindow.UpdateUI();
     }
 }

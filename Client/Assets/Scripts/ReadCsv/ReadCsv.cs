@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 public class ReadCsv {
@@ -12,15 +13,56 @@ public class ReadCsv {
         Debug.Log("Read filePath:" + filePath);
         string[] lineOfArray = File.ReadAllLines(filePath);
         this.Array = new string[lineOfArray.Length][];
-        for (int i = 0; i < lineOfArray.Length; i++) {
-            this.Array[i] = lineOfArray[i].Split(',');
+        for (int i = 0; i < lineOfArray.Length; i++)
+        {
+            string line = lineOfArray[i];
+            List<string> result = new List<string>();
+            int curStartPos = 0;
+            bool flag = false;
+            int index = 0;
+            for (int j = 0; j < line.Length; j++)
+            {
+                if (!flag && line[j] == '"')
+                {
+                    flag = true;
+                    continue;
+                }
+                if (flag && line[j] == '"')
+                {
+                    flag = false;
+                    string str = line.Substring(curStartPos + 1, j - curStartPos - 1);
+                    //Debug.Log("111111:" + str);
+                    result.Add(str);
+                    curStartPos = j + 2;
+                    index++;
+                    j++;
+                    continue;
+                }
+                if (!flag && line[j] == ',')
+                {
+                    string str = line.Substring(curStartPos, j - curStartPos);
+                    //Debug.Log("2222:" + str);
+                    result.Add(str);
+                    curStartPos = j + 1;
+                    index++;
+                }
+            }
+            string str2 = line.Substring(curStartPos);
+            //Debug.Log("last: " + str2);
+            result.Add(str2);
+            this.Array[i] = new string[result.Count];
+            for (int n = 0; n < result.Count; n++)
+            {
+                this.Array[i][n] = result[n];
+            }
+            //Debug.LogError("result.Count: " + result.Count);
         }
         this.Row_ = this.Array.Length;
     }
 
     public int GetRow() {
         return this.Row_;
-    }    
+    }
 
     public string GetDataByRowAndName(int nRow, string strName) {
         if (this.Array.Length <= 0 || nRow >= this.Array.Length)
@@ -63,7 +105,7 @@ public class ReadCsv {
             }
         }
         return "";
-    }  
+    }
 
 
 

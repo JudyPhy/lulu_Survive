@@ -6,16 +6,16 @@ using DG.Tweening;
 
 public class MainWindow : Window
 {
-    GTextField[] mTextTop = new GTextField[3];
-    
-    GTextField[] mTextValueInRect = new GTextField[9];
+    private GTextField[] mTextTop = new GTextField[3];
 
-    GTextField mTextMoney;
-    GButton mBtnNav;
+    private GTextField[] mTextValueInRect = new GTextField[9];
 
-    BottomNormal mBottomNormal;
-    BottomBattle mBottomBattle;
-    BottomEvent mBottomEvent;
+    private GTextField mTextMoney;
+    private GButton mBtnNav;
+
+    private BottomNormal mBottomNormal;
+    private BottomBattle mBottomBattle;
+    private BottomEvent mBottomEvent;
 
     protected override void OnInit()
     {
@@ -43,9 +43,12 @@ public class MainWindow : Window
             }
         }
 
-        mBottomNormal = new BottomNormal();
+        mBottomNormal = new BottomNormal();       
+        this.contentPane.AddChild(mBottomNormal.mObj);        
         mBottomBattle = new BottomBattle();
+        this.contentPane.AddChild(mBottomBattle.mObj);
         mBottomEvent = new BottomEvent();
+        this.contentPane.AddChild(mBottomEvent.mObj);
     }
 
     override protected void DoShowAnimation()
@@ -63,8 +66,13 @@ public class MainWindow : Window
     protected override void OnShown()
     {
         MyLog.Log("MainWindow shown");
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
         UpdateTop();
-        BottomShown(Process.Instance.CurEventType);
+        UpdateBottom();
     }
 
     private void UpdateTop()
@@ -106,7 +114,7 @@ public class MainWindow : Window
 
     private void TweenBackText()
     {
-        
+
     }
 
     public void UpdateEnergy()
@@ -136,17 +144,39 @@ public class MainWindow : Window
         mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
     }
 
-    private void BottomShown(EventType type)
+    public void UpdateBottom()
     {
-        mBottomNormal.Show(type == EventType.Idle);
+        if (Process.Instance.CurEventData == null)
+        {
+            Process.Instance.CurEventData = new EventData(EventType.Idle, 0);
+        }
+        EventType type = Process.Instance.CurEventData._type;
+        MyLog.Log("Bottom shown, type=" + type.ToString());
+        mBottomNormal.Show(type == EventType.Idle || type == EventType.Drop);
         mBottomEvent.Show(type == EventType.Event);
         mBottomBattle.Show(type == EventType.Battle);
+        switch (type)
+        {
+            case EventType.Idle:
+                mBottomNormal.UpdateIdleUI(Process.Instance.CurEventData._desc);
+                break;
+            case EventType.Drop:
+                mBottomNormal.UpdateDropUI(Process.Instance.CurEventData._id);
+                break;
+            case EventType.Event:
+                mBottomEvent.UpdateUI(Process.Instance.CurEventData._id);
+                break;
+            case EventType.Battle:
+                mBottomBattle.UpdateUI(Process.Instance.CurEventData._id);
+                break;
+            default:
+                break;
+        }
     }
 
     public void Tips(string content)
     {
-        BottomShown(EventType.Idle);
-        mBottomNormal.Tips(content);
+        Process.Instance.CurEventData = new EventData(EventType.Idle, 0, content);
     }
 
 }

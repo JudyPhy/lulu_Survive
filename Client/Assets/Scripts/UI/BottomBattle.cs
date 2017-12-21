@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class BottomBattle : BottomUI
 {
-    GComponent mObj;
-
     GButton mBtnStatus;
     GButton mBtnFight;
     GButton mBtnRun;
@@ -17,7 +15,7 @@ public class BottomBattle : BottomUI
     GTextField mDesc;
     GTextField mRunRate;
 
-    public ConfigMonster mMonsterInfo;
+    private ConfigMonster mMonsterInfo;
     private int hp;
 
     public BottomBattle()
@@ -36,6 +34,24 @@ public class BottomBattle : BottomUI
         mMonsterHp = this.mObj.GetChild("textMosterHp").asTextField;
         mDesc = this.mObj.GetChild("textEvent").asTextField;
         mRunRate = this.mObj.GetChild("textRunPro").asTextField;
+    }
+
+    public void UpdateUI(int monsterId)
+    {
+        MyLog.Log("Enter battle, monster:" + monsterId);
+        mMonsterInfo = ConfigManager.Instance.ReqMonster(monsterId);
+        if (mMonsterInfo != null)
+        {
+            mMonsterName.text = mMonsterInfo._name;
+            mMonsterHp.text = "HP:" + mMonsterInfo._hp.ToString();
+            mDesc.text = mMonsterInfo._desc;
+            mRunRate.text = "50%";
+            hp = mMonsterInfo._hp;
+        }
+        else
+        {
+            MyLog.Log("Monster " + monsterId + " not exist.");
+        }
     }
 
     private void UpdateStatusBtn()
@@ -61,17 +77,17 @@ public class BottomBattle : BottomUI
     }
 
     private void OnClickFight(EventContext context)
-    {        
+    {
         int atk = Process.Instance.Player.Atk - mMonsterInfo._def;
-        atk = atk < 0 ? 0 : atk;        
+        atk = atk < 0 ? 0 : atk;
         hp -= atk;
         MyLog.Log("Monster be attacked, lost hp:" + atk + ", left hp:" + hp);
         mMonsterHp.text = hp.ToString();
         if (hp <= 0)
         {
-            this.Hide();
-            UIManager.Instance.mBottomWindow.Show();
-            UIManager.Instance.mBottomWindow.Tips("战斗胜利");
+            Process.Instance.CurEventData = null;
+            UIManager.Instance.mMainWindow.UpdateUI();
+            UIManager.Instance.mMainWindow.Tips("战斗胜利");
         }
         else
         {
@@ -91,23 +107,13 @@ public class BottomBattle : BottomUI
         int rate = Random.Range(0, 101);
         if (rate > 50)
         {
-            Hide();
-            UIManager.Instance.mBottomWindow.Show();
-            UIManager.Instance.mBottomWindow.Tips("逃跑成功");
+            Process.Instance.CurEventData = null;
+            UIManager.Instance.mMainWindow.UpdateUI();
+            UIManager.Instance.mMainWindow.Tips("逃跑成功");
         }
         else
         {
             MonsterAttack(null);
         }
-    }
-
-    protected override void OnShown()
-    {
-        MyLog.Log("BattleWindow shown");
-        mMonsterName.text = mMonsterInfo._name;
-        mMonsterHp.text = "HP:" + mMonsterInfo._hp.ToString();
-        mDesc.text = mMonsterInfo._desc;
-        mRunRate.text = "50%";
-        hp = mMonsterInfo._hp;
     }
 }
