@@ -60,7 +60,6 @@ public class Process
 
     public void StartNewGame()
     {
-        MyLog.Log("StartNewGame=>");
         _player = new Role(69999);
         SwitchScene(1001);
         _lastStoryId = 0;
@@ -73,16 +72,19 @@ public class Process
         SavedData data = GameSaved.GetData();
         _curScene = data.curScene;
         _curPos = new Vector2(data.curPos[0], data.curPos[1]);
+        _curOutId = data.curOutId;
         _lastStoryId = data.lastStoryId;
         _nextStoryId = data.nextStoryId;
         _player = new Role(data.role, data.itemList, data.gold);
-        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _curPos:" + _curPos + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
+        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _curPos:" + _curPos + ", _curOutId:" + _curOutId + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
         MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
         MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
 
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
         if (scene != null)
         {
+            _bornPos = scene._pos;
+            _curOutPos = scene != null ? scene._outList[_curOutId] : new Vector2(0, 0);
             _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
             _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
             _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
@@ -101,6 +103,7 @@ public class Process
         data.curPos = new int[2];
         data.curPos[0] = (int)_curPos.x;
         data.curPos[1] = (int)_curPos.y;
+        data.curOutId = _curOutId;
         data.gold = _player.Gold;
 
         data.lastStoryId = _lastStoryId;
@@ -216,25 +219,20 @@ public class Process
 
     public void MoveTowards()
     {
-        MyLog.Log("MoveTowards:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")); //80
+        MyLog.Log("MoveTowards");
         //energy
         int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
         if (energy >= 0)
         {
             _player.Energy = energy;
-            //UIManager.Instance.mMainWindow.UpdateEnergy();
-            MyLog.Log("MoveTowards2:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")); //80
 
             //hungry
             int hungry = _player.Hungry - GameConfig.COST_HUNGRY_ONCE;
             if (_player.Hungry > 0 && hungry < 0)
             {
                 _player.Healthy--;
-                //UIManager.Instance.mMainWindow.UpdateHealthy();
             }
             _player.Hungry = hungry;
-            //UIManager.Instance.mMainWindow.UpdateHungry();
-            MyLog.Log("MoveTowards3:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
             //scene
             if (_player.Healthy <= 0)
@@ -245,19 +243,16 @@ public class Process
             {
                 _curPos = GetNewPos();
                 MyLog.Log("Move to pos[" + _curPos + "]");
-                MyLog.Log("MoveTowards4:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                 if (_curPos == _curOutPos)
                 {
-                    MyLog.Log("Switch scene.");
                     SwitchScene(_curOutId);
                 }
                 else
                 {
                     //event
-                    _curEventData = GetRandomEvent();
+                    _curEventData = GetRandomEvent();                    
                 }
                 UIManager.Instance.mMainWindow.UpdateUI();
-                MyLog.Log("MoveTowards5:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                 Saved();
             }
         }
@@ -265,7 +260,6 @@ public class Process
         {
             UIManager.Instance.mMainWindow.Tips("精力不足");
         }
-        Debug.LogError("move over:" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
     }
 
     private Vector2 GetNewPos()
@@ -296,7 +290,8 @@ public class Process
 
     private EventType GetCurEventType()
     {
-        return (EventType)Random.Range(1, 4);
+        return EventType.Drop;
+        //return (EventType)Random.Range(1, 4);
     }
 
     public EventData GetRandomEvent()
@@ -340,62 +335,6 @@ public class Process
         return result;
     }
 
-    public void UpdateItems(Dictionary<ConfigItem, int> get, Dictionary<ConfigItem, int> loss)
-    {
-        foreach (ConfigItem item in get.Keys)
-        {
-            if (item._id == 1001)
-            {
-                MyLog.Log("add gold:" + get[item]);
-                _player.UpdateGold(_player.Gold + get[item]);
-            }
-            else
-            {
-                bool find = false;
-                for (int i = 0; i < _player.Items.Count; i++)
-                {
-                    if (item._id == _player.Items[i].id)
-                    {
-                        find = true;
-                        _player.Items[i].count += get[item];
-                        break;
-                    }
-                }
-                if (!find)
-                {
-                    ItemCountData data = new ItemCountData();
-                    data.id = item._id;
-                    data.count = get[item];
-                    _player.Items.Add(data);
-                }
-            }
-        }
-        foreach (ConfigItem item in loss.Keys)
-        {
-            if (item._id == 1001)
-            {
-                MyLog.Log("lost gold:" + loss[item]);
-                _player.UpdateGold(_player.Gold - loss[item]);
-            }
-            else
-            {
-                for (int i = 0; i < _player.Items.Count; i++)
-                {
-                    if (item._id == _player.Items[i].id)
-                    {
-                        _player.Items[i].count -= loss[item];
-                        if (_player.Items[i].count <= 0)
-                        {
-                            _player.Items.RemoveAt(i);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        Saved();
-    }
-
     public void UpdateAttr()
     {
         UIManager.Instance.mMainWindow.UpdateBattleAttr();
@@ -406,23 +345,40 @@ public class Process
         }
     }
 
-    public int GetItemCount(int itemId)
-    {
-        for (int i = 0; i < _player.Items.Count; i++)
-        {
-            if (itemId == _player.Items[i].id)
-            {
-                return _player.Items[i].count;
-            }
-        }
-        return 0;
-    }
-
     public void TurnToNextDialog(int nextStoryId)
     {
         _lastStoryId = _nextStoryId;
         _nextStoryId = nextStoryId;
         Saved();
+    }
+
+    public ItemCountData GetHasItem(int itemId)
+    {
+        ItemCountData data = new ItemCountData();
+        data.id = itemId;
+        data.count = 0;
+        for (int i = 0; i < _player.Items.Count; i++)
+        {
+            if (_player.Items[i].id == itemId)
+            {
+                data.count = _player.Items[i].count;
+            }
+        }
+        return data;
+    }
+
+    public List<ConfigItem> GetItemList(ItemType type)
+    {
+        List<ConfigItem> list = ConfigManager.Instance.ReqItemList();
+        List<ConfigItem> result = new List<ConfigItem>();
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i]._type == (int)type)
+            {
+                result.Add(list[i]);
+            }
+        }
+        return result;
     }
 
     public void GameOver()

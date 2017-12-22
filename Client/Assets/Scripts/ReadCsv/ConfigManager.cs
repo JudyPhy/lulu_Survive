@@ -135,4 +135,9 @@ public class ConfigManager
         return null;
     }
 
+    public List<ConfigItem> ReqItemList()
+    {
+        return new List<ConfigItem>(configData.CfgItem.Values);
+    }
+
 }

@@ -13,9 +13,9 @@ public class GameSaved {
         return File.Exists(_fileName);
     }
     
-    public static void SetData(object pObject)
+    public static void SetData(SavedData data)
     {
-        string toSave = JsonMapper.ToJson(pObject);
+        string toSave = JsonMapper.ToJson(data);
         Debug.Log("toSave: " + toSave);
         //加密
         StreamWriter streamWriter = File.CreateText(_fileName);
@@ -31,6 +31,7 @@ public class GameSaved {
         data.curPos = new int[2];
         data.curPos[0] = int.Parse(jsonData["curPos"][0].ToString());
         data.curPos[1] = int.Parse(jsonData["curPos"][1].ToString());
+        data.curOutId = int.Parse(jsonData["curOutId"].ToString());
         data.lastStoryId = int.Parse(jsonData["nextStoryId"].ToString());
         data.gold = int.Parse(jsonData["gold"].ToString());
         

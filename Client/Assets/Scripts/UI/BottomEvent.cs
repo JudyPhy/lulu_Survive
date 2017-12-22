@@ -22,7 +22,7 @@ public class BottomEvent : BottomUI
     public BottomEvent()
     {
         mObj = UIPackage.CreateObject("wuxia", "fn_event").asCom;
-
+        mObj.visible = false;
         mBtn1 = mObj.GetChild("btnChooseA").asButton;
         mBtn1.onClick.Add(OnClickBtn);
         mBtn2 = mObj.GetChild("btnChooseB").asButton;

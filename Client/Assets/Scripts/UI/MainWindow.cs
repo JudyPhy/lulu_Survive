@@ -44,7 +44,7 @@ public class MainWindow : Window
         }
 
         mBottomNormal = new BottomNormal();       
-        this.contentPane.AddChild(mBottomNormal.mObj);        
+        this.contentPane.AddChild(mBottomNormal.mObj);
         mBottomBattle = new BottomBattle();
         this.contentPane.AddChild(mBottomBattle.mObj);
         mBottomEvent = new BottomEvent();
@@ -83,11 +83,11 @@ public class MainWindow : Window
         UpdateHungry();
         UpdateBattleAttr();
         UpdateGold();
+        UpdateMedicine();
     }
 
     public void UpdateSceneInfo()
     {
-        MyLog.Log("UpdateSceneInfo");
         ConfigScene curSceneData = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
         if (curSceneData != null)
         {
@@ -101,47 +101,45 @@ public class MainWindow : Window
             else
             {
                 mTextValueInRect[6].text = "";
-
             }
         }
+
+        mTextValueInRect[2].text = "";
+        mTextValueInRect[7].text = "";
     }
 
     public void UpdateHealthy()
     {
-        MyLog.Log("UpdateHealthy:" + Process.Instance.Player.Healthy);
         mTextValueInRect[0].text = Process.Instance.Player.Healthy < 0 ? "0" : Process.Instance.Player.Healthy.ToString();
-    }
-
-    private void TweenBackText()
-    {
-
     }
 
     public void UpdateEnergy()
     {
-        MyLog.Log("UpdateEnergy:" + Process.Instance.Player.Energy);
         mTextTop[1].text = Process.Instance.Player.Energy.ToString();
     }
 
     public void UpdateHungry()
     {
-        MyLog.Log("UpdateHungry:" + Process.Instance.Player.Hungry);
         mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
         mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.black;
     }
 
     public void UpdateBattleAttr()
-    {
-        MyLog.Log("UpdateBattleAttr: Hp=" + Process.Instance.Player.Hp + ", Atk=" + Process.Instance.Player.Atk + ", Def=" + Process.Instance.Player.Def);
-        mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
+    {        
         mTextValueInRect[3].text = Process.Instance.Player.Atk.ToString();
         mTextValueInRect[4].text = Process.Instance.Player.Def.ToString();
+        mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
     }
 
     public void UpdateGold()
     {
-        MyLog.Log("UpdateGold:" + Process.Instance.Player.Gold);
         mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
+    }
+
+    public void UpdateMedicine()
+    {
+        ItemCountData data = Process.Instance.GetHasItem(GameConfig.MEDICINE_ID);
+        mTextValueInRect[8].text = data.count.ToString() + "个";
     }
 
     public void UpdateBottom()

@@ -10,7 +10,7 @@ public class ReadCsv {
 
     public ReadCsv(string csvName) {
         string filePath = ResourcesManager.GetCsvConfigFilePath(csvName);
-        Debug.Log("Read filePath:" + filePath);
+        MyLog.Log("Read filePath:" + filePath);
         string[] lineOfArray = File.ReadAllLines(filePath);
         this.Array = new string[lineOfArray.Length][];
         for (int i = 0; i < lineOfArray.Length; i++)
@@ -31,7 +31,7 @@ public class ReadCsv {
                 {
                     flag = false;
                     string str = line.Substring(curStartPos + 1, j - curStartPos - 1);
-                    //Debug.Log("111111:" + str);
+                    //MyLog.Log("111111:" + str);
                     result.Add(str);
                     curStartPos = j + 2;
                     index++;
@@ -41,21 +41,21 @@ public class ReadCsv {
                 if (!flag && line[j] == ',')
                 {
                     string str = line.Substring(curStartPos, j - curStartPos);
-                    //Debug.Log("2222:" + str);
+                    //MyLog.Log("2222:" + str);
                     result.Add(str);
                     curStartPos = j + 1;
                     index++;
                 }
             }
             string str2 = line.Substring(curStartPos);
-            //Debug.Log("last: " + str2);
+            //MyLog.Log("last: " + str2);
             result.Add(str2);
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)
             {
                 this.Array[i][n] = result[n];
             }
-            //Debug.LogError("result.Count: " + result.Count);
+            //MyLog.LogError("result.Count: " + result.Count);
         }
         this.Row_ = this.Array.Length;
     }

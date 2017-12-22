@@ -5,17 +5,17 @@ using System.Collections.Generic;
 public class ConfigData
 {
     //Scene
-    public Dictionary<int, ConfigScene> CfgScene = new Dictionary<int, ConfigScene>();
+    public readonly Dictionary<int, ConfigScene> CfgScene = new Dictionary<int, ConfigScene>();
     //Story
-    public Dictionary<int, ConfigStory> CfgStory = new Dictionary<int, ConfigStory>();
+    public readonly Dictionary<int, ConfigStory> CfgStory = new Dictionary<int, ConfigStory>();
     //Event
-    public Dictionary<int, ConfigEvent> CfgEvent = new Dictionary<int, ConfigEvent>();
+    public readonly Dictionary<int, ConfigEvent> CfgEvent = new Dictionary<int, ConfigEvent>();
     //Item
-    public Dictionary<int, ConfigItem> CfgItem = new Dictionary<int, ConfigItem>();
+    public readonly Dictionary<int, ConfigItem> CfgItem = new Dictionary<int, ConfigItem>();
     //Drop
-    public Dictionary<int, ConfigDrop> CfgDrop = new Dictionary<int, ConfigDrop>();
+    public readonly Dictionary<int, ConfigDrop> CfgDrop = new Dictionary<int, ConfigDrop>();
     //Monster
-    public Dictionary<int, ConfigMonster> CfgMonster = new Dictionary<int, ConfigMonster>();
+    public readonly Dictionary<int, ConfigMonster> CfgMonster = new Dictionary<int, ConfigMonster>();
 
     public void LoadConfigs()
     {
@@ -228,16 +228,42 @@ public class ConfigItem
     public int _id;
     public string _name;
     public string _desc;
+    public int _type;
     public string _icon;
     public int _price;
+
+    public int _healthy;
+    public int _energy;
+    public int _hungry;
+
+    public int _hp;
+    public int _power;
+    public int _agile;
+    public int _physic;
+    public int _charm;
+    public int _perception;
+    public int _duration;
 
     public ConfigItem(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
+        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
         _icon = config.GetDataByRowAndName(row, "Icon");
         _price = int.Parse(config.GetDataByRowAndName(row, "Price"));
+
+        _healthy = int.Parse(config.GetDataByRowAndName(row, "Healthy"));
+        _energy = int.Parse(config.GetDataByRowAndName(row, "Energy"));
+        _hungry = int.Parse(config.GetDataByRowAndName(row, "Hungry"));
+
+        _hp = int.Parse(config.GetDataByRowAndName(row, "Hp"));
+        _power = int.Parse(config.GetDataByRowAndName(row, "Power"));
+        _agile = int.Parse(config.GetDataByRowAndName(row, "Agile"));
+        _physic = int.Parse(config.GetDataByRowAndName(row, "Physic"));
+        _charm = int.Parse(config.GetDataByRowAndName(row, "Charm"));
+        _perception = int.Parse(config.GetDataByRowAndName(row, "Perception"));
+        _duration = int.Parse(config.GetDataByRowAndName(row, "Duration"));
     }
 }
 

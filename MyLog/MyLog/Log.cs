@@ -14,18 +14,24 @@ public enum LogLevel
 
 public class MyLog
 {
-    static public LogLevel mLogLevel = LogLevel.Log;
+    static private LogLevel mLogLevel = LogLevel.Log;
 
     static string mLogDirPath = Application.persistentDataPath + "/log";
 
-    static private Thread mLogThread;
+    static private Thread mLogThread = null;
 
     static private List<object> mLogList = new List<object>();
 
     static private readonly object mLock = new object();
 
-    public MyLog()
+    static private int mExportTimeInterval = 1000;
+
+    public static void Init(LogLevel logLevel, int exportTimeInterval)
     {
+        mLogLevel = logLevel;
+        mExportTimeInterval = exportTimeInterval;
+
+        mLogList.Add("Start ==================>>>>>>>>>>>>");
         mLogThread = new Thread(new ThreadStart(ProcessSaved));
         mLogThread.IsBackground = true;
         if (!mLogThread.IsAlive)
@@ -34,12 +40,12 @@ public class MyLog
         }
     }
 
-    private void ProcessSaved()
+    private static void ProcessSaved()
     {
         while (true)
         {
             ExportLog();
-            Thread.Sleep(1000);
+            Thread.Sleep(mExportTimeInterval);
         }
     }
 
@@ -78,7 +84,7 @@ public class MyLog
                     string str = "";
                     for (int i = 0; i < mLogList.Count; i++)
                     {
-                        str += mLogList[i] + "\n";
+                        str += i == mLogList.Count - 1 ? mLogList[i] : mLogList[i] + "\n";
                     }
                     mLogList.Clear();
                     //write to file
@@ -111,9 +117,16 @@ public class MyLog
             }
         }
         catch (Exception ex)
-        {            
-        }        
+        {
+        }
     }
 
+    public static void StopThread()
+    {
+        if (mLogThread != null)
+        {
+            mLogThread.Abort();
+        }
+    }
 
 }

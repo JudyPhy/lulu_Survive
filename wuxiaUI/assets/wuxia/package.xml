@@ -44,6 +44,8 @@
     <component id="hscom15" name="fn_moster.xml" path="/" exported="true"/>
     <component id="p8frm17" name="UI_storyA.xml" path="/" exported="true"/>
     <component id="hva5m18" name="textBox.xml" path="/" exported="true"/>
+    <component id="zursm19" name="UI_items.xml" path="/" exported="true"/>
+    <component id="zursm1a" name="lableItem.xml" path="/素材/"/>
   </resources>
   <publish name="wuxia"/>
 </packageDescription>

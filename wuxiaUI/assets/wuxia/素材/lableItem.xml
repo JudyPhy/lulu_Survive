@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="672,219" extention="Label">
+  <displayList>
+    <component id="n1_zurs" name="btnItemName" src="uto7t" xy="44,0">
+      <Button title="道具名称"/>
+    </component>
+    <text id="n2_zurs" name="curNum" xy="23,92" size="169,43" fontSize="30" color="#ffffff" autoSize="none" text="*拥有：0"/>
+    <text id="n3_zurs" name="infoEffect" xy="23,136" size="625,83" fontSize="30" color="#ffffff" autoSize="none" text="*效果：饥饿+20,15%几率恢复1点健康值一而已而已而已"/>
+  </displayList>
+</component>

@@ -1,4 +1,7 @@
-﻿ID,名称,描述,图标,单价
-int32,string,string,string,int32
-ID,Name,Describe,Icon,Price
-1001,易拉罐,易拉罐,item1,1
+﻿ID,名称,描述,类型,图标,单价,恢复健康,恢复精力,恢复体力,恢复生命,增加力量,增加敏捷,增加体质,增加魅力,增加感知,持续时间
+int32,string,string,int32,string,int32,int32,int32,int32,int32,int32,int32,int32,int32,int32,int32
+ID,Name,Describe,Type,Icon,Price,Healthy,Energy,Hungry,Hp,Power,Agile,Physic,Charm,Perception,Duration
+1001,易拉罐,易拉罐，可以换取少量的金钱,,item1,1,,,,,,,,,,
+1002,烂布,一堆烂布，可用来缝衣服,1,item2,2,,,,,,,,,,
+1003,丹药,包治百病的灵药,2,item3,3,,,20,,,,,,,
+1004,毒药,绝命穿肠的毒药,2,item4,4,,,,-50,,,,,,

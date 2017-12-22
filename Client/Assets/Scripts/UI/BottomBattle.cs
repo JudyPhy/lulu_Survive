@@ -21,7 +21,7 @@ public class BottomBattle : BottomUI
     public BottomBattle()
     {
         mObj = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
-
+        mObj.visible = false;
         mBtnStatus = this.mObj.GetChild("n5").asButton;
         mBtnStatus.onClick.Add(OnClickStatus);
         UpdateStatusBtn();

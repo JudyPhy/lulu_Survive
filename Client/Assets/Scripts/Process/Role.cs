@@ -26,7 +26,7 @@ public class Role
     private int _atk;
 
     public int Status { get { return _status; } }
-    private int _status;    
+    private int _status;
 
     public int Gold { set { _gold = value; } get { return _gold; } }
     private int _gold;
@@ -51,7 +51,7 @@ public class Role
         _items = new List<ItemCountData>();
     }
 
-    public Role(RoleAttr roleAttr, List<ItemCountData> items,int gold)
+    public Role(RoleAttr roleAttr, List<ItemCountData> items, int gold)
     {
         _id = 69999;
 
@@ -88,6 +88,32 @@ public class Role
     {
         _gold = gold <= 0 ? 0 : gold;
         UIManager.Instance.mMainWindow.UpdateGold();
+    }
+
+    public void UpdateItem(int itemId, int count)
+    {
+        bool isFind = false;
+        for (int i = 0; i < _items.Count; i++)
+        {
+            if (_items[i].id == itemId)
+            {
+                _items[i].count = count >= 0 ? _items[i].count + count : _items[i].count - count;
+                if (_items[i].count <= 0)
+                {
+                    _items.RemoveAt(i);
+                }
+                isFind = true;
+                break;
+            }
+        }
+        if (!isFind && count > 0)
+        {
+            ItemCountData data = new ItemCountData();
+            data.id = itemId;
+            data.count = count;
+            _items.Add(data);
+        }
+        UIManager.Instance.mMainWindow.UpdateMedicine();
     }
 
 }
