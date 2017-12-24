@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" bgColorEnabled="true" bgColor="#000000">
   <displayList>
-    <list id="n0_zurs" name="itemList" xy="24,138" size="672,969" layout="flow_vt" overflow="scroll" scroll="horizontal" scrollBarFlags="88" scrollBar="auto" lineGap="20" lineItemCount="4" defaultItem="ui://lmcgaigtzursm1a">
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-      <item/>
-    </list>
+    <list id="n0_zurs" name="itemList" xy="24,138" size="672,969" layout="flow_vt" overflow="scroll" scroll="horizontal" scrollBarFlags="88" scrollBar="auto" lineGap="20" lineItemCount="4" defaultItem="ui://lmcgaigtzursm1a"/>
     <component id="n1_zurs" name="n1" src="uto7q" xy="277,1159">
       <Button title="返  回"/>
     </component>

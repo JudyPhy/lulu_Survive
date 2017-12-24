@@ -8,8 +8,10 @@ public class BagWindow : Window
 {
     private GList mList;
     private GButton mBtnBack;
+    private GTextField[] mTextTop = new GTextField[6];
 
     List<ConfigItem> mDataList = new List<ConfigItem>();
+    List<Item> mItemList = new List<Item>();
 
     protected override void OnInit()
     {
@@ -22,6 +24,31 @@ public class BagWindow : Window
         mList.onClickItem.Add(OnClickItem);
         mBtnBack = this.contentPane.GetChild("n1").asButton;
         mBtnBack.onClick.Add(OnClickBack);
+        int index = 0;
+        for (int i = 4; i < 7; i++)
+        {
+            GComponent com = this.contentPane.GetChild("n" + i.ToString()).asCom;
+            if (com == null)
+            {
+                Debug.LogError("com null ");
+            }
+            else
+            {
+                Debug.LogError("com  not null ");
+            }
+            mTextTop[index] = com.GetChild("title").asTextField;
+            if (mTextTop[index] == null)
+            {
+                Debug.LogError("index null ");
+            }
+            else
+            {
+                Debug.LogError("index  not null ");
+            }
+            index++;
+            mTextTop[index] = com.GetChild("value").asTextField;
+            index++;
+        }
     }
 
     override protected void DoShowAnimation()
@@ -51,7 +78,7 @@ public class BagWindow : Window
     {
         UpdateUI();
     }
-
+    
     public void UpdateUI()
     {        
         List<ConfigItem> costList = Process.Instance.GetItemList(ItemType.Cost);
@@ -59,18 +86,29 @@ public class BagWindow : Window
         mDataList = new List<ConfigItem>(costList);
         mDataList.AddRange(materialList);
         mDataList.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
-        Debug.LogError("22222:" + mDataList.Count);
-        mList.numItems = mDataList.Count;
-        MyLog.Log("333333mDataList count=" + mDataList.Count);
+        mItemList.Clear();
+        mList.numItems = mDataList.Count;        
+        UpdateTopAttr();
+    }
+
+    public void UpdateTopAttr()
+    {
+        mTextTop[0].text = "健康：";
+        mTextTop[1].text = Process.Instance.Player.Healthy.ToString();
+        mTextTop[2].text = "精力：";
+        mTextTop[3].text = Process.Instance.Player.Energy.ToString();
+        mTextTop[4].text = "饥饿：";
+        mTextTop[5].text = Process.Instance.Player.Hungry.ToString();
     }
 
     private void RenderListItem(int index, GObject obj)
     {
-        MyLog.Log("RenderListItem: index=" + index);
+        //MyLog.Log("RenderListItem: index=" + index);
         if (index < mDataList.Count)
-        {            
-            Item itemObj = (Item)obj;
-            itemObj.UpdateUI(mDataList[index]);
+        {
+            GComponent itemObj = obj.asCom;            
+            Item item = new Item(itemObj);
+            item.UpdateUI(mDataList[index]);            
         }
     }
 }

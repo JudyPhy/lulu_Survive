@@ -2,13 +2,13 @@
 <component size="668,272">
   <displayList>
     <image id="n9_12fam" name="n9" src="si38a" xy="0,0"/>
-    <component id="n0_12fam" name="attb0" src="uto7z" xy="24,55"/>
+    <component id="n0_12fam" name="attb0" src="uto7z" xy="24,55">
+      <Label title="健康"/>
+    </component>
     <component id="n1_12fam" name="attb1" src="uto7z" xy="234,55">
       <Label title="金钱"/>
     </component>
-    <component id="n2_12fam" name="attb2" src="uto7z" xy="444,55">
-      <Label title="特性"/>
-    </component>
+    <component id="n2_12fam" name="attb2" src="uto7z" xy="444,55"/>
     <component id="n3_12fam" name="attb3" src="uto7z" xy="24,114">
       <Label title="攻击"/>
     </component>
@@ -19,13 +19,11 @@
       <Label title="生命"/>
     </component>
     <component id="n6_12fam" name="attb6" src="uto7z" xy="24,173">
-      <Label title="离家"/>
+      <Label title="去往"/>
     </component>
-    <component id="n7_12fam" name="attb7" src="uto7z" xy="234,173">
-      <Label title="伤药"/>
-    </component>
+    <component id="n7_12fam" name="attb7" src="uto7z" xy="234,173"/>
     <component id="n8_12fam" name="attb8" src="uto7z" xy="444,173">
-      <Label title="食物"/>
+      <Label title="伤药"/>
     </component>
   </displayList>
 </component>

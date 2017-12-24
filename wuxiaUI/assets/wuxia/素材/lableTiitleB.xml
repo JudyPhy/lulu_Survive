@@ -2,6 +2,6 @@
 <component size="200,58" extention="Label">
   <displayList>
     <loader id="n0_uto7" name="icon" xy="0,0" size="65,58" url="ui://lmcgaigtsi386" fill="scale" autoSize="true"/>
-    <text id="n1_uto7" name="title" xy="67,7" size="121,43" font="微软雅黑" fontSize="30" color="#ffffff" text="999/999"/>
+    <text id="n1_uto7" name="title" xy="67,7" size="10,43" font="微软雅黑" fontSize="30" color="#ffffff" text=""/>
   </displayList>
 </component>

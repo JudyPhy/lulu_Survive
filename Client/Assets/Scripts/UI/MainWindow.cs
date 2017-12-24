@@ -75,7 +75,7 @@ public class MainWindow : Window
         UpdateBottom();
     }
 
-    private void UpdateTop()
+    public void UpdateTop()
     {
         UpdateSceneInfo();
         UpdateHealthy();
@@ -115,12 +115,13 @@ public class MainWindow : Window
 
     public void UpdateEnergy()
     {
-        mTextTop[1].text = Process.Instance.Player.Energy.ToString();
+        mTextTop[1].text = Process.Instance.Player.Energy.ToString() + "/" + Process.Instance.Player.EnergyMax.ToString();
     }
 
     public void UpdateHungry()
     {
-        mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0" : Process.Instance.Player.Hungry.ToString();
+        mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0/" + Process.Instance.Player.EnergyMax.ToString()
+            : Process.Instance.Player.Hungry.ToString() + "/" + Process.Instance.Player.EnergyMax.ToString();
         mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.black;
     }
 
@@ -175,6 +176,7 @@ public class MainWindow : Window
     public void Tips(string content)
     {
         Process.Instance.CurEventData = new EventData(EventType.Idle, 0, content);
+        UpdateBottom();
     }
 
 }

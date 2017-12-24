@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="497,58">
+  <displayList>
+    <loader id="n1_uz3d" name="n1" xy="0,0" size="59,58" url="ui://lmcgaigtsi386"/>
+    <text id="n3_uz3d" name="n3" xy="64,-2" size="109,59" fontSize="42" color="#ffffff" autoSize="none" text="精力"/>
+    <text id="n4_uz3d" name="n4" xy="178,-1" size="109,59" fontSize="42" color="#ffffff" autoSize="none" text="+90"/>
+    <text id="n5_uz3d" name="n5" xy="292,-1" size="205,59" fontSize="42" color="#ffffff" autoSize="none" text="999/999"/>
+  </displayList>
+</component>

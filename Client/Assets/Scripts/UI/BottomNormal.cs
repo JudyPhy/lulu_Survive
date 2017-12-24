@@ -141,10 +141,11 @@ public class BottomNormal : BottomUI
         {
             bool inScene = Process.Instance.InCurScene(scene, Process.Instance.CurPos);
             MyLog.Log("inScene:" + inScene);
-            mBtnList[0].visible = inScene && scene._shop != 0;
-            mBtnList[3].visible = inScene;
-            mBtnList[4].visible = true;
-            mBtnList[5].visible = true;
+            mBtnList[0].visible = inScene && scene._shop != 0;  //shop
+            mBtnList[3].visible = inScene;  //explore
+            mBtnList[4].visible = true; //towards
+            mBtnList[5].visible = true; //sleep
+            mBtnList[8].visible = true; //bag
         }
         else
         {
@@ -165,20 +166,15 @@ public class BottomNormal : BottomUI
         }
         else if (btn == mBtnList[4])
         {
-            MyLog.LogError("Click towards");
             Process.Instance.MoveTowards();
         }
         else if (btn == mBtnList[5])
         {
-            MyLog.Log("Click bag.");
-            if (Process.Instance.Player.Items.Count > 0)
-            {
-                UIManager.Instance.SwitchToUI(UIType.Bag);
-            }
-            else
-            {
-                UIManager.Instance.mMainWindow.Tips("没有任何物品");
-            }
+            UIManager.Instance.SwitchToUI(UIType.Sleep);
+        }
+        else if (btn == mBtnList[8])
+        {
+            UIManager.Instance.SwitchToUI(UIType.Bag);
         }
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" bgColorEnabled="true" bgColor="#000000">
   <displayList>
-    <component id="n2_z2ph" name="btnSkip" src="uto7s" xy="553,1202"/>
-    <component id="n3_z2ph" name="btnOver" src="uto7q" xy="277,1062"/>
+    <component id="n2_z2ph" name="btnSkip" src="uto7s" xy="553,1202" visible="false"/>
+    <component id="n3_z2ph" name="btnOver" src="uto7q" xy="277,1062" visible="false"/>
     <component id="n4_bvd9" name="btnChooseA" src="uto7t" xy="0,1001" size="720,84" visible="false"/>
     <component id="n5_bvd9" name="btnChooseB" src="uto7t" xy="0,1116" size="720,84" visible="false"/>
   </displayList>

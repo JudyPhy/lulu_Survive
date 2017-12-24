@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" bgColorEnabled="true" bgColor="#000000">
   <displayList>
-    <component id="n0_uto7" name="" src="uto7p" xy="0,0"/>
-    <component id="n1_uto7" name="btnLoadGame" src="uto7q" xy="277,612">
+    <component id="n0_uto7" name="n0" src="uto7p" xy="0,0"/>
+    <component id="n1_uto7" name="btnLoadGame" src="uto7q" xy="277,612" visible="false">
       <Button title="继  续"/>
     </component>
     <component id="n2_uto7" name="btnNewGame" src="uto7q" xy="277,766">

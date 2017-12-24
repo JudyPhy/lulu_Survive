@@ -58,12 +58,16 @@ public class Process
     public EventData CurEventData { set { _curEventData = value; } get { return _curEventData; } }
     private EventData _curEventData;
 
+    public int CurDay { get { return _curDay; } }
+    private int _curDay;
+
     public void StartNewGame()
     {
         _player = new Role(69999);
         SwitchScene(1001);
         _lastStoryId = 0;
         _nextStoryId = 100101;
+        _curDay = 1;
         Saved();
     }
 
@@ -75,10 +79,15 @@ public class Process
         _curOutId = data.curOutId;
         _lastStoryId = data.lastStoryId;
         _nextStoryId = data.nextStoryId;
-        _player = new Role(data.role, data.itemList, data.gold);
-        MyLog.LogError("ReqHistoryData=> _curScene:" + _curScene + ", _curPos:" + _curPos + ", _curOutId:" + _curOutId + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
-        MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", hungry:" + _player.Hungry + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
+        _player = new Role(data.role, data.itemList, data.gold, data.buffId, data.buffDuration);
+        _curDay = data.day;
+        MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _curPos:" + _curPos
+            + ", _curOutId:" + _curOutId + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
+        MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", energyMax:"
+            + _player.EnergyMax + ", hungry:" + _player.Hungry + ", hungryMax:" + _player.HungryMax
+            + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
         MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
+        MyLog.LogError("player buff: id:" + _player.BuffID + ", duration:" + _player.BuffDuration);
 
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
         if (scene != null)
@@ -99,6 +108,8 @@ public class Process
     public void Saved()
     {
         SavedData data = new SavedData();
+        data.day = _curDay;
+
         data.curScene = _curScene;
         data.curPos = new int[2];
         data.curPos[0] = (int)_curPos.x;
@@ -112,12 +123,17 @@ public class Process
         data.role = new RoleAttr();
         data.role.healthy = _player.Healthy;
         data.role.energy = _player.Energy;
+        data.role.energyMax = _player.EnergyMax;
         data.role.hungry = _player.Hungry;
+        data.role.hungryMax = _player.HungryMax;
         data.role.hp = _player.Hp;
         data.role.atk = _player.Atk;
         data.role.def = _player.Def;
 
         data.itemList = _player.Items;
+
+        data.buffId = _player.BuffID;
+        data.buffDuration = _player.BuffDuration;
 
         GameSaved.SetData(data);
     }
@@ -290,7 +306,7 @@ public class Process
 
     private EventType GetCurEventType()
     {
-        return EventType.Drop;
+        return EventType.Battle;
         //return (EventType)Random.Range(1, 4);
     }
 
@@ -337,8 +353,11 @@ public class Process
 
     public void UpdateAttr()
     {
-        UIManager.Instance.mMainWindow.UpdateBattleAttr();
         UIManager.Instance.mMainWindow.UpdateHealthy();
+        UIManager.Instance.mMainWindow.UpdateEnergy();
+        UIManager.Instance.mMainWindow.UpdateHungry();
+        UIManager.Instance.mMainWindow.UpdateBattleAttr();
+        UIManager.Instance.mBagWindow.UpdateTopAttr();
         if (_player.Healthy <= 0)
         {
             GameOver();

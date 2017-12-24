@@ -9,12 +9,13 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     
     private GComponent _mainView;
-
  
+    public Dictionary<UIType, Window> mWindows = new Dictionary<UIType, Window>();
     public LoginWindow mLoginWindow;
-    public DialogWindow mDialogWindow;
     public MainWindow mMainWindow;
     public BagWindow mBagWindow;
+    public DialogWindow mDialogWindow;
+    public SleepWindow mSleedpWindow;
 
     void Awake()
     {
@@ -25,24 +26,39 @@ public class UIManager : MonoBehaviour
         UIConfig.defaultFont = "Microsoft YaHei";
 
         UIPackage.AddPackage("wuxia");
-        ConfigManager.Instance.InitConfigs();       
+        ConfigManager.Instance.InitConfigs();
 
         //UIConfig.verticalScrollBar = "ui://Basics/ScrollBar_VT";
         //UIConfig.horizontalScrollBar = "ui://Basics/ScrollBar_HZ";
         //UIConfig.popupMenu = "ui://Basics/PopupMenu";
         //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");
+        LoadAllUI();
+    }
+
+    private void LoadAllUI()
+    {
+        mLoginWindow = new LoginWindow();
+        mWindows.Add(UIType.Login, mLoginWindow);
+
+        mMainWindow = new MainWindow();
+        mWindows.Add(UIType.Main, mMainWindow);
 
         mDialogWindow = new DialogWindow();
-        mLoginWindow = new LoginWindow();
-        mMainWindow = new MainWindow();
+        mWindows.Add(UIType.Dialog, mDialogWindow);
+
         mBagWindow = new BagWindow();
+        mWindows.Add(UIType.Bag, mBagWindow);
+
+        mSleedpWindow = new SleepWindow();
+        mWindows.Add(UIType.Sleep, mSleedpWindow);
     }
 
     void Start()
     {
         Application.targetFrameRate = 60;
         _mainView = this.GetComponent<UIPanel>().ui;
-        mLoginWindow.Show();
+        _mainView.visible = false;
+        SwitchToUI(UIType.Login);
     }
 
     public void EnterGame()
@@ -61,32 +77,17 @@ public class UIManager : MonoBehaviour
 
     public void SwitchToUI(UIType type)
     {
-        switch (type)
+        foreach (UIType windowType in mWindows.Keys)
         {
-            case UIType.Dialog:
-                mLoginWindow.Hide();
-                mMainWindow.Hide();
-                mBagWindow.Hide();
-                mDialogWindow.Show();
-                break;
-            case UIType.Login:                
-                mMainWindow.Hide();
-                mDialogWindow.Hide();
-                mBagWindow.Hide();
-                mLoginWindow.Show();
-                break;
-            case UIType.Main:
-                mLoginWindow.Hide();
-                mDialogWindow.Hide();
-                mBagWindow.Hide();
-                mMainWindow.Show();
-                break;
-            case UIType.Bag:
-                mLoginWindow.Hide();
-                mDialogWindow.Hide();
-                mMainWindow.Hide();
-                mBagWindow.Show();
-                break;
+            //Debug.LogError("windowType:" + windowType.ToString() + ", type:" + type.ToString());
+            if (windowType == type)
+            {
+                mWindows[windowType].Show();
+            }
+            else
+            {
+                mWindows[windowType].Hide();
+            }
         }
     }
 

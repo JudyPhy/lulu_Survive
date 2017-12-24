@@ -46,6 +46,9 @@
     <component id="hva5m18" name="textBox.xml" path="/" exported="true"/>
     <component id="zursm19" name="UI_items.xml" path="/" exported="true"/>
     <component id="zursm1a" name="lableItem.xml" path="/素材/"/>
+    <component id="tsdum1b" name="UI_shop.xml" path="/"/>
+    <component id="tsdum1c" name="UI_sleep.xml" path="/" exported="true"/>
+    <component id="uz3dm1d" name="lableGift.xml" path="/素材/"/>
   </resources>
   <publish name="wuxia"/>
 </packageDescription>

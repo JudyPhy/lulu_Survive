@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280">
   <displayList>
-    <text id="n0_hsco" name="textEvent" xy="89,495" size="560,310" fontSize="30" align="center" vAlign="middle" autoSize="none" text="yyoyoyoyoyoy\n&#xA;斯蒂芬森d"/>
-    <text id="n1_hsco" name="textMonsterName" xy="89,388" size="560,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text="怪物名字LV7"/>
-    <text id="n2_hsco" name="textMosterHp" xy="89,436" size="560,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text="HP 999"/>
+    <text id="n0_hsco" name="textEvent" xy="89,495" size="560,310" fontSize="30" align="center" vAlign="middle" autoSize="none" text=""/>
+    <text id="n1_hsco" name="textMonsterName" xy="89,388" size="560,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text=""/>
+    <text id="n2_hsco" name="textMosterHp" xy="89,436" size="560,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text=""/>
     <component id="n3_hsco" name="n3" src="uto7r" xy="102,1101">
       <Button title="战  斗"/>
     </component>
@@ -13,7 +13,7 @@
     <component id="n5_hsco" name="n5" src="uto7r" xy="257,955">
       <Button title="状  态"/>
     </component>
-    <text id="n6_hsco" name="textPlayerHP" xy="102,1190" size="193,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text="HP 999/999"/>
-    <text id="n7_hsco" name="textRunPro" xy="425,1187" size="193,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text="50%"/>
+    <text id="n6_hsco" name="textPlayerHP" xy="102,1190" size="193,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text=""/>
+    <text id="n7_hsco" name="textRunPro" xy="425,1187" size="193,45" fontSize="30" align="center" vAlign="middle" autoSize="none" text=""/>
   </displayList>
 </component>
