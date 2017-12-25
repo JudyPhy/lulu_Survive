@@ -44,7 +44,7 @@ public class Item
         ItemCountData countData = Process.Instance.GetHasItem(mData._id);
         if (countData.count > 0)
         {
-            Process.Instance.Player.UpdateItem(mData._id, -1);
+            Process.Instance.Player.AddItem(mData._id, -1);
             mBtnTitleText.color = countData.count - 1 > 0 ? Color.green : Color.white;
             mCount.text = "拥有：" + (countData.count - 1) + "个";
             UpdateItemAttr();

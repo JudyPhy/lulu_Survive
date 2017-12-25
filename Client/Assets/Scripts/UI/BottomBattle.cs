@@ -6,25 +6,22 @@ using DG.Tweening;
 
 public class BottomBattle : BottomUI
 {
-    GButton mBtnStatus;
-    GButton mBtnFight;
-    GButton mBtnRun;
+    private GButton mBtnStatus;
+    private GButton mBtnFight;
+    private GButton mBtnRun;
 
-    GTextField mMonsterName;
-    GTextField mMonsterHp;
-    GTextField mDesc;
-    GTextField mRunRate;
-
-    private ConfigMonster mMonsterInfo;
-    private int hp;
-
+    private GTextField mMonsterName;
+    private GTextField mMonsterHp;
+    private GTextField mDesc;
+    private GTextField mRunRate;
+    
     public BottomBattle()
     {
         mObj = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
         mObj.visible = false;
         mBtnStatus = this.mObj.GetChild("n5").asButton;
         mBtnStatus.onClick.Add(OnClickStatus);
-        UpdateStatusBtn();
+
         mBtnFight = this.mObj.GetChild("n3").asButton;
         mBtnFight.onClick.Add(OnClickFight);
         mBtnRun = this.mObj.GetChild("n4").asButton;
@@ -39,32 +36,29 @@ public class BottomBattle : BottomUI
     public void UpdateUI(int monsterId)
     {
         MyLog.Log("Enter battle, monster:" + monsterId);
-        mMonsterInfo = ConfigManager.Instance.ReqMonster(monsterId);
-        if (mMonsterInfo != null)
+        BattleManager.Instance.CreateMonster(monsterId);
+        ConfigMonster monster = ConfigManager.Instance.ReqMonster(monsterId);
+        if (monster != null)
         {
-            mMonsterName.text = mMonsterInfo._name;
-            mMonsterHp.text = "HP:" + mMonsterInfo._hp.ToString();
-            mDesc.text = mMonsterInfo._desc;
+            mMonsterName.text = monster._name;
+            mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
+            mDesc.text = monster._desc;
             mRunRate.text = "50%";
-            hp = mMonsterInfo._hp;
         }
-        else
-        {
-            MyLog.Log("Monster " + monsterId + " not exist.");
-        }
+        UpdateStatusBtn();
     }
 
     private void UpdateStatusBtn()
     {
         switch (Process.Instance.Player.Status)
         {
-            case 0:
+            case PlayerBattleStatus.Balance:
                 mBtnStatus.text = "平衡";
                 break;
-            case 1:
+            case PlayerBattleStatus.Risk:
                 mBtnStatus.text = "拼命";
                 break;
-            case 2:
+            case PlayerBattleStatus.Filthy:
                 mBtnStatus.text = "猥琐";
                 break;
         }
@@ -78,28 +72,13 @@ public class BottomBattle : BottomUI
 
     private void OnClickFight(EventContext context)
     {
-        int atk = Process.Instance.Player.Atk - mMonsterInfo._def;
-        atk = atk < 0 ? 0 : atk;
-        hp -= atk;
-        MyLog.Log("Monster be attacked, lost hp:" + atk + ", left hp:" + hp);
-        mMonsterHp.text = hp.ToString();
-        if (hp <= 0)
-        {
-            Process.Instance.CurEventData = null;
-            UIManager.Instance.mMainWindow.UpdateUI();
-            UIManager.Instance.mMainWindow.Tips("战斗胜利");
-        }
-        else
-        {
-            Timers.inst.Add(1f, 0, MonsterAttack);
-        }
+        BattleManager.Instance.PlayerAtk();
     }
 
-    private void MonsterAttack(object param)
+    public void PlayAtkAni()
     {
-        int atk = mMonsterInfo._atk - Process.Instance.Player.Def;
-        atk = atk < 0 ? 0 : atk;
-        Process.Instance.Player.BeAtc(atk);
+        mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
+        //mObj.TweenRotate(10, 0.2f).SetEase(Ease.OutQuad).OnComplete(MonsterAttack);
     }
 
     private void OnClickRun(EventContext context)
@@ -108,12 +87,11 @@ public class BottomBattle : BottomUI
         if (rate > 50)
         {
             Process.Instance.CurEventData = null;
-            UIManager.Instance.mMainWindow.UpdateUI();
             UIManager.Instance.mMainWindow.Tips("逃跑成功");
         }
         else
         {
-            MonsterAttack(null);
+            BattleManager.Instance.PlayerBeAtked(null);
         }
     }
 }

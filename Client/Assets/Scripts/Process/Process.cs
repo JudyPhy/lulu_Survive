@@ -52,8 +52,8 @@ public class Process
     public int NextStoryID { get { return _nextStoryId; } }
     private int _nextStoryId;
 
-    public Role Player { get { return _player; } }
-    private Role _player;
+    public Player Player { get { return _player; } }
+    private Player _player;
 
     public EventData CurEventData { set { _curEventData = value; } get { return _curEventData; } }
     private EventData _curEventData;
@@ -62,11 +62,12 @@ public class Process
     private int _curDay;
 
     public void StartNewGame()
-    {
-        _player = new Role(69999);
+    {        
         SwitchScene(1001);
+        _player = new Player();
+        _player.Create();
         _lastStoryId = 0;
-        _nextStoryId = 100101;
+        _nextStoryId = GameConfig.DIALOG_START_ID;
         _curDay = 1;
         Saved();
     }
@@ -74,19 +75,26 @@ public class Process
     public void StartHistoryGame()
     {
         SavedData data = GameSaved.GetData();
+
         _curScene = data.curScene;
         _curPos = new Vector2(data.curPos[0], data.curPos[1]);
         _curOutId = data.curOutId;
+
+        _player = new Player();
+        _player.CreateHistory(data);
+
         _lastStoryId = data.lastStoryId;
         _nextStoryId = data.nextStoryId;
-        _player = new Role(data.role, data.itemList, data.gold, data.buffId, data.buffDuration);
+
         _curDay = data.day;
         MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _curPos:" + _curPos
             + ", _curOutId:" + _curOutId + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
         MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", energyMax:"
             + _player.EnergyMax + ", hungry:" + _player.Hungry + ", hungryMax:" + _player.HungryMax
-            + ", hp:" + _player.Hp + ", atk:" + _player.Atk + ", def:" + _player.Def);
-        MyLog.LogError("player item: gold:" + _player.Gold + ", itemlist:" + _player.Items.Count);
+            + ", Hp:" + _player.Hp + ", Atk:" + _player.Atk + ", Def:" + _player.Def
+            + ", Power:" + _player.Power + ", Agile:" + _player.Agile + ", Physic:" + _player.Physic
+            + ", Charm:" + _player.Charm + ", Perception:" + _player.Perception);
+        MyLog.LogError("player item: gold:" + _player.Gold + ", itemCount:" + _player.Items.Count);
         MyLog.LogError("player buff: id:" + _player.BuffID + ", duration:" + _player.BuffDuration);
 
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
@@ -114,8 +122,7 @@ public class Process
         data.curPos = new int[2];
         data.curPos[0] = (int)_curPos.x;
         data.curPos[1] = (int)_curPos.y;
-        data.curOutId = _curOutId;
-        data.gold = _player.Gold;
+        data.curOutId = _curOutId;       
 
         data.lastStoryId = _lastStoryId;
         data.nextStoryId = _nextStoryId;
@@ -126,16 +133,24 @@ public class Process
         data.role.energyMax = _player.EnergyMax;
         data.role.hungry = _player.Hungry;
         data.role.hungryMax = _player.HungryMax;
+
         data.role.hp = _player.Hp;
         data.role.atk = _player.Atk;
         data.role.def = _player.Def;
+        data.role.power = _player.Power;
+        data.role.agile = _player.Agile;
+        data.role.physic = _player.Physic;
+        data.role.charm = _player.Charm;
+        data.role.perception = _player.Perception;
 
-        data.itemList = _player.Items;
+        data.role.buffId = _player.BuffID;
+        data.role.buffDuration = _player.BuffDuration;
 
-        data.buffId = _player.BuffID;
-        data.buffDuration = _player.BuffDuration;
+        data.gold = _player.Gold;
 
-        GameSaved.SetData(data);
+        data.itemList = _player.Items;        
+
+        GameSaved.SaveData(data);
     }
 
     private void SwitchScene(int toSceneId)
@@ -157,6 +172,11 @@ public class Process
                     _curOutId = id;
                     _curOutPos = scene._outList[id];
                 }
+            }
+            else
+            {
+                _curOutId = 0;
+                _curOutPos = Vector2.zero;
             }
             //event
             _curEventData = null;
@@ -210,18 +230,6 @@ public class Process
         }
     }
 
-    private int GetSwitchDialog(int newSceneId)
-    {
-        MyLog.Log("GetSwitchDialog: newSceneId=" + newSceneId);
-        List<ConfigStory> list = ConfigManager.Instance.ReqSceneStory(newSceneId);
-        list.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
-        if (list.Count > 0)
-        {
-            return list[0]._id;
-        }
-        return 0;
-    }
-
     public bool InCurScene(ConfigScene curSceneData, Vector2 curPos)
     {
         Vector2 deltaX = curPos - _bornPos;
@@ -231,6 +239,41 @@ public class Process
             return true;
         }
         return false;
+    }
+
+    public void Explore()
+    {
+        MyLog.Log("Explore");
+        //energy
+        int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
+        if (energy >= 0)
+        {
+            _player.Energy = energy;
+
+            //hungry
+            int hungry = _player.Hungry - GameConfig.COST_HUNGRY_ONCE;
+            if (_player.Hungry > 0 && hungry < 0)
+            {
+                _player.Healthy--;
+            }
+            _player.Hungry = hungry;
+
+            //random event
+            if (_player.Healthy <= 0)
+            {
+                GameOver();
+            }
+            else
+            {
+                _curEventData = GetRandomEvent();
+                UIManager.Instance.mMainWindow.UpdateUI();
+                Saved();
+            }
+        }
+        else
+        {
+            UIManager.Instance.mMainWindow.Tips("精力不足");
+        }
     }
 
     public void MoveTowards()

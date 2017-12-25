@@ -10,8 +10,8 @@ public class BagWindow : Window
     private GButton mBtnBack;
     private GTextField[] mTextTop = new GTextField[6];
 
-    List<ConfigItem> mDataList = new List<ConfigItem>();
-    List<Item> mItemList = new List<Item>();
+    private List<ConfigItem> mDataList = new List<ConfigItem>();
+    private List<Item> mItemList = new List<Item>();
 
     protected override void OnInit()
     {
@@ -21,7 +21,6 @@ public class BagWindow : Window
 
         mList = this.contentPane.GetChild("itemList").asList;
         mList.itemRenderer = RenderListItem;
-        mList.onClickItem.Add(OnClickItem);
         mBtnBack = this.contentPane.GetChild("n1").asButton;
         mBtnBack.onClick.Add(OnClickBack);
         int index = 0;
@@ -65,13 +64,8 @@ public class BagWindow : Window
 
     private void OnClickBack(EventContext context)
     {
+        Process.Instance.CurEventData = null;
         UIManager.Instance.SwitchToUI(UIType.Main);
-    }
-
-    private void OnClickItem(EventContext context)
-    {
-        GComponent item = (GComponent)context.data;
-
     }
 
     protected override void OnShown()

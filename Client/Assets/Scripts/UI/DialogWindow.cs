@@ -59,7 +59,7 @@ public class DialogWindow : Window
 
     private void OnClickOptionBtn(EventContext context)
     {       
-        MyLog.Log("OnClickOptionBtn");
+        //MyLog.Log("OnClickOptionBtn");
         int resultType = context.sender == mBtn1 ? mStoryInfo._optionList[0].type : mStoryInfo._optionList[1].type;
         int resultId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
         switch (resultType)
@@ -76,7 +76,7 @@ public class DialogWindow : Window
 
     private void OnClickBtnOver(EventContext context)
     {        
-        MyLog.Log("OnClickBtnOver");
+        //MyLog.Log("OnClickBtnOver");
         if (mStoryInfo._type == 1)
         {
             Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
@@ -90,7 +90,7 @@ public class DialogWindow : Window
 
     private void OnClickBtnSkip(EventContext context)
     {
-        MyLog.Log("OnClickBtnSkip");
+        //MyLog.Log("OnClickBtnSkip");
         Timers.inst.Remove(UpdateDialog);
         HideAllText();
         for (int i = 0; i < mDialogList.Count; i++)

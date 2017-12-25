@@ -272,23 +272,39 @@ public class ConfigMonster
     public int _id;
     public string _name;
     public string _desc;
+
     public int _hp;
     public int _atk;
     public int _def;
+    public int _power;
+    public int _agile;
+    public int _physic;
+    public int _charm;
+    public int _perception;
+
     public int _skill;
     public int _sceneId;
     public int _rate;
+    public int _drop;
 
     public ConfigMonster(ReadCsv config, int row)
     {
         _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
+
         _hp = int.Parse(config.GetDataByRowAndName(row, "HP"));
         _atk = int.Parse(config.GetDataByRowAndName(row, "Atk"));        
         _def = int.Parse(config.GetDataByRowAndName(row, "Def"));
+        _power = int.Parse(config.GetDataByRowAndName(row, "Power"));
+        _agile = int.Parse(config.GetDataByRowAndName(row, "Agile"));
+        _physic = int.Parse(config.GetDataByRowAndName(row, "Physic"));
+        _charm = int.Parse(config.GetDataByRowAndName(row, "Charm"));
+        _perception = int.Parse(config.GetDataByRowAndName(row, "Perception"));
+
         _skill = int.Parse(config.GetDataByRowAndName(row, "Skill"));
         _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
         _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
+        _drop = int.Parse(config.GetDataByRowAndName(row, "Drop"));
     }
 }

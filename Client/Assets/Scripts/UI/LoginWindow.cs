@@ -6,8 +6,8 @@ using DG.Tweening;
 
 public class LoginWindow : Window
 {
-    GButton mBtnNew;
-    GButton mBtnContinue;
+    private GButton mBtnNew;
+    private GButton mBtnContinue;
 
     protected override void OnInit()
     {
@@ -25,15 +25,26 @@ public class LoginWindow : Window
     private void OnClickNew(EventContext context)
     {
         Process.Instance.StartNewGame();
-        this.Hide();
-        UIManager.Instance.EnterGame();
+        EnterGame();
     }
 
     private void OnClickContinue(EventContext context)
     {
         Process.Instance.StartHistoryGame();
-        this.Hide();
-        UIManager.Instance.EnterGame();
+        EnterGame();
+    }
+
+    private void EnterGame()
+    {
+        if (Process.Instance.NeedShowDialog())
+        {
+            MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+            UIManager.Instance.SwitchToUI(UIType.Dialog);
+        }
+        else
+        {
+            UIManager.Instance.SwitchToUI(UIType.Main);
+        }
     }
 
     protected override void OnShown()

@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public BagWindow mBagWindow;
     public DialogWindow mDialogWindow;
     public SleepWindow mSleedpWindow;
+    public EquipWindow mEquipWindow;
 
     void Awake()
     {
@@ -51,6 +52,9 @@ public class UIManager : MonoBehaviour
 
         mSleedpWindow = new SleepWindow();
         mWindows.Add(UIType.Sleep, mSleedpWindow);
+
+        mEquipWindow = new EquipWindow();
+        mWindows.Add(UIType.Equip, mEquipWindow);
     }
 
     void Start()
@@ -59,21 +63,7 @@ public class UIManager : MonoBehaviour
         _mainView = this.GetComponent<UIPanel>().ui;
         _mainView.visible = false;
         SwitchToUI(UIType.Login);
-    }
-
-    public void EnterGame()
-    {
-        MyLog.Log("EnterGame");
-        if (Process.Instance.NeedShowDialog())
-        {
-            MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
-            SwitchToUI(UIType.Dialog);
-        }
-        else
-        {
-            SwitchToUI(UIType.Main);
-        }
-    }
+    }    
 
     public void SwitchToUI(UIType type)
     {

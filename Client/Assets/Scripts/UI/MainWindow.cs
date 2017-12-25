@@ -65,7 +65,7 @@ public class MainWindow : Window
 
     protected override void OnShown()
     {
-        MyLog.Log("MainWindow shown");
+        //MyLog.Log("MainWindow shown");
         UpdateUI();
     }
 
@@ -150,7 +150,7 @@ public class MainWindow : Window
             Process.Instance.CurEventData = new EventData(EventType.Idle, 0);
         }
         EventType type = Process.Instance.CurEventData._type;
-        MyLog.Log("Bottom shown, type=" + type.ToString());
+        //MyLog.Log("Bottom shown, type=" + type.ToString());
         mBottomNormal.Show(type == EventType.Idle || type == EventType.Drop);
         mBottomEvent.Show(type == EventType.Event);
         mBottomBattle.Show(type == EventType.Battle);
@@ -177,6 +177,13 @@ public class MainWindow : Window
     {
         Process.Instance.CurEventData = new EventData(EventType.Idle, 0, content);
         UpdateBottom();
+    }
+
+    public void PlayBattleAtkAni()
+    {
+        UpdateHealthy();
+        UpdateBattleAttr();
+        mBottomBattle.PlayAtkAni();
     }
 
 }

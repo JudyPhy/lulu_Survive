@@ -17,6 +17,7 @@ public class SleepWindow : Window
 
         mBtnBack = this.contentPane.GetChild("n2").asButton;
         mBtnBack.onClick.Add(OnClickBack);
+        mBtnBack.visible = false;
         mList = this.contentPane.GetChild("n1").asList;       
         mList.itemRenderer = RenderListItem;
     }
@@ -34,19 +35,22 @@ public class SleepWindow : Window
     }
 
     private void OnClickBack(EventContext context)
-    {
+    {        
         Process.Instance.CurEventData = null;
         UIManager.Instance.SwitchToUI(UIType.Main);
+        mBtnBack.visible = false;
     }
 
     protected override void OnShown()
     {
         mList.numItems = 1;
+        Process.Instance.Saved();
+        mBtnBack.visible = true;
     }
 
     private void RenderListItem(int index, GObject obj)
     {
-        MyLog.Log("RenderListItem: index=" + index);
+        //MyLog.Log("RenderListItem: index=" + index);
         GComponent itemObj = obj.asCom;        
         GTextField title = itemObj.GetChild("n3").asTextField;
         title.text = "精力";
@@ -54,7 +58,7 @@ public class SleepWindow : Window
         addValue.text = "+" + GameConfig.RECOVER_ENERGY_ONCE;
         Process.Instance.Player.UpdateEnergy(Process.Instance.Player.Energy + GameConfig.RECOVER_ENERGY_ONCE);
         GTextField curValue = itemObj.GetChild("n5").asTextField;
-        curValue.text = Process.Instance.Player.Energy + "/" + Process.Instance.Player.EnergyMax;
+        curValue.text = Process.Instance.Player.Energy + "/" + Process.Instance.Player.EnergyMax;        
     }
 
 }

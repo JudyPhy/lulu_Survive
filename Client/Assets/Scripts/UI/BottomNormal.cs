@@ -80,13 +80,13 @@ public class BottomNormal : BottomUI
                 {
                     if (drop._itemList[i]._count > 0)
                     {
-                        Process.Instance.Player.UpdateItem(drop._itemList[i]._itemId, drop._itemList[i]._count);
+                        Process.Instance.Player.AddItem(drop._itemList[i]._itemId, drop._itemList[i]._count);
                         content_get.Add(item._name + "x" + drop._itemList[i]._count);
                     }
                     else if (drop._itemList[i]._count < 0)
                     {
                         int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.GetHasItem(drop._itemList[i]._itemId).count);
-                        Process.Instance.Player.UpdateItem(drop._itemList[i]._itemId, -lossCount);
+                        Process.Instance.Player.AddItem(drop._itemList[i]._itemId, -lossCount);
                         if (lossCount > 0)
                         {
                             content_loss.Add(item._name + "x" + Mathf.Abs(drop._itemList[i]._count));
@@ -145,6 +145,7 @@ public class BottomNormal : BottomUI
             mBtnList[3].visible = inScene;  //explore
             mBtnList[4].visible = true; //towards
             mBtnList[5].visible = true; //sleep
+            mBtnList[6].visible = true; //equip
             mBtnList[8].visible = true; //bag
         }
         else
@@ -162,7 +163,7 @@ public class BottomNormal : BottomUI
         }
         else if (btn == mBtnList[3])
         {
-            MyLog.Log("Click explore.");
+            Process.Instance.Explore();
         }
         else if (btn == mBtnList[4])
         {
@@ -171,6 +172,10 @@ public class BottomNormal : BottomUI
         else if (btn == mBtnList[5])
         {
             UIManager.Instance.SwitchToUI(UIType.Sleep);
+        }
+        else if (btn == mBtnList[6])
+        {
+            UIManager.Instance.SwitchToUI(UIType.Equip);
         }
         else if (btn == mBtnList[8])
         {
