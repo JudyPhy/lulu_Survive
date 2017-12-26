@@ -28,25 +28,19 @@ public class Process
     public int CurScene { get { return _curScene; } }
     private int _curScene;
 
-    private Vector2 _bornPos;
+    public int TowardsStep { get { return _towardsStep; } }
+    private int _towardsStep;
 
-    public Vector2 CurPos { get { return _curPos; } }
-    private Vector2 _curPos;
-
-    public Vector2 CurOutPos { get { return _curOutPos; } }
-    private Vector2 _curOutPos;
-    private int _curOutId;
-
-    public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
+    //public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
     private List<ConfigEvent> _curSceneEvents = new List<ConfigEvent>();
 
-    public List<ConfigMonster> CurSceneMonsters { get { return _curSceneMonsters; } }
+    //public List<ConfigMonster> CurSceneMonsters { get { return _curSceneMonsters; } }
     private List<ConfigMonster> _curSceneMonsters = new List<ConfigMonster>();
 
-    public List<ConfigDrop> CurSceneDrops { get { return _curSceneDrops; } }
+    //public List<ConfigDrop> CurSceneDrops { get { return _curSceneDrops; } }
     private List<ConfigDrop> _curSceneDrops = new List<ConfigDrop>();
 
-    public int LastStoryID { get { return _lastStoryId; } }
+    //public int LastStoryID { get { return _lastStoryId; } }
     private int _lastStoryId;
 
     public int NextStoryID { get { return _nextStoryId; } }
@@ -77,8 +71,6 @@ public class Process
         SavedData data = GameSaved.GetData();
 
         _curScene = data.curScene;
-        _curPos = new Vector2(data.curPos[0], data.curPos[1]);
-        _curOutId = data.curOutId;
 
         _player = new Player();
         _player.CreateHistory(data);
@@ -87,8 +79,7 @@ public class Process
         _nextStoryId = data.nextStoryId;
 
         _curDay = data.day;
-        MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _curPos:" + _curPos
-            + ", _curOutId:" + _curOutId + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
+        MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
         MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", energyMax:"
             + _player.EnergyMax + ", hungry:" + _player.Hungry + ", hungryMax:" + _player.HungryMax
             + ", Hp:" + _player.Hp + ", Atk:" + _player.Atk + ", Def:" + _player.Def
@@ -100,8 +91,6 @@ public class Process
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
         if (scene != null)
         {
-            _bornPos = scene._pos;
-            _curOutPos = scene != null ? scene._outList[_curOutId] : new Vector2(0, 0);
             _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
             _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
             _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
@@ -118,11 +107,7 @@ public class Process
         SavedData data = new SavedData();
         data.day = _curDay;
 
-        data.curScene = _curScene;
-        data.curPos = new int[2];
-        data.curPos[0] = (int)_curPos.x;
-        data.curPos[1] = (int)_curPos.y;
-        data.curOutId = _curOutId;       
+        data.curScene = _curScene;    
 
         data.lastStoryId = _lastStoryId;
         data.nextStoryId = _nextStoryId;
@@ -159,25 +144,9 @@ public class Process
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
         if (scene != null)
         {
-            _bornPos = scene._pos;
-            _curPos = scene._pos;
             _curSceneEvents = ConfigManager.Instance.ReqEventList(_curScene);
             _curSceneMonsters = ConfigManager.Instance.ReqMonsterList(_curScene);
             _curSceneDrops = ConfigManager.Instance.ReqDropList(_curScene);
-            //out
-            if (scene._outList.Count > 0)
-            {
-                foreach (int id in scene._outList.Keys)
-                {
-                    _curOutId = id;
-                    _curOutPos = scene._outList[id];
-                }
-            }
-            else
-            {
-                _curOutId = 0;
-                _curOutPos = Vector2.zero;
-            }
             //event
             _curEventData = null;
         }
@@ -230,55 +199,20 @@ public class Process
         }
     }
 
-    public bool InCurScene(ConfigScene curSceneData, Vector2 curPos)
-    {
-        Vector2 deltaX = curPos - _bornPos;
-        if ((curPos.x <= _bornPos.x && Mathf.Abs(deltaX.x) <= curSceneData._range.x) && (curPos.x >= _bornPos.x && Mathf.Abs(deltaX.x) <= curSceneData._range.y)
-            && (curPos.y >= _bornPos.y && Mathf.Abs(deltaX.y) <= curSceneData._range.z) && (curPos.y <= _bornPos.y && Mathf.Abs(deltaX.y) <= curSceneData._range.w))
-        {
-            return true;
-        }
-        return false;
-    }
-
     public void Explore()
     {
         MyLog.Log("Explore");
-        //energy
-        int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
-        if (energy >= 0)
-        {
-            _player.Energy = energy;
-
-            //hungry
-            int hungry = _player.Hungry - GameConfig.COST_HUNGRY_ONCE;
-            if (_player.Hungry > 0 && hungry < 0)
-            {
-                _player.Healthy--;
-            }
-            _player.Hungry = hungry;
-
-            //random event
-            if (_player.Healthy <= 0)
-            {
-                GameOver();
-            }
-            else
-            {
-                _curEventData = GetRandomEvent();
-                UIManager.Instance.mMainWindow.UpdateUI();
-                Saved();
-            }
-        }
-        else
-        {
-            UIManager.Instance.mMainWindow.Tips("精力不足");
-        }
+        Move(false);
     }
 
     public void MoveTowards()
     {
         MyLog.Log("MoveTowards");
+        Move(true);
+    }
+
+    private void Move(bool isTowards)
+    {
         //energy
         int energy = _player.Energy - GameConfig.COST_ENERGY_ONCE;
         if (energy >= 0)
@@ -300,17 +234,12 @@ public class Process
             }
             else
             {
-                _curPos = GetNewPos();
-                MyLog.Log("Move to pos[" + _curPos + "]");
-                if (_curPos == _curOutPos)
+                if (isTowards)
                 {
-                    SwitchScene(_curOutId);
+                    _towardsStep++;
                 }
-                else
-                {
-                    //event
-                    _curEventData = GetRandomEvent();                    
-                }
+                //event
+                _curEventData = GetRandomEvent();
                 UIManager.Instance.mMainWindow.UpdateUI();
                 Saved();
             }
@@ -319,32 +248,6 @@ public class Process
         {
             UIManager.Instance.mMainWindow.Tips("精力不足");
         }
-    }
-
-    private Vector2 GetNewPos()
-    {
-        Vector2 pos = _curPos;
-        ConfigScene curSceneData = ConfigManager.Instance.ReqSceneData(_curScene);
-        if (curSceneData != null)
-        {
-            Vector2 delta = _curOutPos - _curPos;
-            if (delta.x != 0)
-            {
-                pos.x = delta.x > 0 ? _curPos.x++ : _curPos.x--;
-            }
-            else
-            {
-                if (delta.y != 0)
-                {
-                    pos.y = delta.y > 0 ? _curPos.y++ : _curPos.y--;
-                }
-                else
-                {
-                    MyLog.Log("Current pos == out pos");
-                }
-            }
-        }
-        return pos;
     }
 
     private EventType GetCurEventType()
@@ -407,10 +310,19 @@ public class Process
         }
     }
 
-    public void TurnToNextDialog(int nextStoryId)
+    public void TurnToNextDialog(ConfigStory curStory)
     {
         _lastStoryId = _nextStoryId;
-        _nextStoryId = nextStoryId;
+        switch (curStory._type)
+        {
+            case (int)DialogType.ToNextDialog:
+                _nextStoryId = curStory._nextId;
+                break;
+            case (int)DialogType.ChooseDialog:
+            case (int)DialogType.ToNextScene:
+                _nextStoryId = 0;
+                break;
+        }
         Saved();
     }
 

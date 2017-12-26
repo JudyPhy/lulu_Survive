@@ -92,18 +92,9 @@ public class MainWindow : Window
         if (curSceneData != null)
         {
             mTextTop[0].text = curSceneData._name;
-            if (curSceneData._outList.Count == 1)
-            {
-                List<int> list = new List<int>(curSceneData._outList.Keys);
-                ConfigScene outSceneData = ConfigManager.Instance.ReqSceneData(list[0]);
-                mTextValueInRect[6].text = outSceneData != null ? outSceneData._name : "未知";
-            }
-            else
-            {
-                mTextValueInRect[6].text = "";
-            }
+            ConfigScene destinationData = ConfigManager.Instance.ReqSceneData(curSceneData._destination);
+            mTextValueInRect[6].text = destinationData == null ? "" : destinationData._name;
         }
-
         mTextValueInRect[2].text = "";
         mTextValueInRect[7].text = "";
     }

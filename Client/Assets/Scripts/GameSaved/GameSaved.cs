@@ -29,10 +29,6 @@ public class GameSaved {
         SavedData data = new SavedData();
 
         data.curScene = int.Parse(jsonData["curScene"].ToString());
-        data.curPos = new int[2];
-        data.curPos[0] = int.Parse(jsonData["curPos"][0].ToString());
-        data.curPos[1] = int.Parse(jsonData["curPos"][1].ToString());
-        data.curOutId = int.Parse(jsonData["curOutId"].ToString());
 
         data.lastStoryId = int.Parse(jsonData["lastStoryId"].ToString());
         data.nextStoryId = int.Parse(jsonData["nextStoryId"].ToString());        
@@ -91,8 +87,6 @@ public class SavedData
     public int day;
 
     public int curScene;
-    public int[] curPos;
-    public int curOutId;
 
     public int lastStoryId;
     public int nextStoryId;

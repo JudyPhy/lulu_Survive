@@ -43,6 +43,14 @@ public enum UIType
     Equip,
 }
 
+public enum DialogType
+{
+    Idle,
+    ToNextDialog = 1,
+    ChooseDialog = 2,
+    ToNextScene = 3,
+}
+
 public class GameConfig
 {
     public static readonly int DIALOG_START_ID = 111101;

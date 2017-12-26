@@ -42,7 +42,7 @@ public class SleepWindow : Window
     }
 
     protected override void OnShown()
-    {
+    {        
         mList.numItems = 1;
         Process.Instance.Saved();
         mBtnBack.visible = true;

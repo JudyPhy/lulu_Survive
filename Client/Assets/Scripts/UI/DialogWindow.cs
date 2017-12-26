@@ -75,11 +75,11 @@ public class DialogWindow : Window
     }
 
     private void OnClickBtnOver(EventContext context)
-    {        
+    {
         //MyLog.Log("OnClickBtnOver");
+        Process.Instance.TurnToNextDialog(mStoryInfo);
         if (mStoryInfo._type == 1)
         {
-            Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
             OnShown();
         }
         else

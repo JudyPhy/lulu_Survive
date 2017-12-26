@@ -139,11 +139,9 @@ public class BottomNormal : BottomUI
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
         if (scene != null)
         {
-            bool inScene = Process.Instance.InCurScene(scene, Process.Instance.CurPos);
-            MyLog.Log("inScene:" + inScene);
-            mBtnList[0].visible = inScene && scene._shop != 0;  //shop
-            mBtnList[3].visible = inScene;  //explore
-            mBtnList[4].visible = true; //towards
+            mBtnList[0].visible = scene._shop != 0;  //shop
+            mBtnList[3].visible = true;  //explore
+            mBtnList[4].visible = scene._destination != 0; //towards
             mBtnList[5].visible = true; //sleep
             mBtnList[6].visible = true; //equip
             mBtnList[8].visible = true; //bag
@@ -171,7 +169,15 @@ public class BottomNormal : BottomUI
         }
         else if (btn == mBtnList[5])
         {
-            UIManager.Instance.SwitchToUI(UIType.Sleep);
+            if (Process.Instance.NeedShowDialog())
+            {
+                MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+                UIManager.Instance.SwitchToUI(UIType.Dialog);
+            }
+            else
+            {
+                UIManager.Instance.SwitchToUI(UIType.Sleep);
+            }            
         }
         else if (btn == mBtnList[6])
         {
