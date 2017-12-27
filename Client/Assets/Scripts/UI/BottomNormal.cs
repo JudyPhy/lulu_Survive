@@ -172,6 +172,7 @@ public class BottomNormal : BottomUI
             if (Process.Instance.NeedShowDialog())
             {
                 MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+                UIManager.Instance.mDialogWindow.mSwitchScene = UIType.Sleep;
                 UIManager.Instance.SwitchToUI(UIType.Dialog);
             }
             else

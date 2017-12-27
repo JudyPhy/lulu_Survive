@@ -44,7 +44,7 @@ public class ConfigManager
         return null;
     }
 
-    public List<ConfigStory> ReqSceneStory(int sceneId)
+    public List<ConfigStory> ReqDialogList(int sceneId)
     {
         List<ConfigStory> list = new List<ConfigStory>();
         foreach (ConfigStory data in configData.CfgStory.Values)

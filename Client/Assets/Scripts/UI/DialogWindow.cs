@@ -13,6 +13,7 @@ public class DialogWindow : Window
     private List<GTextField> mTextFiledList = new List<GTextField>();
 
     public ConfigStory mStoryInfo;
+    public UIType mSwitchScene;
 
     private List<string> mDialogList = new List<string>();
     private int mCurDialogIndex;
@@ -53,7 +54,7 @@ public class DialogWindow : Window
         else
         {
             MyLog.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
-            UIManager.Instance.SwitchToUI(UIType.Main);
+            UIManager.Instance.SwitchToUI(mSwitchScene);
         }
     }
 
@@ -64,27 +65,37 @@ public class DialogWindow : Window
         int resultId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
         switch (resultType)
         {
-            case 1:
+            case (int)DialogChooseResultType.ToNextDialog:
                 Process.Instance.TurnToNextDialog(resultId);
                 OnShown();
                 break;
             default:
-                UIManager.Instance.SwitchToUI(UIType.Main);
+                Process.Instance.TurnToNextDialog(0);
+                if (mStoryInfo._type == 3 && Process.Instance.CurScene != mStoryInfo._sceneId)
+                {
+                    Process.Instance.SwitchScene(mStoryInfo._sceneId);
+                }
+                UIManager.Instance.SwitchToUI(mSwitchScene);
                 break;
         }
     }
 
     private void OnClickBtnOver(EventContext context)
     {
-        //MyLog.Log("OnClickBtnOver");
-        Process.Instance.TurnToNextDialog(mStoryInfo);
-        if (mStoryInfo._type == 1)
+        //MyLog.Log("OnClickBtnOver");       
+        if (mStoryInfo._type == (int)DialogType.ToNextDialog)
         {
+            Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
             OnShown();
         }
         else
         {
-            UIManager.Instance.SwitchToUI(UIType.Main);
+            Process.Instance.TurnToNextDialog(0);
+            if (mStoryInfo._type == 3 && Process.Instance.CurScene != mStoryInfo._sceneId)
+            {
+                Process.Instance.SwitchScene(mStoryInfo._sceneId);
+            }
+            UIManager.Instance.SwitchToUI(mSwitchScene);
         }
     }
 
@@ -200,3 +211,5 @@ public class DialogWindow : Window
         mBtnSkip.visible = false;
     }
 }
+
+

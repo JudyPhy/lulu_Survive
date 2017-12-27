@@ -51,6 +51,13 @@ public enum DialogType
     ToNextScene = 3,
 }
 
+public enum DialogChooseResultType
+{
+    Idle,
+    ToNextDialog = 1,
+    ToScene = 2,
+}
+
 public class GameConfig
 {
     public static readonly int DIALOG_START_ID = 111101;

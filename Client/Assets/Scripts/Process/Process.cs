@@ -138,7 +138,7 @@ public class Process
         GameSaved.SaveData(data);
     }
 
-    private void SwitchScene(int toSceneId)
+    public void SwitchScene(int toSceneId)
     {
         _curScene = toSceneId;
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
@@ -159,42 +159,62 @@ public class Process
 
     public bool NeedShowDialog()
     {
-        if (_nextStoryId != 0)
+        if (_lastStoryId == 0)
         {
+            _nextStoryId = GameConfig.DIALOG_START_ID;
             return true;
         }
         else
         {
-            MyLog.Log("Switched dialog of current scene  has played over.");
-        }
-        ConfigStory lastStory = ConfigManager.Instance.ReqStory(_lastStoryId);
-        if (lastStory == null)
-        {
-            MyLog.LogError("lastStory[" + lastStory + "] is null.");
-            return false;
-        }
-        else
-        {
-            switch (lastStory._type)
+            ConfigStory lastStory = ConfigManager.Instance.ReqStory(_lastStoryId);
+            if (lastStory._type == (int)DialogType.ChooseDialog)
             {
-                case 1:
-                    //跳转下一个剧情
-                    _nextStoryId = lastStory._nextId; ;
-                    return true;
-                case 2:
-                    //未选择就退出，重新选择
-                    _nextStoryId = _lastStoryId;
-                    return true;
-                case 3:
-                    //跳转场景
-                    if (lastStory._nextId != _curScene)
+                MyLog.Log("Continue show last choose dialog[" + lastStory._nextId + "]");
+                _nextStoryId = lastStory._nextId;
+                return true;
+            }
+            else if (lastStory._type == (int)DialogType.ToNextDialog)
+            {
+                MyLog.Log("To next dialog[" + lastStory._nextId + "]");
+                _nextStoryId = lastStory._nextId;
+                return true;
+            }
+            else
+            {
+                List<ConfigStory> curSceneDialogs = ConfigManager.Instance.ReqDialogList(_curScene);
+                curSceneDialogs.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
+                int index = -1;
+                for (int i = 0; i < curSceneDialogs.Count; i++)
+                {
+                    if (curSceneDialogs[i]._id == lastStory._id)
                     {
-                        SwitchScene(lastStory._nextId);
+                        index = i + 1;
+                        break;
                     }
-                    _nextStoryId = 0;
-                    return false;
-                default:
-                    return false;
+                }
+                if (index == -1)
+                {
+                    MyLog.Log("Last dialog scene[" + _lastStoryId + "] is not current scene[" + _curScene + "]. Current scene has dialog count " + curSceneDialogs.Count);
+                    if (curSceneDialogs.Count > 0)
+                    {
+                        _nextStoryId = curSceneDialogs[0]._id;
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                else
+                {
+                    MyLog.Log("Current scene has dialog count " + curSceneDialogs.Count);
+                    if (index >= curSceneDialogs.Count)
+                        return false;
+                    else
+                    {
+                        _nextStoryId = curSceneDialogs[index]._id;
+                        MyLog.Log("Will play dialog[ " + _nextStoryId + "]");
+                        return true;
+                    }
+                }
             }
         }
     }
@@ -310,19 +330,10 @@ public class Process
         }
     }
 
-    public void TurnToNextDialog(ConfigStory curStory)
+    public void TurnToNextDialog(int nextId)
     {
         _lastStoryId = _nextStoryId;
-        switch (curStory._type)
-        {
-            case (int)DialogType.ToNextDialog:
-                _nextStoryId = curStory._nextId;
-                break;
-            case (int)DialogType.ChooseDialog:
-            case (int)DialogType.ToNextScene:
-                _nextStoryId = 0;
-                break;
-        }
+        _nextStoryId = nextId;
         Saved();
     }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class ReadCsv {
 
@@ -16,40 +17,23 @@ public class ReadCsv {
         for (int i = 0; i < lineOfArray.Length; i++)
         {
             string line = lineOfArray[i];
+            Regex regex = new Regex(",\"");
+            string[] str_y1 = regex.Split(line);
             List<string> result = new List<string>();
-            int curStartPos = 0;
-            bool flag = false;
-            int index = 0;
-            for (int j = 0; j < line.Length; j++)
+            for (int n_y1 = 0; n_y1 < str_y1.Length; n_y1++)
             {
-                if (!flag && line[j] == '"')
+                regex = new Regex("\",");
+                string[] str_y2 = regex.Split(str_y1[n_y1]);
+                for (int n_y2 = 0; n_y2 < str_y2.Length; n_y2++)
                 {
-                    flag = true;
-                    continue;
-                }
-                if (flag && line[j] == '"')
-                {
-                    flag = false;
-                    string str = line.Substring(curStartPos + 1, j - curStartPos - 1);
-                    //MyLog.Log("111111:" + str);
-                    result.Add(str);
-                    curStartPos = j + 2;
-                    index++;
-                    j++;
-                    continue;
-                }
-                if (!flag && line[j] == ',')
-                {
-                    string str = line.Substring(curStartPos, j - curStartPos);
-                    //MyLog.Log("2222:" + str);
-                    result.Add(str);
-                    curStartPos = j + 1;
-                    index++;
+                    string[] str_d = str_y2[n_y2].Split(',');
+                    for (int n_d = 0; n_d < str_d.Length; n_d++)
+                    {
+                        //Debug.LogError("str_d:" + str_d[n_d]);
+                        result.Add(str_d[n_d]);
+                    }
                 }
             }
-            string str2 = line.Substring(curStartPos);
-            //MyLog.Log("last: " + str2);
-            result.Add(str2);
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)
             {
