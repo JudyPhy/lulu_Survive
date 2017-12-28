@@ -19,6 +19,9 @@ public class Player : Role
     public int HungryMax { set { _hungryMax = value; } get { return _hungryMax; } }
     protected int _hungryMax;
 
+    public int HpMax { set { _hpMax = value; } get { return _hpMax; } }
+    protected int _hpMax;
+
     public PlayerBattleStatus Status { get { return _status; } }
     private PlayerBattleStatus _status;
 
@@ -40,6 +43,7 @@ public class Player : Role
             _hungryMax = GameConfig.PLAYER_BASE_HUNGRY_MAX;
 
             _hp = player._hp;
+            _hpMax = player._hp;
             _def = player._def;
             _atk = player._atk;
             _power = player._power;
@@ -71,6 +75,7 @@ public class Player : Role
         _hungryMax = savedData.role.hungryMax;
 
         _hp = savedData.role.hp;
+        _hpMax = savedData.role.hpMax;
         _def = savedData.role.def;
         _atk = savedData.role.atk;
         _power = savedData.role.power;
@@ -114,6 +119,7 @@ public class Player : Role
                 }
                 isFind = true;
                 Process.Instance.Saved();
+                MyLog.Log("item[" + itemId + "] new count " + _items[i].count);
                 break;
             }
         }
@@ -124,12 +130,46 @@ public class Player : Role
             data.count = count;
             _items.Add(data);
             Process.Instance.Saved();
+        }        
+    }
+
+    public void AddHealthy(int addValue)
+    {
+        _healthy += addValue;
+        if (_healthy <= 0)
+        {
+            Process.Instance.GameOver();
+        }
+        else if (_healthy > GameConfig.PLAYER_BASE_HEALTHY)
+        {
+            _healthy = GameConfig.PLAYER_BASE_HEALTHY;
         }
     }
 
     public void UpdateEnergy(int newValue)
     {
         _energy = Mathf.Min(newValue, _energyMax);
+    }
+
+    public void AddEnergy(int addValue)
+    {
+        _energy += addValue;
+        _energy = Mathf.Max(_energy, 0);
+        _energy = Mathf.Min(_energy, _energyMax);
+    }
+
+    public void AddHungry(int addValue)
+    {
+        _hungry += addValue;
+        _hungry = Mathf.Max(_hungry, 0);
+        _hungry = Mathf.Min(_hungry, _hungryMax);
+    }
+
+    public void AddHp(int addValue)
+    {
+        _hp += addValue;
+        _hp = Mathf.Max(_hp, 0);
+        _hp = Mathf.Min(_hp, _hpMax);
     }
 
     public void UpdateAttrDaily()

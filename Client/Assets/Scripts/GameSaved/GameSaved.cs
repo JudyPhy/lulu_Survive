@@ -107,6 +107,7 @@ public class RoleAttr
     public int hungryMax;
 
     public int hp;
+    public int hpMax;
     public int def;
     public int atk;
     public int power;

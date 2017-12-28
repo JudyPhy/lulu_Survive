@@ -268,17 +268,32 @@ public class Process
         {
             UIManager.Instance.mMainWindow.Tips("精力不足");
         }
+        MyLog.Log("Move over, event type=" + _curEventData._type);
     }
 
     private EventType GetCurEventType()
     {
-        //return EventType.Event;
-        return (EventType)Random.Range(1, 4);
+        List<EventType> typeList = new List<EventType>();
+        if (_curSceneEvents.Count > 0)
+        {
+            typeList.Add(EventType.Event);
+        }
+        if (_curSceneMonsters.Count > 0)
+        {
+            typeList.Add(EventType.Battle);
+        }
+        if (_curSceneDrops.Count > 0)
+        {
+            typeList.Add(EventType.Drop);
+        }
+        int index = Random.Range(0, typeList.Count);
+        return typeList[index];
     }
 
     public EventData GetRandomEvent()
     {
         EventType type = GetCurEventType();
+        MyLog.Log("GetRandomEvent type=" + type);
         List<int> sampleList = new List<int>();
         switch (type)
         {
@@ -310,6 +325,7 @@ public class Process
                 }
                 break;
             default:
+                MyLog.Log("type is null.");
                 return null;
         }
         //MyLog.Log("sampleList count=" + sampleList.Count + ", cur event type=" + type.ToString());
@@ -370,6 +386,35 @@ public class Process
             }
         }
         return result;
+    }
+
+    public bool CanUseItem(int itemId)
+    {
+        ItemCountData data = GetHasItem(itemId);
+        if (data.count <= 0)
+            return false;
+        ConfigItem configData = ConfigManager.Instance.ReqItem(itemId);
+        if (configData == null)
+            return false;
+        if (configData._healthy > 0 && _player.Healthy == GameConfig.PLAYER_BASE_HEALTHY)
+            return false;
+        if ((configData._energy > 0 && _player.Energy == _player.EnergyMax) || (configData._energy < 0 && _player.Energy == 0))
+            return false;
+        if ((configData._hungry > 0 && _player.Hungry == _player.HungryMax) || (configData._hungry < 0 && _player.Hungry == 0))
+            return false;
+        if ((configData._hp > 0 && _player.Hp == _player.HpMax) || (configData._hp < 0 && _player.Hp == 0))
+            return false;
+        if (configData._power < 0 && _player.Power == 0)
+            return false;
+        if (configData._agile < 0 && _player.Agile == 0)
+            return false;
+        if (configData._physic < 0 && _player.Physic == 0)
+            return false;
+        if (configData._charm < 0 && _player.Charm == 0)
+            return false;
+        if (configData._perception < 0 && _player.Perception == 0)
+            return false;
+        return true;
     }
 
     public void GameOver()

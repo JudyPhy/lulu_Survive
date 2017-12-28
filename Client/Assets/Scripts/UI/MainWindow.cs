@@ -113,7 +113,7 @@ public class MainWindow : Window
     {
         mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0/" + Process.Instance.Player.EnergyMax.ToString()
             : Process.Instance.Player.Hungry.ToString() + "/" + Process.Instance.Player.EnergyMax.ToString();
-        mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.black;
+        mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.white;
     }
 
     public void UpdateBattleAttr()
@@ -141,7 +141,7 @@ public class MainWindow : Window
             Process.Instance.CurEventData = new EventData(EventType.Idle, 0);
         }
         EventType type = Process.Instance.CurEventData._type;
-        //MyLog.Log("Bottom shown, type=" + type.ToString());
+        MyLog.Log("Bottom shown, type=" + type.ToString());
         mBottomNormal.Show(type == EventType.Idle || type == EventType.Drop);
         mBottomEvent.Show(type == EventType.Event);
         mBottomBattle.Show(type == EventType.Battle);

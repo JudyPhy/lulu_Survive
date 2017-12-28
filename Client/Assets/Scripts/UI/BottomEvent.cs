@@ -30,8 +30,10 @@ public class BottomEvent : BottomUI
         if (mEventInfo != null)
         {
             mText.text = mEventInfo._desc;
-            mBtn1.text = mEventInfo._resultList[0].resultDesc;
-            mBtn2.text = mEventInfo._resultList[1].resultDesc;
+            mBtn1.visible = mEventInfo._resultList.Count > 0;
+            mBtn1.text = mEventInfo._resultList.Count > 0 ? mEventInfo._resultList[0].resultDesc : "";
+            mBtn2.visible = mEventInfo._resultList.Count > 1;
+            mBtn2.text = mEventInfo._resultList.Count > 1 ? mEventInfo._resultList[1].resultDesc : "";
         }
         else
         {

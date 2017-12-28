@@ -8,7 +8,7 @@ public class Role
     protected int _id;
 
     public int Hp { set { _hp = value; } get { return _hp; } }
-    protected int _hp;
+    protected int _hp;    
 
     public int Def { set { _def = value; } get { return _def; } }
     protected int _def;

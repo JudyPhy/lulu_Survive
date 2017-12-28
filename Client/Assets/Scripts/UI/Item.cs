@@ -39,15 +39,14 @@ public class Item
     }
 
     private void OnClickUseItem(EventContext context)
-    {
-        Debug.LogError("click item");
-        ItemCountData countData = Process.Instance.GetHasItem(mData._id);
-        if (countData.count > 0)
+    {       
+        if (Process.Instance.CanUseItem(mData._id))
         {
-            Process.Instance.Player.AddItem(mData._id, -1);
-            mBtnTitleText.color = countData.count - 1 > 0 ? Color.green : Color.white;
-            mCount.text = "拥有：" + (countData.count - 1) + "个";
+            Process.Instance.Player.AddItem(mData._id, -1);            
             UpdateItemAttr();
+            ItemCountData countData = Process.Instance.GetHasItem(mData._id);
+            mBtnTitleText.color = countData.count - 1 > 0 ? Color.green : Color.white;
+            mCount.text = "拥有：" + countData.count + "个";
         }
     }
 
@@ -55,43 +54,16 @@ public class Item
     {
         Process.Instance.Player.BuffID = mData._id;
         Process.Instance.Player.BuffDuration = mData._duration;
-        if (mData._healthy != 0)
-        {
-            Process.Instance.Player.Healthy += mData._healthy;
-        }
-        if (mData._energy != 0)
-        {
-            Process.Instance.Player.Energy += mData._energy;
-        }
-        if (mData._hungry != 0)
-        {
-            Process.Instance.Player.Hungry += mData._hungry;
-        }
-        if (mData._hp != 0)
-        {
-            Process.Instance.Player.Hp += mData._hp;
-        }
-        if (mData._power != 0)
-        {
-            Process.Instance.Player.Power += mData._power;
-        }
-        if (mData._agile != 0)
-        {
-            Process.Instance.Player.Agile += mData._agile;
-        }
-        if (mData._physic != 0)
-        {
-            Process.Instance.Player.Physic += mData._physic;
-        }
-        if (mData._charm != 0)
-        {
-            Process.Instance.Player.Charm += mData._charm;
-        }
-        if (mData._perception != 0)
-        {
-            Process.Instance.Player.Perception += mData._perception;
-        }
-        Process.Instance.UpdateAttr();
+        Process.Instance.Player.AddHealthy(mData._healthy);
+        Process.Instance.Player.AddEnergy(mData._energy);
+        Process.Instance.Player.AddHungry(mData._hungry);
+        Process.Instance.Player.AddHp(mData._hp);
+        Process.Instance.Player.Power = Mathf.Max(0, Process.Instance.Player.Power + mData._power);
+        Process.Instance.Player.Agile = Mathf.Max(0, Process.Instance.Player.Agile + mData._agile);
+        Process.Instance.Player.Physic = Mathf.Max(0, Process.Instance.Player.Physic + mData._physic);
+        Process.Instance.Player.Charm = Mathf.Max(0, Process.Instance.Player.Charm + mData._charm);
+        Process.Instance.Player.Perception = Mathf.Max(0, Process.Instance.Player.Perception + mData._perception);
+        UIManager.Instance.mBagWindow.UpdateTopAttr();
         Process.Instance.Saved();
     }
 }
