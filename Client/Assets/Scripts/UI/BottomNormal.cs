@@ -73,11 +73,13 @@ public class BottomNormal : BottomUI
                 }
             }
             //items
+            MyLog.Log("Drop item count:" + drop._itemList.Count);
             for (int i = 0; i < drop._itemList.Count; i++)
             {
                 ConfigItem item = ConfigManager.Instance.ReqItem(drop._itemList[i]._itemId);
                 if (item != null)
                 {
+                    MyLog.Log("get item id:" + drop._itemList[i]._itemId + ", count:" + drop._itemList[i]._count);
                     if (drop._itemList[i]._count > 0)
                     {
                         Process.Instance.Player.AddItem(drop._itemList[i]._itemId, drop._itemList[i]._count);
@@ -85,7 +87,7 @@ public class BottomNormal : BottomUI
                     }
                     else if (drop._itemList[i]._count < 0)
                     {
-                        int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.GetHasItem(drop._itemList[i]._itemId).count);
+                        int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.GetSelfItem(drop._itemList[i]._itemId).count);
                         Process.Instance.Player.AddItem(drop._itemList[i]._itemId, -lossCount);
                         if (lossCount > 0)
                         {
@@ -93,7 +95,12 @@ public class BottomNormal : BottomUI
                         }
                     }
                 }
+                else
+                {
+                    MyLog.LogError("item[" + drop._itemList[i]._itemId + "] not exist.");
+                }
             }
+            MyLog.Log("content_get count:" + content_get.Count);
             if (content_get.Count > 0)
             {
                 mTextTips.text = "获得：";
@@ -109,6 +116,7 @@ public class BottomNormal : BottomUI
                     }
                 }
             }
+            MyLog.Log("content_loss count:" + content_loss.Count);
             if (content_loss.Count > 0)
             {
                 mTextTips.text = "失去：";

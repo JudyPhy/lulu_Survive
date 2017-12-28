@@ -40,7 +40,7 @@ public class BattleManager
         }
         else
         {
-            MyLog.Log("Monster " + monsterId + " not exist.");
+            MyLog.LogError("Monster " + monsterId + " not exist.");
         }
     }
 

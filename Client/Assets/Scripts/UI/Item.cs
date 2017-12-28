@@ -30,7 +30,7 @@ public class Item
     {
         //MyLog.Log("Update item ui, item=" + data._id);
         mData = data;
-        ItemCountData countData = Process.Instance.GetHasItem(mData._id);
+        ItemCountData countData = Process.Instance.GetSelfItem(mData._id);
         mBtnTitleText.text = mData._name;
         mBtnTitleText.color = countData.count > 0 ? Color.green : Color.white;
         mBtnTitle.enabled = countData.count > 0;
@@ -44,7 +44,7 @@ public class Item
         {
             Process.Instance.Player.AddItem(mData._id, -1);            
             UpdateItemAttr();
-            ItemCountData countData = Process.Instance.GetHasItem(mData._id);
+            ItemCountData countData = Process.Instance.GetSelfItem(mData._id);
             mBtnTitleText.color = countData.count - 1 > 0 ? Color.green : Color.white;
             mCount.text = "拥有：" + countData.count + "个";
         }

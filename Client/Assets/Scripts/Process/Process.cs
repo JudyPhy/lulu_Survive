@@ -82,7 +82,7 @@ public class Process
         MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
         MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", energyMax:"
             + _player.EnergyMax + ", hungry:" + _player.Hungry + ", hungryMax:" + _player.HungryMax
-            + ", Hp:" + _player.Hp + ", Atk:" + _player.Atk + ", Def:" + _player.Def
+            + ", Hp:" + _player.Hp + ", HpMax:" + _player.HpMax + ", Atk:" + _player.Atk + ", Def:" + _player.Def
             + ", Power:" + _player.Power + ", Agile:" + _player.Agile + ", Physic:" + _player.Physic
             + ", Charm:" + _player.Charm + ", Perception:" + _player.Perception);
         MyLog.LogError("player item: gold:" + _player.Gold + ", itemCount:" + _player.Items.Count);
@@ -120,6 +120,7 @@ public class Process
         data.role.hungryMax = _player.HungryMax;
 
         data.role.hp = _player.Hp;
+        data.role.hpMax = _player.HpMax;
         data.role.atk = _player.Atk;
         data.role.def = _player.Def;
         data.role.power = _player.Power;
@@ -359,7 +360,7 @@ public class Process
         Saved();
     }
 
-    public ItemCountData GetHasItem(int itemId)
+    public ItemCountData GetSelfItem(int itemId)
     {
         ItemCountData data = new ItemCountData();
         data.id = itemId;
@@ -390,7 +391,7 @@ public class Process
 
     public bool CanUseItem(int itemId)
     {
-        ItemCountData data = GetHasItem(itemId);
+        ItemCountData data = GetSelfItem(itemId);
         if (data.count <= 0)
             return false;
         ConfigItem configData = ConfigManager.Instance.ReqItem(itemId);

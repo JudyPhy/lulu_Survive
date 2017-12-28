@@ -130,7 +130,7 @@ public class MainWindow : Window
 
     public void UpdateMedicine()
     {
-        ItemCountData data = Process.Instance.GetHasItem(GameConfig.MEDICINE_ID);
+        ItemCountData data = Process.Instance.GetSelfItem(GameConfig.MEDICINE_ID);
         mTextValueInRect[8].text = data.count.ToString() + "个";
     }
 
