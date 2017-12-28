@@ -58,9 +58,19 @@ public enum DialogChooseResultType
     ToScene = 2,
 }
 
+
+public enum EventResultType
+{
+    Idle,
+    Battle = 1,
+    Drop = 2,
+    Event = 3,
+}
+
 public class GameConfig
 {
-    public static readonly int DIALOG_START_ID = 111101;
+    public static readonly int SCENE_START_ID = 111;
+    public static readonly int DIALOG_START_ID = 11101;
     public static readonly int PLAYER_CONFIG_ID = 69999;
 
     public static readonly int PLAYER_BASE_HEALTHY = 30;

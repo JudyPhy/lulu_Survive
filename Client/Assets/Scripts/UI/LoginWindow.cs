@@ -39,6 +39,7 @@ public class LoginWindow : Window
         if (Process.Instance.NeedShowDialog())
         {
             MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+            UIManager.Instance.mDialogWindow.mSwitchScene = UIType.Idle;
             UIManager.Instance.SwitchToUI(UIType.Dialog);
         }
         else

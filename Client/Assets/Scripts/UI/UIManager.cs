@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
 
     public void SwitchToUI(UIType type)
     {
+        MyLog.Log("SwitchToUI:" + type.ToString());
         foreach (UIType windowType in mWindows.Keys)
         {
             //Debug.LogError("windowType:" + windowType.ToString() + ", type:" + type.ToString());

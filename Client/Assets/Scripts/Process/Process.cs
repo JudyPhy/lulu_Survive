@@ -57,11 +57,11 @@ public class Process
 
     public void StartNewGame()
     {        
-        SwitchScene(1001);
+        SwitchScene(GameConfig.SCENE_START_ID);
         _player = new Player();
         _player.Create();
         _lastStoryId = 0;
-        _nextStoryId = GameConfig.DIALOG_START_ID;
+        //_nextStoryId = GameConfig.DIALOG_START_ID;
         _curDay = 1;
         Saved();
     }
@@ -76,7 +76,7 @@ public class Process
         _player.CreateHistory(data);
 
         _lastStoryId = data.lastStoryId;
-        _nextStoryId = data.nextStoryId;
+        //_nextStoryId = data.nextStoryId;
 
         _curDay = data.day;
         MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
@@ -110,7 +110,7 @@ public class Process
         data.curScene = _curScene;    
 
         data.lastStoryId = _lastStoryId;
-        data.nextStoryId = _nextStoryId;
+        //data.nextStoryId = _nextStoryId;
 
         data.role = new RoleAttr();
         data.role.healthy = _player.Healthy;
@@ -272,8 +272,8 @@ public class Process
 
     private EventType GetCurEventType()
     {
-        return EventType.Battle;
-        //return (EventType)Random.Range(1, 4);
+        //return EventType.Event;
+        return (EventType)Random.Range(1, 4);
     }
 
     public EventData GetRandomEvent()
@@ -312,9 +312,15 @@ public class Process
             default:
                 return null;
         }
-        int m = Random.Range(0, sampleList.Count);
-        EventData result = new EventData(type, sampleList[m]);
-        return result;
+        //MyLog.Log("sampleList count=" + sampleList.Count + ", cur event type=" + type.ToString());
+        if (sampleList.Count > 0)
+        {            
+            int m = Random.Range(0, sampleList.Count);
+            EventData result = new EventData(type, sampleList[m]);
+            return result;
+        }
+        else
+            return null;
     }
 
     public void UpdateAttr()

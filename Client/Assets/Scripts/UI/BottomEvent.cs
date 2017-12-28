@@ -4,13 +4,6 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public enum EventResultType
-{
-    Idle,
-    Battle,
-    Drop,
-}
-
 public class BottomEvent : BottomUI
 {
     GButton mBtn1;
@@ -67,6 +60,9 @@ public class BottomEvent : BottomUI
                 break;
             case EventResultType.Drop:
                 Process.Instance.CurEventData = new EventData(EventType.Drop, resultId);
+                break;
+            case EventResultType.Event:
+                Process.Instance.CurEventData = new EventData(EventType.Event, resultId);
                 break;
             default:
                 Process.Instance.CurEventData = null;

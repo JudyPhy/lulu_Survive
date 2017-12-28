@@ -27,23 +27,7 @@ public class BagWindow : Window
         for (int i = 4; i < 7; i++)
         {
             GComponent com = this.contentPane.GetChild("n" + i.ToString()).asCom;
-            if (com == null)
-            {
-                Debug.LogError("com null ");
-            }
-            else
-            {
-                Debug.LogError("com  not null ");
-            }
             mTextTop[index] = com.GetChild("title").asTextField;
-            if (mTextTop[index] == null)
-            {
-                Debug.LogError("index null ");
-            }
-            else
-            {
-                Debug.LogError("index  not null ");
-            }
             index++;
             mTextTop[index] = com.GetChild("value").asTextField;
             index++;

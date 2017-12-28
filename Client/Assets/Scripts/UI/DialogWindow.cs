@@ -82,7 +82,6 @@ public class DialogWindow : Window
 
     private void OnClickBtnOver(EventContext context)
     {
-        //MyLog.Log("OnClickBtnOver");       
         if (mStoryInfo._type == (int)DialogType.ToNextDialog)
         {
             Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
@@ -93,7 +92,11 @@ public class DialogWindow : Window
             Process.Instance.TurnToNextDialog(0);
             if (mStoryInfo._type == 3 && Process.Instance.CurScene != mStoryInfo._sceneId)
             {
-                Process.Instance.SwitchScene(mStoryInfo._sceneId);
+                Process.Instance.SwitchScene(mStoryInfo._sceneId);                
+            }
+            if (mSwitchScene == UIType.Idle)
+            {
+                mSwitchScene = UIType.Main;
             }
             UIManager.Instance.SwitchToUI(mSwitchScene);
         }
@@ -152,6 +155,7 @@ public class DialogWindow : Window
 
     private void DialogOver()
     {
+        MyLog.Log("Dialog over, type=" + mStoryInfo._type);
         switch (mStoryInfo._type)
         {
             case 1:
@@ -170,8 +174,7 @@ public class DialogWindow : Window
     private void UpdateDialog(object param)
     {
         if (mCurDialogIndex >= mDialogList.Count)
-        {
-            MyLog.Log("Dialog over");
+        {            
             Timers.inst.Remove(UpdateDialog);
             DialogOver();
         }
