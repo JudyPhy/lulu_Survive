@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,84">
   <displayList>
-    <text id="n0_hva5" name="n0" xy="0,0" size="720,84" font="微软雅黑" fontSize="30" align="center" vAlign="middle" leading="5" autoSize="none" text=""/>
+    <text id="n0_hva5" name="n0" xy="0,0" size="720,84" font="微软雅黑" fontSize="30" color="#ffffff" align="center" vAlign="middle" leading="5" autoSize="none" text=""/>
   </displayList>
 </component>

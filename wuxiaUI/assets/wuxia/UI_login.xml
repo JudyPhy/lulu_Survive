@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" bgColorEnabled="true" bgColor="#000000">
+<component size="720,1280" bgColor="#000000">
   <displayList>
+    <graph id="n3_rscn" name="n3" xy="0,0" size="720,1280" type="rect" lineSize="0" fillColor="#ff000000"/>
     <component id="n0_uto7" name="n0" src="uto7p" xy="0,0"/>
     <component id="n1_uto7" name="btnLoadGame" src="uto7q" xy="277,612" visible="false">
       <Button title="继  续"/>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280">
   <displayList>
+    <graph id="n3_rscn" name="n3" xy="0,0" size="720,1280" type="rect" lineSize="0" fillColor="#ff000000"/>
     <text id="n0_uz3d" name="n0" xy="279,88" size="161,71" fontSize="52" color="#ffffff" text="第xx天"/>
     <list id="n1_uz3d" name="n1" xy="111,199" size="497,242" overflow="scroll" lineGap="30" defaultItem="ui://lmcgaigtuz3dm1d">
       <item/>

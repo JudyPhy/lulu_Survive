@@ -7,7 +7,7 @@
       <Label icon="ui://lmcgaigtsi387"/>
     </component>
     <component id="n3_12fam" name="title2" src="uto7x" xy="495,12">
-      <Label icon="ui://lmcgaigtsi388"/>
+      <Label titleColor="#ffffff" icon="ui://lmcgaigtsi388"/>
     </component>
   </displayList>
 </component>

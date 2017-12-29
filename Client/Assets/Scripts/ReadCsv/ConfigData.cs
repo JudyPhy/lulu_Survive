@@ -81,7 +81,7 @@ public class ConfigScene
 
     public ConfigScene(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
         string stageStr = config.GetDataByRowAndName(row, "Stage");
@@ -91,9 +91,9 @@ public class ConfigScene
         {
             _stage[i] = int.Parse(stageStrs[i]);
         }
-        _shop = int.Parse(config.GetDataByRowAndName(row, "Shop"));
-        _destination = int.Parse(config.GetDataByRowAndName(row, "Destination"));
-        _distance = int.Parse(config.GetDataByRowAndName(row, "Distance"));
+        _shop = (int)float.Parse(config.GetDataByRowAndName(row, "Shop"));
+        _destination = (int)float.Parse(config.GetDataByRowAndName(row, "Destination"));
+        _distance = (int)float.Parse(config.GetDataByRowAndName(row, "Distance"));
     }
 }
 
@@ -115,22 +115,22 @@ public class ConfigStory
 
     public ConfigStory(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _desc = config.GetDataByRowAndName(row, "Describe");        
-        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
-        _nextId = int.Parse(config.GetDataByRowAndName(row, "NextID"));
+        _type = (int)float.Parse(config.GetDataByRowAndName(row, "Type"));
+        _nextId = (int)float.Parse(config.GetDataByRowAndName(row, "NextID"));
         if (_type == 2)
         {
             for (int i = 0; i < 2; i++)
             {
                 StoryOption data;
                 data.option = config.GetDataByRowAndName(row, "Option" + (i + 1).ToString());
-                data.type = int.Parse(config.GetDataByRowAndName(row, "ResultType" + (i + 1).ToString()));
-                data.result = int.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
+                data.type = (int)float.Parse(config.GetDataByRowAndName(row, "ResultType" + (i + 1).ToString()));
+                data.result = (int)float.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
                 _optionList.Add(data);
             }
         }
-        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
     }
 }
 
@@ -152,17 +152,17 @@ public class ConfigEvent
 
     public ConfigEvent(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
-        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
-        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
+        _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = (int)float.Parse(config.GetDataByRowAndName(row, "Rate"));
         for (int i = 0; i < 2; i++)
         {
             EventResult data;
             data.resultDesc = config.GetDataByRowAndName(row, "ResultDesc" + (i + 1).ToString());
-            data.type = int.Parse(config.GetDataByRowAndName(row, "Type" + (i + 1).ToString()));
-            data.result = int.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
+            data.type = (int)float.Parse(config.GetDataByRowAndName(row, "Type" + (i + 1).ToString()));
+            data.result = (int)float.Parse(config.GetDataByRowAndName(row, "Result" + (i + 1).ToString()));
             if (!string.IsNullOrEmpty(data.resultDesc))
             {
                 _resultList.Add(data);
@@ -187,17 +187,17 @@ public class ConfigDrop
 
     public ConfigDrop(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
-        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
-        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
-        _gold = int.Parse(config.GetDataByRowAndName(row, "Gold"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
+        _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = (int)float.Parse(config.GetDataByRowAndName(row, "Rate"));
+        _gold = (int)float.Parse(config.GetDataByRowAndName(row, "Gold"));
         for (int i = 0; i < 4; i++)
         {
             DropData data;
-            data._itemId = int.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
+            data._itemId = (int)float.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
             if (data._itemId > 0)
             {
-                data._count = int.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
+                data._count = (int)float.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
                 _itemList.Add(data);
             }
         }
@@ -227,24 +227,24 @@ public class ConfigItem
 
     public ConfigItem(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
-        _type = int.Parse(config.GetDataByRowAndName(row, "Type"));
+        _type = (int)float.Parse(config.GetDataByRowAndName(row, "Type"));
         _icon = config.GetDataByRowAndName(row, "Icon");
-        _price = int.Parse(config.GetDataByRowAndName(row, "Price"));
+        _price = (int)float.Parse(config.GetDataByRowAndName(row, "Price"));
 
-        _healthy = int.Parse(config.GetDataByRowAndName(row, "Healthy"));
-        _energy = int.Parse(config.GetDataByRowAndName(row, "Energy"));
-        _hungry = int.Parse(config.GetDataByRowAndName(row, "Hungry"));
+        _healthy = (int)float.Parse(config.GetDataByRowAndName(row, "Healthy"));
+        _energy = (int)float.Parse(config.GetDataByRowAndName(row, "Energy"));
+        _hungry = (int)float.Parse(config.GetDataByRowAndName(row, "Hungry"));
 
-        _hp = int.Parse(config.GetDataByRowAndName(row, "Hp"));
-        _power = int.Parse(config.GetDataByRowAndName(row, "Power"));
-        _agile = int.Parse(config.GetDataByRowAndName(row, "Agile"));
-        _physic = int.Parse(config.GetDataByRowAndName(row, "Physic"));
-        _charm = int.Parse(config.GetDataByRowAndName(row, "Charm"));
-        _perception = int.Parse(config.GetDataByRowAndName(row, "Perception"));
-        _duration = int.Parse(config.GetDataByRowAndName(row, "Duration"));
+        _hp = (int)float.Parse(config.GetDataByRowAndName(row, "Hp"));
+        _power = (int)float.Parse(config.GetDataByRowAndName(row, "Power"));
+        _agile = (int)float.Parse(config.GetDataByRowAndName(row, "Agile"));
+        _physic = (int)float.Parse(config.GetDataByRowAndName(row, "Physic"));
+        _charm = (int)float.Parse(config.GetDataByRowAndName(row, "Charm"));
+        _perception = (int)float.Parse(config.GetDataByRowAndName(row, "Perception"));
+        _duration = (int)float.Parse(config.GetDataByRowAndName(row, "Duration"));
     }
 }
 
@@ -270,22 +270,22 @@ public class ConfigMonster
 
     public ConfigMonster(ReadCsv config, int row)
     {
-        _id = int.Parse(config.GetDataByRowAndName(row, "ID"));
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
 
-        _hp = int.Parse(config.GetDataByRowAndName(row, "HP"));
-        _atk = int.Parse(config.GetDataByRowAndName(row, "Atk"));        
-        _def = int.Parse(config.GetDataByRowAndName(row, "Def"));
-        _power = int.Parse(config.GetDataByRowAndName(row, "Power"));
-        _agile = int.Parse(config.GetDataByRowAndName(row, "Agile"));
-        _physic = int.Parse(config.GetDataByRowAndName(row, "Physic"));
-        _charm = int.Parse(config.GetDataByRowAndName(row, "Charm"));
-        _perception = int.Parse(config.GetDataByRowAndName(row, "Perception"));
+        _hp = (int)float.Parse(config.GetDataByRowAndName(row, "HP"));
+        _atk = (int)float.Parse(config.GetDataByRowAndName(row, "Atk"));        
+        _def = (int)float.Parse(config.GetDataByRowAndName(row, "Def"));
+        _power = (int)float.Parse(config.GetDataByRowAndName(row, "Power"));
+        _agile = (int)float.Parse(config.GetDataByRowAndName(row, "Agile"));
+        _physic = (int)float.Parse(config.GetDataByRowAndName(row, "Physic"));
+        _charm = (int)float.Parse(config.GetDataByRowAndName(row, "Charm"));
+        _perception = (int)float.Parse(config.GetDataByRowAndName(row, "Perception"));
 
-        _skill = int.Parse(config.GetDataByRowAndName(row, "Skill"));
-        _sceneId = int.Parse(config.GetDataByRowAndName(row, "Scene"));
-        _rate = int.Parse(config.GetDataByRowAndName(row, "Rate"));
-        _drop = int.Parse(config.GetDataByRowAndName(row, "Drop"));
+        _skill = (int)float.Parse(config.GetDataByRowAndName(row, "Skill"));
+        _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
+        _rate = (int)float.Parse(config.GetDataByRowAndName(row, "Rate"));
+        _drop = (int)float.Parse(config.GetDataByRowAndName(row, "Drop"));
     }
 }

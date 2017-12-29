@@ -17,29 +17,47 @@ public class ReadCsv {
         for (int i = 0; i < lineOfArray.Length; i++)
         {
             string line = lineOfArray[i];
-            Regex regex = new Regex(",\"");
-            string[] str_y1 = regex.Split(line);
+            //先按照逗号分割
+            string[] str_d = line.Split(',');
+            bool needConbine = false;
             List<string> result = new List<string>();
-            for (int n_y1 = 0; n_y1 < str_y1.Length; n_y1++)
+            string curGrid = "";
+            for (int n_d = 0; n_d < str_d.Length; n_d++)
             {
-                regex = new Regex("\",");
-                string[] str_y2 = regex.Split(str_y1[n_y1]);
-                for (int n_y2 = 0; n_y2 < str_y2.Length; n_y2++)
+                //将含有引号的部分拼接                
+                if (needConbine)
                 {
-                    string[] str_d = str_y2[n_y2].Split(',');
-                    for (int n_d = 0; n_d < str_d.Length; n_d++)
+                    curGrid += "," + str_d[n_d];
+                    if (str_d[n_d].Contains("\""))
                     {
-                        //Debug.LogError("str_d:" + str_d[n_d]);
-                        result.Add(str_d[n_d]);
+                        int index = curGrid.IndexOf('\"');
+                        curGrid = curGrid.Remove(index, 1);                        
+                        result.Add(curGrid);
+                        curGrid = "";
+                        needConbine = false;
                     }
                 }
+                else
+                {
+                    if (str_d[n_d].Contains("\""))
+                    {
+                        curGrid = str_d[n_d];
+                        int index = curGrid.IndexOf('\"');
+                        curGrid = curGrid.Remove(index, 1);
+                        needConbine = true;
+                    }
+                    else
+                    {
+                        result.Add(str_d[n_d]);
+                    }
+                }                
             }
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)
             {
+                //Debug.LogError("result:" + result[n]);
                 this.Array[i][n] = result[n];
             }
-            //MyLog.LogError("result.Count: " + result.Count);
         }
         this.Row_ = this.Array.Length;
     }
