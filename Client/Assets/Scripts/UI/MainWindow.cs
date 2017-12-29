@@ -43,7 +43,7 @@ public class MainWindow : Window
             }
         }
 
-        mBottomNormal = new BottomNormal();       
+        mBottomNormal = new BottomNormal();
         this.contentPane.AddChild(mBottomNormal.mObj);
         mBottomBattle = new BottomBattle();
         this.contentPane.AddChild(mBottomBattle.mObj);
@@ -117,7 +117,7 @@ public class MainWindow : Window
     }
 
     public void UpdateBattleAttr()
-    {        
+    {
         mTextValueInRect[3].text = Process.Instance.Player.Atk.ToString();
         mTextValueInRect[4].text = Process.Instance.Player.Def.ToString();
         mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
@@ -164,7 +164,7 @@ public class MainWindow : Window
         }
     }
 
-    public void Tips(string content)
+    public void CommonTips(string content)
     {
         Process.Instance.CurEventData = new EventData(EventType.Idle, 0, content);
         UpdateBottom();
@@ -172,9 +172,12 @@ public class MainWindow : Window
 
     public void PlayBattleAtkAni()
     {
-        UpdateHealthy();
-        UpdateBattleAttr();
-        mBottomBattle.PlayAtkAni();
+        TweenMove(new Vector2(10, 10), 0.05f).SetEase(Ease.OutExpo).OnComplete(() => { TweenMove(new Vector2(0, 0), 0.05f).SetEase(Ease.OutExpo); });
+    }
+
+    public void BattleUpdate(string tips)
+    {
+        mBottomBattle.UpdateMonsterUI(tips);
     }
 
 }

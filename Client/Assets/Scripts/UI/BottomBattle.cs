@@ -37,14 +37,10 @@ public class BottomBattle : BottomUI
     {
         MyLog.Log("Enter battle, monster:" + monsterId);
         BattleManager.Instance.CreateMonster(monsterId);
-        ConfigMonster monster = ConfigManager.Instance.ReqMonster(monsterId);
-        if (monster != null)
-        {
-            mMonsterName.text = monster._name;
-            mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
-            mDesc.text = monster._desc;
-            mRunRate.text = "50%";
-        }
+        mMonsterName.text = BattleManager.Instance.Monster.Name;
+        mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
+        mDesc.text = BattleManager.Instance.Monster.Desc;
+        mRunRate.text = "50%";
         UpdateStatusBtn();
     }
 
@@ -72,13 +68,7 @@ public class BottomBattle : BottomUI
 
     private void OnClickFight(EventContext context)
     {
-        BattleManager.Instance.PlayerAtk();
-    }
-
-    public void PlayAtkAni()
-    {
-        mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
-        //mObj.TweenRotate(10, 0.2f).SetEase(Ease.OutQuad).OnComplete(MonsterAttack);
+        Process.Instance.Player.PlayAtk();
     }
 
     private void OnClickRun(EventContext context)
@@ -87,11 +77,17 @@ public class BottomBattle : BottomUI
         if (rate > 50)
         {
             Process.Instance.CurEventData = null;
-            UIManager.Instance.mMainWindow.Tips("逃跑成功");
+            UIManager.Instance.mMainWindow.CommonTips("逃跑成功");
         }
         else
         {
-            BattleManager.Instance.PlayerBeAtked(null);
+            BattleManager.Instance.Monster.PlayAtk(null);
         }
+    }
+
+    public void UpdateMonsterUI(string desc)
+    {
+        mDesc.text = desc;
+        mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
     }
 }

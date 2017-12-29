@@ -227,6 +227,35 @@ public class Player : Role
         }
     }
 
+    public void PlayAtk()
+    {
+        BattleManager.Instance.Monster.BeHurt(_atk);
+        UIManager.Instance.mMainWindow.PlayBattleAtkAni();
+    }
+
+    public void BeHurt(int atk)
+    {
+        _hp -= Mathf.Max(atk - _def, 0);
+        if (_hp <= 0)
+        { 
+            _healthy--;
+            if (_healthy <= 0)
+            {
+                Process.Instance.GameOver();
+            }
+            else
+            {
+                BattleManager.Instance.BattleOver(false);
+            }
+        }
+        else
+        {
+            UIManager.Instance.mMainWindow.UpdateBattleAttr();
+            string curDesc = "你失去" + atk + "点生命";
+            UIManager.Instance.mMainWindow.BattleUpdate(curDesc);
+        }
+    }
+
 }
 
 public enum PlayerBattleStatus

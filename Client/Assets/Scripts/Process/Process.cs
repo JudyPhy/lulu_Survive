@@ -267,7 +267,7 @@ public class Process
         }
         else
         {
-            UIManager.Instance.mMainWindow.Tips("精力不足");
+            UIManager.Instance.mMainWindow.CommonTips("精力不足");
         }
         MyLog.Log("Move over, event type=" + _curEventData._type);
     }
@@ -333,7 +333,8 @@ public class Process
         if (sampleList.Count > 0)
         {            
             int m = Random.Range(0, sampleList.Count);
-            EventData result = new EventData(type, sampleList[m]);
+            //EventData result = new EventData(type, sampleList[m]);
+            EventData result = new EventData(EventType.Battle, 20001);
             return result;
         }
         else

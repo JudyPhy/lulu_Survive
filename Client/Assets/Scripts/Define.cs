@@ -85,3 +85,11 @@ public class GameConfig
 
     public static readonly int MEDICINE_ID = 1003;
 }
+
+public class Event
+{
+    public static string UPDATE_MONSTER_HP = "UPDATE_MONSTER_HP";
+}
+
+
+
