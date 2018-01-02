@@ -31,6 +31,9 @@ public class Player : Role
     public List<ItemCountData> Items { get { return _items; } }
     private List<ItemCountData> _items;
 
+    public List<EquipmentData> EquipmentList { get { return _equipmentList; } }
+    private List<EquipmentData> _equipmentList;
+
     public void Create()
     {
         ConfigMonster player = ConfigManager.Instance.ReqMonster(GameConfig.PLAYER_CONFIG_ID);

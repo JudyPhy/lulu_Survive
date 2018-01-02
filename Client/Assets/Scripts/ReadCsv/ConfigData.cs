@@ -16,6 +16,8 @@ public class ConfigData
     public readonly Dictionary<int, ConfigDrop> CfgDrop = new Dictionary<int, ConfigDrop>();
     //Monster
     public readonly Dictionary<int, ConfigMonster> CfgMonster = new Dictionary<int, ConfigMonster>();
+    //Equipment
+    public readonly Dictionary<int, ConfigEquipment> CfgEquipment = new Dictionary<int, ConfigEquipment>();
 
     public void LoadConfigs()
     {
@@ -65,6 +67,14 @@ public class ConfigData
         {
             ConfigMonster data = new ConfigMonster(config, i);
             this.CfgMonster.Add(data._id, data);
+        }
+
+        //Equipment
+        config = new ReadCsv("Equipment");
+        for (int i = 3; i < config.GetRow(); i++)
+        {
+            ConfigEquipment data = new ConfigEquipment(config, i);
+            this.CfgEquipment.Add(data._id, data);
         }
     }
 }
@@ -287,5 +297,50 @@ public class ConfigMonster
         _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
         _rate = (int)float.Parse(config.GetDataByRowAndName(row, "Rate"));
         _drop = (int)float.Parse(config.GetDataByRowAndName(row, "Drop"));
+    }
+}
+
+public class ConfigEquipment
+{
+    public struct MaterialData
+    {
+        public int _materialId;
+        public int _baseCount;
+        public int _increaseCount;
+    }
+
+    public struct AttrData
+    {
+        public int _type;
+        public int _baseValue;
+        public int _increaseValue;
+    }
+
+    public int _id;
+    public string _name;
+    public string _desc;
+    public List<MaterialData> _materialList = new List<MaterialData>();
+    public AttrData _attr;
+
+    public ConfigEquipment(ReadCsv config, int row)
+    {
+        _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
+        _name = config.GetDataByRowAndName(row, "Name");
+        _desc = config.GetDataByRowAndName(row, "Describe");
+
+        for (int i = 0; i < 2; i++)
+        {
+            MaterialData data;
+            data._materialId = (int)float.Parse(config.GetDataByRowAndName(row, "Material") + i.ToString());
+            data._baseCount = (int)float.Parse(config.GetDataByRowAndName(row, "BaseCount") + i.ToString());
+            data._increaseCount = (int)float.Parse(config.GetDataByRowAndName(row, "IncreaseCount") + i.ToString());
+            if (data._baseCount > 0)
+            {
+                _materialList.Add(data);
+            }            
+        }
+        _attr._type = (int)float.Parse(config.GetDataByRowAndName(row, "AttrType"));
+        _attr._baseValue = (int)float.Parse(config.GetDataByRowAndName(row, "BaseAttr"));
+        _attr._increaseValue = (int)float.Parse(config.GetDataByRowAndName(row, "IncreaseAttr"));
     }
 }

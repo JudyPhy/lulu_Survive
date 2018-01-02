@@ -10,8 +10,8 @@ public class EquipWindow : Window
     private GButton mBtnBack;
     private GTextField[] mTextTop = new GTextField[6];
 
-    private List<ConfigItem> mDataList = new List<ConfigItem>();
-    private List<Item> mItemList = new List<Item>();
+    private List<ConfigEquipment> mDataList = new List<ConfigEquipment>();
+    private List<EquipItem> mItemList = new List<EquipItem>();
 
     protected override void OnInit()
     {
@@ -45,7 +45,11 @@ public class EquipWindow : Window
 
     public void UpdateUI()
     {
-        
+        mDataList = ConfigManager.Instance.ReqEquipList();
+        MyLog.Log("Equipment count:" + mDataList.Count);
+        mDataList.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
+        mItemList.Clear();
+        mList.numItems = mDataList.Count;
     }
 
     private void RenderListItem(int index, GObject obj)
@@ -54,8 +58,8 @@ public class EquipWindow : Window
         if (index < mDataList.Count)
         {
             GComponent itemObj = obj.asCom;
-            Item item = new Item(itemObj);
-            //item.UpdateUI(mDataList[index]);
+            EquipItem item = new EquipItem(itemObj);
+            item.UpdateUI(mDataList[index]);
         }
     }
 }

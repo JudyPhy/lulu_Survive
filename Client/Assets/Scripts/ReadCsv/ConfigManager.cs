@@ -140,4 +140,9 @@ public class ConfigManager
         return new List<ConfigItem>(configData.CfgItem.Values);
     }
 
+    public List<ConfigEquipment> ReqEquipList()
+    {
+        return new List<ConfigEquipment>(configData.CfgEquipment.Values);
+    }
+
 }
