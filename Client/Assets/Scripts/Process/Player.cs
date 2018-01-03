@@ -10,17 +10,33 @@ public class Player : Role
     public int Energy { set { _energy = value; } get { return _energy; } }
     private int _energy;
 
-    public int EnergyMax { set { _energyMax = value; } get { return _energyMax; } }
-    private int _energyMax;
+    public int EnergyMax
+    {
+        get
+        {
+            return GameConfig.PLAYER_BASE_ENERGY_MAX + GetEquipAddAttrValue(BattleAttr.HpRecover);
+        }
+    }
 
     public int Hungry { set { _hungry = value; } get { return _hungry; } }
     protected int _hungry;
 
-    public int HungryMax { set { _hungryMax = value; } get { return _hungryMax; } }
-    protected int _hungryMax;
+    public int HungryMax
+    {
+        get
+        {
+            return GameConfig.PLAYER_BASE_HUNGRY_MAX;
+        }
+    }
 
-    public int HpMax { set { _hpMax = value; } get { return _hpMax; } }
-    protected int _hpMax;
+    public int HpMax
+    {
+        get
+        {
+            return _baseHp + GetEquipAddAttrValue(BattleAttr.Hp);
+        }
+    }
+    private int _baseHp;
 
     public PlayerBattleStatus Status { get { return _status; } }
     private PlayerBattleStatus _status;
@@ -28,8 +44,8 @@ public class Player : Role
     public int Gold { set { _gold = value; } get { return _gold; } }
     private int _gold;
 
-    public List<ItemCountData> Items { get { return _items; } }
-    private List<ItemCountData> _items;
+    public List<ItemData> Items { get { return _items; } }
+    private List<ItemData> _items;
 
     public List<EquipmentData> EquipmentList { get { return _equipmentList; } }
     private List<EquipmentData> _equipmentList;
@@ -41,12 +57,10 @@ public class Player : Role
         {
             _healthy = GameConfig.PLAYER_BASE_HEALTHY;
             _energy = GameConfig.PLAYER_BASE_ENERGY;
-            _energyMax = GameConfig.PLAYER_BASE_ENERGY_MAX;
             _hungry = GameConfig.PLAYER_BASE_HUNGRY;
-            _hungryMax = GameConfig.PLAYER_BASE_HUNGRY_MAX;
 
             _hp = player._hp;
-            _hpMax = player._hp;
+            _baseHp = player._hp;
             _def = player._def;
             _atk = player._atk;
             _power = player._power;
@@ -61,7 +75,9 @@ public class Player : Role
             _status = PlayerBattleStatus.Balance;
 
             _gold = 0;
-            _items = new List<ItemCountData>();
+            _items = new List<ItemData>();
+            EquipmentData equip = new EquipmentData(1);
+            _equipmentList = new List<EquipmentData>();
         }
         else
         {
@@ -73,12 +89,11 @@ public class Player : Role
     {
         _healthy = savedData.role.healthy;
         _energy = savedData.role.energy;
-        _energyMax = savedData.role.energyMax;
         _hungry = savedData.role.hungry;
-        _hungryMax = savedData.role.hungryMax;
 
         _hp = savedData.role.hp;
-        _hpMax = savedData.role.hpMax;
+        ConfigMonster player = ConfigManager.Instance.ReqMonster(GameConfig.PLAYER_CONFIG_ID);
+        _baseHp = player != null ? player._hp : 0;
         _def = savedData.role.def;
         _atk = savedData.role.atk;
         _power = savedData.role.power;
@@ -92,7 +107,33 @@ public class Player : Role
         _status = PlayerBattleStatus.Balance;
 
         _gold = savedData.gold;
-        _items = savedData.itemList;       
+
+        for (int i = 0; i < savedData.itemList.Count; i++)
+        {
+            ItemData data = new ItemData(savedData.itemList[i].id);
+            data.Count = savedData.itemList[i].num;
+            _items.Add(data);
+        }
+
+        for (int i = 0; i < savedData.equipmentList.Count; i++)
+        {
+            EquipmentData data = new EquipmentData(savedData.equipmentList[i].id);
+            data.Lev = savedData.equipmentList[i].num;
+            _equipmentList.Add(data);
+        }
+    }
+
+    public int GetEquipAddAttrValue(BattleAttr attr)
+    {
+        int addValue = 0;
+        for (int i = 0; i < _equipmentList.Count; i++)
+        {
+            if (_equipmentList[i].ConfigData._attr._type == (int)attr)
+            {
+                addValue += _equipmentList[i].ConfigData._attr._baseValue + _equipmentList[i].ConfigData._attr._increaseValue * _equipmentList[i].Lev;
+            }
+        }
+        return addValue;
     }
 
     public void GoToNextStatus()
@@ -113,24 +154,23 @@ public class Player : Role
         bool isFind = false;
         for (int i = 0; i < _items.Count; i++)
         {
-            if (_items[i].id == itemId)
+            if (_items[i].ID == itemId)
             {
-                _items[i].count = _items[i].count + count;
-                if (_items[i].count <= 0)
+                _items[i].Count = _items[i].Count + count;
+                if (_items[i].Count <= 0)
                 {
                     _items.RemoveAt(i);
                 }
                 isFind = true;
                 Process.Instance.Saved();
-                MyLog.Log("item[" + itemId + "] new count " + _items[i].count);
+                MyLog.Log("item[" + itemId + "] new count " + _items[i].Count);
                 break;
             }
         }
         if (!isFind && count > 0)
         {
-            ItemCountData data = new ItemCountData();
-            data.id = itemId;
-            data.count = count;
+            ItemData data = new ItemData(itemId);
+            data.Count = count;
             _items.Add(data);
             Process.Instance.Saved();
         }        
@@ -151,88 +191,33 @@ public class Player : Role
 
     public void UpdateEnergy(int newValue)
     {
-        _energy = Mathf.Min(newValue, _energyMax);
+        _energy = Mathf.Min(newValue, EnergyMax);
     }
 
     public void AddEnergy(int addValue)
     {
         _energy += addValue;
         _energy = Mathf.Max(_energy, 0);
-        _energy = Mathf.Min(_energy, _energyMax);
+        _energy = Mathf.Min(_energy, EnergyMax);
     }
 
     public void AddHungry(int addValue)
     {
         _hungry += addValue;
         _hungry = Mathf.Max(_hungry, 0);
-        _hungry = Mathf.Min(_hungry, _hungryMax);
+        _hungry = Mathf.Min(_hungry, HungryMax);
     }
 
     public void AddHp(int addValue)
     {
         _hp += addValue;
         _hp = Mathf.Max(_hp, 0);
-        _hp = Mathf.Min(_hp, _hpMax);
-    }
-
-    public void UpdateAttrDaily()
-    {
-        MyLog.Log("update role attr everyday.");
-        if (_buffDuration > 0)
-        {
-            _buffDuration--;
-            if (_buffDuration <= 0)
-            {
-                MyLog.Log("Need reset attr to orig.");
-                ConfigItem item = ConfigManager.Instance.ReqItem(_buffID);
-                if (item != null)
-                {
-                    if (item._healthy != 0)
-                    {
-                        _healthy -= item._healthy;
-                    }
-                    if (item._energy != 0)
-                    {
-                        _energy -= item._energy;
-                    }
-                    if (item._hungry != 0)
-                    {
-                        _hungry -= item._hungry;
-                    }
-                    if (item._hp != 0)
-                    {
-                        _hp -= item._hp;
-                    }
-                    if (item._power != 0)
-                    {
-                        _power -= item._power;
-                    }
-                    if (item._agile != 0)
-                    {
-                        _agile -= item._agile;
-                    }
-                    if (item._physic != 0)
-                    {
-                        _physic -= item._physic;
-                    }
-                    if (item._charm != 0)
-                    {
-                        _charm -= item._charm;
-                    }
-                    if (item._perception != 0)
-                    {
-                        _perception -= item._perception;
-                    }
-                }
-            }
-            Process.Instance.UpdateAttr();
-            Process.Instance.Saved();
-        }
+        _hp = Mathf.Min(_hp, HpMax);
     }
 
     public void PlayAtk()
     {
-        BattleManager.Instance.Monster.BeHurt(_atk);
+        BattleManager.Instance.Monster.BeHurt(_atk + GetEquipAddAttrValue(BattleAttr.Atk));
         UIManager.Instance.mMainWindow.PlayBattleAtkAni();
     }
 
@@ -257,6 +242,30 @@ public class Player : Role
             string curDesc = "你失去" + atk + "点生命";
             UIManager.Instance.mMainWindow.BattleUpdate(curDesc);
         }
+    }
+
+    public ItemData ReqItem(int id)
+    {
+        for (int i = 0; i < _items.Count; i++)
+        {
+            if (_items[i].ID == id)
+            {
+                return _items[i];
+            }
+        }
+        return new ItemData(id);
+    }
+
+    public EquipmentData ReqEquipment(int id)
+    {
+        for (int i = 0; i < _equipmentList.Count; i++)
+        {
+            if (_equipmentList[i].ID == id)
+            {
+                return _equipmentList[i];
+            }
+        }
+        return new EquipmentData(id);
     }
 
 }

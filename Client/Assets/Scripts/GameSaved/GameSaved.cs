@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
 
-public class GameSaved {
-
+public class GameSaved
+{
     private static string _fileName = Path.Combine(Application.persistentDataPath, "saved.json");
 
     public static bool HasHistory()
     {
         return File.Exists(_fileName);
     }
-    
+
     public static void SaveData(SavedData data)
     {
         string toSave = JsonMapper.ToJson(data);
@@ -31,14 +31,12 @@ public class GameSaved {
         data.curScene = int.Parse(jsonData["curScene"].ToString());
 
         data.lastStoryId = int.Parse(jsonData["lastStoryId"].ToString());
-        data.nextStoryId = int.Parse(jsonData["nextStoryId"].ToString());        
-        
+        data.nextStoryId = int.Parse(jsonData["nextStoryId"].ToString());
+
         data.role = new RoleAttr();
         data.role.healthy = int.Parse(jsonData["role"]["healthy"].ToString());
         data.role.energy = int.Parse(jsonData["role"]["energy"].ToString());
-        data.role.energyMax = int.Parse(jsonData["role"]["energyMax"].ToString());
         data.role.hungry = int.Parse(jsonData["role"]["hungry"].ToString());
-        data.role.hungryMax = int.Parse(jsonData["role"]["hungryMax"].ToString());
         data.role.hp = int.Parse(jsonData["role"]["hp"].ToString());
         data.role.atk = int.Parse(jsonData["role"]["atk"].ToString());
         data.role.def = int.Parse(jsonData["role"]["def"].ToString());
@@ -52,13 +50,22 @@ public class GameSaved {
 
         data.gold = int.Parse(jsonData["gold"].ToString());
 
-        data.itemList = new List<ItemCountData>();
+        data.itemList = new List<SavedData.ItemCountData>();
         for (int i = 0; i < jsonData["itemList"].Count; i++)
         {
-            ItemCountData item = new ItemCountData();
+            SavedData.ItemCountData item = new SavedData.ItemCountData();
             item.id = int.Parse(jsonData["itemList"][i]["id"].ToString());
-            item.count = int.Parse(jsonData["itemList"][i]["count"].ToString());
+            item.num = int.Parse(jsonData["itemList"][i]["num"].ToString());
             data.itemList.Add(item);
+        }
+
+        data.equipmentList = new List<SavedData.ItemCountData>();
+        for (int i = 0; i < jsonData["equipmentList"].Count; i++)
+        {
+            SavedData.ItemCountData item = new SavedData.ItemCountData();
+            item.id = int.Parse(jsonData["equipmentList"][i]["id"].ToString());
+            item.num = int.Parse(jsonData["equipmentList"][i]["num"].ToString());
+            data.equipmentList.Add(item);
         }
 
         return data;
@@ -79,11 +86,16 @@ public class GameSaved {
         }
         return null;
     }
-
 }
 
 public class SavedData
 {
+    public struct ItemCountData
+    {
+        public int id;
+        public int num;
+    }
+
     public int day;
 
     public int curScene;
@@ -95,19 +107,18 @@ public class SavedData
 
     public int gold;
 
-    public List<ItemCountData> itemList;    
+    public List<ItemCountData> itemList;
+
+    public List<ItemCountData> equipmentList;
 }
 
 public class RoleAttr
 {
     public int healthy;
     public int energy;
-    public int energyMax;
     public int hungry;
-    public int hungryMax;
 
     public int hp;
-    public int hpMax;
     public int def;
     public int atk;
     public int power;

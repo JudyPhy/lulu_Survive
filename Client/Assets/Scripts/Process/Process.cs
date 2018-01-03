@@ -61,7 +61,6 @@ public class Process
         _player = new Player();
         _player.Create();
         _lastStoryId = 0;
-        //_nextStoryId = GameConfig.DIALOG_START_ID;
         _curDay = 1;
         Saved();
     }
@@ -76,16 +75,15 @@ public class Process
         _player.CreateHistory(data);
 
         _lastStoryId = data.lastStoryId;
-        //_nextStoryId = data.nextStoryId;
 
         _curDay = data.day;
-        MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _lastStoryId:" + _lastStoryId + ", _nextStoryId:" + _nextStoryId);
+        MyLog.LogError("ReqHistoryData=> _curDay:" + _curDay + ", _curScene:" + _curScene + ", _lastStoryId:" + _lastStoryId);
         MyLog.LogError("player attr: healthy:" + _player.Healthy + ", energy:" + _player.Energy + ", energyMax:"
             + _player.EnergyMax + ", hungry:" + _player.Hungry + ", hungryMax:" + _player.HungryMax
             + ", Hp:" + _player.Hp + ", HpMax:" + _player.HpMax + ", Atk:" + _player.Atk + ", Def:" + _player.Def
             + ", Power:" + _player.Power + ", Agile:" + _player.Agile + ", Physic:" + _player.Physic
             + ", Charm:" + _player.Charm + ", Perception:" + _player.Perception);
-        MyLog.LogError("player item: gold:" + _player.Gold + ", itemCount:" + _player.Items.Count);
+        MyLog.LogError("player item: gold:" + _player.Gold + ", itemCount:" + _player.Items.Count + ", equipmentCount:" + _player.EquipmentList.Count);
         MyLog.LogError("player buff: id:" + _player.BuffID + ", duration:" + _player.BuffDuration);
 
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
@@ -110,17 +108,13 @@ public class Process
         data.curScene = _curScene;    
 
         data.lastStoryId = _lastStoryId;
-        //data.nextStoryId = _nextStoryId;
 
         data.role = new RoleAttr();
         data.role.healthy = _player.Healthy;
         data.role.energy = _player.Energy;
-        data.role.energyMax = _player.EnergyMax;
         data.role.hungry = _player.Hungry;
-        data.role.hungryMax = _player.HungryMax;
 
         data.role.hp = _player.Hp;
-        data.role.hpMax = _player.HpMax;
         data.role.atk = _player.Atk;
         data.role.def = _player.Def;
         data.role.power = _player.Power;
@@ -134,7 +128,23 @@ public class Process
 
         data.gold = _player.Gold;
 
-        data.itemList = _player.Items;        
+        data.itemList = new List<SavedData.ItemCountData>();
+        for (int i = 0; i < _player.Items.Count; i++)
+        {
+            SavedData.ItemCountData item = new SavedData.ItemCountData();
+            item.id = _player.Items[i].ID;
+            item.id = _player.Items[i].Count;
+            data.itemList.Add(item);
+        }
+
+        data.equipmentList = new List<SavedData.ItemCountData>();
+        for (int i = 0; i < _player.EquipmentList.Count; i++)
+        {
+            SavedData.ItemCountData item = new SavedData.ItemCountData();
+            item.id = _player.EquipmentList[i].ID;
+            item.id = _player.EquipmentList[i].Lev;
+            data.equipmentList.Add(item);
+        }
 
         GameSaved.SaveData(data);
     }
@@ -333,8 +343,7 @@ public class Process
         if (sampleList.Count > 0)
         {            
             int m = Random.Range(0, sampleList.Count);
-            //EventData result = new EventData(type, sampleList[m]);
-            EventData result = new EventData(EventType.Battle, 20001);
+            EventData result = new EventData(type, sampleList[m]);
             return result;
         }
         else
@@ -361,21 +370,6 @@ public class Process
         Saved();
     }
 
-    public ItemCountData GetSelfItem(int itemId)
-    {
-        ItemCountData data = new ItemCountData();
-        data.id = itemId;
-        data.count = 0;
-        for (int i = 0; i < _player.Items.Count; i++)
-        {
-            if (_player.Items[i].id == itemId)
-            {
-                data.count = _player.Items[i].count;
-            }
-        }
-        return data;
-    }
-
     public List<ConfigItem> GetItemList(ItemType type)
     {
         List<ConfigItem> list = ConfigManager.Instance.ReqItemList();
@@ -388,35 +382,6 @@ public class Process
             }
         }
         return result;
-    }
-
-    public bool CanUseItem(int itemId)
-    {
-        ItemCountData data = GetSelfItem(itemId);
-        if (data.count <= 0)
-            return false;
-        ConfigItem configData = ConfigManager.Instance.ReqItem(itemId);
-        if (configData == null)
-            return false;
-        if (configData._healthy > 0 && _player.Healthy == GameConfig.PLAYER_BASE_HEALTHY)
-            return false;
-        if ((configData._energy > 0 && _player.Energy == _player.EnergyMax) || (configData._energy < 0 && _player.Energy == 0))
-            return false;
-        if ((configData._hungry > 0 && _player.Hungry == _player.HungryMax) || (configData._hungry < 0 && _player.Hungry == 0))
-            return false;
-        if ((configData._hp > 0 && _player.Hp == _player.HpMax) || (configData._hp < 0 && _player.Hp == 0))
-            return false;
-        if (configData._power < 0 && _player.Power == 0)
-            return false;
-        if (configData._agile < 0 && _player.Agile == 0)
-            return false;
-        if (configData._physic < 0 && _player.Physic == 0)
-            return false;
-        if (configData._charm < 0 && _player.Charm == 0)
-            return false;
-        if (configData._perception < 0 && _player.Perception == 0)
-            return false;
-        return true;
     }
 
     public void GameOver()

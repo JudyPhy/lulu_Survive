@@ -140,6 +140,15 @@ public class ConfigManager
         return new List<ConfigItem>(configData.CfgItem.Values);
     }
 
+    public ConfigEquipment ReqEquipment(int id)
+    {
+        if (configData.CfgEquipment.ContainsKey(id))
+        {
+            return configData.CfgEquipment[id];
+        }
+        return null;
+    }
+
     public List<ConfigEquipment> ReqEquipList()
     {
         return new List<ConfigEquipment>(configData.CfgEquipment.Values);

@@ -12,7 +12,7 @@ public class Item
     private GTextField mCount;
     private GTextField mDesc;
 
-    private ConfigItem mData;
+    private ItemData mData;
 
     public Item(GComponent obj)
     {
@@ -29,41 +29,22 @@ public class Item
     public void UpdateUI(ConfigItem data)
     {
         //MyLog.Log("Update item ui, item=" + data._id);
-        mData = data;
-        ItemCountData countData = Process.Instance.GetSelfItem(mData._id);
-        mBtnTitleText.text = mData._name;
-        mBtnTitleText.color = countData.count > 0 ? Color.green : Color.white;
-        mBtnTitle.enabled = countData.count > 0;
-        mCount.text = "拥有：" + countData.count + "个";
-        mDesc.text = "效果：" + mData._desc;
+        mData = Process.Instance.Player.ReqItem(data._id);
+        mBtnTitleText.text = mData.ConfigItemData._name;
+        mBtnTitleText.color = mData.Count > 0 ? Color.green : Color.white;
+        mBtnTitle.enabled = mData.Count > 0;
+        mCount.text = "拥有：" + mData.Count + "个";
+        mDesc.text = "效果：" + mData.ConfigItemData._desc;
     }
 
     private void OnClickUseItem(EventContext context)
     {       
-        if (Process.Instance.CanUseItem(mData._id))
+        if (mData.CanUse())
         {
-            Process.Instance.Player.AddItem(mData._id, -1);            
-            UpdateItemAttr();
-            ItemCountData countData = Process.Instance.GetSelfItem(mData._id);
-            mBtnTitleText.color = countData.count - 1 > 0 ? Color.green : Color.white;
-            mCount.text = "拥有：" + countData.count + "个";
+            Process.Instance.Player.AddItem(mData.ID, -1);
+            mData.Used();
+            UIManager.Instance.mBagWindow.UpdateUI();
+            Process.Instance.Saved();
         }
-    }
-
-    private void UpdateItemAttr()
-    {
-        Process.Instance.Player.BuffID = mData._id;
-        Process.Instance.Player.BuffDuration = mData._duration;
-        Process.Instance.Player.AddHealthy(mData._healthy);
-        Process.Instance.Player.AddEnergy(mData._energy);
-        Process.Instance.Player.AddHungry(mData._hungry);
-        Process.Instance.Player.AddHp(mData._hp);
-        Process.Instance.Player.Power = Mathf.Max(0, Process.Instance.Player.Power + mData._power);
-        Process.Instance.Player.Agile = Mathf.Max(0, Process.Instance.Player.Agile + mData._agile);
-        Process.Instance.Player.Physic = Mathf.Max(0, Process.Instance.Player.Physic + mData._physic);
-        Process.Instance.Player.Charm = Mathf.Max(0, Process.Instance.Player.Charm + mData._charm);
-        Process.Instance.Player.Perception = Mathf.Max(0, Process.Instance.Player.Perception + mData._perception);
-        UIManager.Instance.mBagWindow.UpdateTopAttr();
-        Process.Instance.Saved();
     }
 }

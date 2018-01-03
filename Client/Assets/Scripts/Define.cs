@@ -9,12 +9,7 @@ public enum ItemType
     Idle,
     Material = 1,
     Cost = 2,
-}
-
-public class ItemCountData
-{
-    public int id;
-    public int count;
+    Equipment = 3,
 }
 
 public class EventData
@@ -86,9 +81,13 @@ public class GameConfig
     public static readonly int MEDICINE_ID = 1003;
 }
 
-public class Event
+public enum BattleAttr
 {
-    public static string UPDATE_MONSTER_HP = "UPDATE_MONSTER_HP";
+    Idle,
+    Atk = 1,
+    Hp = 2,
+    Def = 3,
+    HpRecover = 4,
 }
 
 

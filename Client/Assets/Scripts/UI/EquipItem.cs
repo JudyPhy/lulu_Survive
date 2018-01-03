@@ -12,7 +12,7 @@ public class EquipItem
     private GTextField mCount;
     private GTextField mDesc;
 
-    private ConfigEquipment mData;
+    private EquipmentData mData;
 
     public EquipItem(GComponent obj)
     {
@@ -26,41 +26,34 @@ public class EquipItem
         mDesc = mObj.GetChild("infoEffect").asTextField;
     }
 
-    public void UpdateUI(ConfigEquipment data)
+    public void UpdateUI(int equipmentId)
     {
-        mData = data;
+        mData = Process.Instance.Player.ReqEquipment(equipmentId);
         //title
-        ItemCountData countData = Process.Instance.GetSelfItem(mData._id);
-        mBtnTitleText.text = mData._name;
-        mBtnTitleText.color = countData.count > 0 ? Color.green : Color.white;
-        mBtnTitle.enabled = countData.count > 0;
-        //material
-        List<string> descList = new List<string>();
-        for (int i = 0; i < data._materialList.Count; i++)
+        mBtnTitleText.text = mData.ConfigData._name;
+        bool canCompose = mData.CanUpgrade();
+        if (canCompose)
         {
-            ConfigItem item = ConfigManager.Instance.ReqItem(data._materialList[i]._materialId);
-            if (item != null)
-            {
-                ItemCountData materialCount = Process.Instance.GetSelfItem(data._materialList[i]._materialId);
-                string colorStr = materialCount.count >= data._materialList[i]._baseCount ? "[color =#00FF00]" : "[color =#00FF00]";
-                string desc = item._name + "[" + colorStr + materialCount.count + "[/color]/" + data._materialList[i]._baseCount + "]";
-                descList.Add(desc);
-            }
+            mBtnTitleText.color = Color.green;            
         }
-        mCount.text = "所需材料：";
-        for (int i = 0; i < descList.Count; i++)
+        else
         {
-            mCount.text += i == descList.Count - 1 ? descList[i] : descList[i] + ", ";
+            mBtnTitleText.color = mData.Count > 0 ? Color.white : Color.gray;
         }
-        mDesc.text = "效果：" + mData._desc;
+        mBtnTitle.enabled = canCompose ? true : false;
+
+        //material        
+        mCount.text = "所需材料：" + mData.GetMaterialDesc();
+        mDesc.text = "效果：" + mData.ConfigData._desc;
     }
 
     private void OnClickUpgradeItem(EventContext context)
     {
-        
-        if (Process.Instance.Player.GetEquipment(mData._id))
+        if (mData.CanUpgrade())
         {
-
+            mData.Upgrade();
+            UIManager.Instance.mEquipWindow.UpdateUI();
+            Process.Instance.Saved();
         }
     }
 

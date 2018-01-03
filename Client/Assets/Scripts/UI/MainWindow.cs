@@ -65,7 +65,6 @@ public class MainWindow : Window
 
     protected override void OnShown()
     {
-        //MyLog.Log("MainWindow shown");
         UpdateUI();
     }
 
@@ -130,8 +129,8 @@ public class MainWindow : Window
 
     public void UpdateMedicine()
     {
-        ItemCountData data = Process.Instance.GetSelfItem(GameConfig.MEDICINE_ID);
-        mTextValueInRect[8].text = data.count.ToString() + "个";
+        ItemData item = Process.Instance.Player.ReqItem(GameConfig.MEDICINE_ID);
+        mTextValueInRect[8].text = item.Count.ToString() + "个";
     }
 
     public void UpdateBottom()

@@ -59,7 +59,7 @@ public class EquipWindow : Window
         {
             GComponent itemObj = obj.asCom;
             EquipItem item = new EquipItem(itemObj);
-            item.UpdateUI(mDataList[index]);
+            item.UpdateUI(mDataList[index]._id);
         }
     }
 }

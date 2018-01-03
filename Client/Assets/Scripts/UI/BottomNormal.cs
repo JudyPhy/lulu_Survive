@@ -87,7 +87,7 @@ public class BottomNormal : BottomUI
                     }
                     else if (drop._itemList[i]._count < 0)
                     {
-                        int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.GetSelfItem(drop._itemList[i]._itemId).count);
+                        int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.Player.ReqItem(drop._itemList[i]._itemId).Count);
                         Process.Instance.Player.AddItem(drop._itemList[i]._itemId, -lossCount);
                         if (lossCount > 0)
                         {
