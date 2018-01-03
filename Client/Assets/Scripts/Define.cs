@@ -6,7 +6,7 @@ using System.IO;
 
 public enum ItemType
 {
-    Idle,
+    Idle = 0,
     Material = 1,
     Cost = 2,
     Equipment = 3,

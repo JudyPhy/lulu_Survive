@@ -55,7 +55,10 @@ public class ReadCsv {
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)
             {
-                //Debug.LogError("result:" + result[n]);
+                //if (csvName == "Equipment")
+                //{
+                //    Debug.LogError("result:" + result[n]);
+                //}
                 this.Array[i][n] = result[n];
             }
         }

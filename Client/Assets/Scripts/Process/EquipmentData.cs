@@ -55,8 +55,13 @@ public class EquipmentData : ItemData
                 int curCount = Process.Instance.Player.ReqItem(mConfigData._materialList[i]._materialId).Count;
                 string count = curCount.ToString() + "/" + needCount.ToString();
                 string color = curCount >= needCount ? "[color=#00FF00]" : "[color=#FFFFFF]";
-                string desc = color + name + "[" + count + "]" + "[/color]/";
+                string desc = color + name + "[" + count + "]" + "[/color]";
+                //Debug.LogError("desc=" + desc);
                 descList.Add(desc);
+            }
+            else
+            {
+                MyLog.LogError("Material[" + mConfigData._materialList[i]._materialId + "] not exist.");
             }
         }
         string result = "";

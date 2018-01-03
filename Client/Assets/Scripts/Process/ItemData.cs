@@ -23,7 +23,10 @@ public class ItemData
         mId = id;
         mCount = 0;
         mItemConfigData = ConfigManager.Instance.ReqItem(mId);
-        mType = (ItemType)mItemConfigData._type;
+        if (mItemConfigData != null)
+        {            
+            mType = (ItemType)mItemConfigData._type;
+        }
     }
 
     public bool CanUse()

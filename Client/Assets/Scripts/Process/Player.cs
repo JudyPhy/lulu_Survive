@@ -108,6 +108,7 @@ public class Player : Role
 
         _gold = savedData.gold;
 
+        _items = new List<ItemData>();
         for (int i = 0; i < savedData.itemList.Count; i++)
         {
             ItemData data = new ItemData(savedData.itemList[i].id);
@@ -115,6 +116,7 @@ public class Player : Role
             _items.Add(data);
         }
 
+        _equipmentList = new List<EquipmentData>();
         for (int i = 0; i < savedData.equipmentList.Count; i++)
         {
             EquipmentData data = new EquipmentData(savedData.equipmentList[i].id);

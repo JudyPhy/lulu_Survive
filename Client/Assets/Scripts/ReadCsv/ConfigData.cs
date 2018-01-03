@@ -327,13 +327,13 @@ public class ConfigEquipment
         _id = (int)float.Parse(config.GetDataByRowAndName(row, "ID"));
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
-
-        for (int i = 0; i < 2; i++)
+        
+        for (int i = 1; i < 3; i++)
         {
             MaterialData data;
-            data._materialId = (int)float.Parse(config.GetDataByRowAndName(row, "Material") + i.ToString());
-            data._baseCount = (int)float.Parse(config.GetDataByRowAndName(row, "BaseCount") + i.ToString());
-            data._increaseCount = (int)float.Parse(config.GetDataByRowAndName(row, "IncreaseCount") + i.ToString());
+            data._materialId = (int)float.Parse(config.GetDataByRowAndName(row, "Material" + i.ToString()));
+            data._baseCount = (int)float.Parse(config.GetDataByRowAndName(row, "BaseCount" + i.ToString()));
+            data._increaseCount = (int)float.Parse(config.GetDataByRowAndName(row, "IncreaseCount" + i.ToString()));
             if (data._baseCount > 0)
             {
                 _materialList.Add(data);
