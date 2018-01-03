@@ -9,10 +9,9 @@ public class ReadCsv {
     private string[][] Array;
     private int Row_;
 
-    public ReadCsv(string csvName) {
-        string filePath = ResourcesManager.GetCsvConfigFilePath(csvName);
-        MyLog.Log("Read filePath:" + filePath);
-        string[] lineOfArray = File.ReadAllLines(filePath);
+    public ReadCsv(string[] array)
+    {
+        string[] lineOfArray = array;
         this.Array = new string[lineOfArray.Length][];
         for (int i = 0; i < lineOfArray.Length; i++)
         {
@@ -31,7 +30,7 @@ public class ReadCsv {
                     if (str_d[n_d].Contains("\""))
                     {
                         int index = curGrid.IndexOf('\"');
-                        curGrid = curGrid.Remove(index, 1);                        
+                        curGrid = curGrid.Remove(index, 1);
                         result.Add(curGrid);
                         curGrid = "";
                         needConbine = false;
@@ -50,7 +49,7 @@ public class ReadCsv {
                     {
                         result.Add(str_d[n_d]);
                     }
-                }                
+                }
             }
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)

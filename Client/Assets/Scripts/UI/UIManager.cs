@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FairyGUI;
 using System.IO;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class UIManager : MonoBehaviour
     public SleepWindow mSleedpWindow;
     public EquipWindow mEquipWindow;
 
+    private int mCsvCount = 0;
+
     void Awake()
     {
         Instance = this;
@@ -27,13 +30,43 @@ public class UIManager : MonoBehaviour
         UIConfig.defaultFont = "Microsoft YaHei";
 
         UIPackage.AddPackage("wuxia");
-        ConfigManager.Instance.InitConfigs();
+        //ConfigManager.Instance.InitConfigs();
+        LoadConfigs();
 
         //UIConfig.verticalScrollBar = "ui://Basics/ScrollBar_VT";
         //UIConfig.horizontalScrollBar = "ui://Basics/ScrollBar_HZ";
         //UIConfig.popupMenu = "ui://Basics/PopupMenu";
         //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");
         LoadAllUI();
+    }
+
+    private void LoadConfigs()
+    {
+        List<string> filePathList = ResourcesManager.GetCsvFileList();
+        mCsvCount = filePathList.Count;
+        MyLog.LogError("mCsvCount:" + mCsvCount);
+        ResourcesManager.CsvDict.Clear();
+        for (int i = 0; i < filePathList.Count; i++)
+        {
+            StartCoroutine(LoadCsv(filePathList[i]));
+        }
+    }
+
+    IEnumerator LoadCsv(string path)
+    {
+        WWW www = new WWW(path);
+        yield return www;
+        if (www.error == null)
+        {
+            MyLog.Log("Load :" + path);
+            string[] array = www.text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            ReadCsv config = new ReadCsv(array);
+            ResourcesManager.CsvDict.Add(path, config);
+        }
+        else
+        {
+            MyLog.LogError("load csv" + path + " error:" + www.error);
+        }
     }
 
     private void LoadAllUI()
@@ -60,9 +93,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
-        _mainView = this.GetComponent<UIPanel>().ui;
-        _mainView.visible = false;
-        SwitchToUI(UIType.Login);
+        _mainView = this.GetComponent<UIPanel>().ui;        
     }    
 
     public void SwitchToUI(UIType type)
@@ -79,6 +110,17 @@ public class UIManager : MonoBehaviour
             {
                 mWindows[windowType].Hide();
             }
+        }
+    }
+
+    private void Update()
+    {
+        if (mCsvCount > 0 && ResourcesManager.CsvDict.Count == mCsvCount)
+        {
+            mCsvCount = 0;
+            ConfigManager.Instance.InitConfigs();
+            _mainView.visible = false;
+            SwitchToUI(UIType.Login);
         }
     }
 

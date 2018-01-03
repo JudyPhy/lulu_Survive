@@ -21,60 +21,47 @@ public class ConfigData
 
     public void LoadConfigs()
     {
-        //Scene
-        ReadCsv config = new ReadCsv("Scene");
-        for (int i = 3; i < config.GetRow(); i++)
+        foreach (string path in ResourcesManager.CsvDict.Keys)
         {
-            ConfigScene data = new ConfigScene(config, i);
-            this.CfgScene.Add(data._id, data);
-        }
-
-        //Story
-        config = new ReadCsv("Story");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigStory data = new ConfigStory(config, i);
-            this.CfgStory.Add(data._id, data);
-        }
-
-        //Event
-        config = new ReadCsv("Event");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigEvent data = new ConfigEvent(config, i);
-            this.CfgEvent.Add(data._id, data);
-        }
-
-        //Item
-        config = new ReadCsv("Item");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigItem data = new ConfigItem(config, i);
-            this.CfgItem.Add(data._id, data);
-        }
-
-        //Drop
-        config = new ReadCsv("Drop");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigDrop data = new ConfigDrop(config, i);
-            this.CfgDrop.Add(data._id, data);
-        }
-
-        //Monster
-        config = new ReadCsv("Monster");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigMonster data = new ConfigMonster(config, i);
-            this.CfgMonster.Add(data._id, data);
-        }
-
-        //Equipment
-        config = new ReadCsv("Equipment");
-        for (int i = 3; i < config.GetRow(); i++)
-        {
-            ConfigEquipment data = new ConfigEquipment(config, i);
-            this.CfgEquipment.Add(data._id, data);
+            ReadCsv config = ResourcesManager.CsvDict[path];
+            for (int i = 3; i < config.GetRow(); i++)
+            {
+                if (path.Contains("Scene.csv"))
+                {
+                    ConfigScene data = new ConfigScene(config, i);
+                    this.CfgScene.Add(data._id, data);
+                }
+                else if (path.Contains("Story.csv"))
+                {
+                    ConfigStory data = new ConfigStory(config, i);
+                    this.CfgStory.Add(data._id, data);
+                }
+                else if (path.Contains("Event.csv"))
+                {
+                    ConfigEvent data = new ConfigEvent(config, i);
+                    this.CfgEvent.Add(data._id, data);
+                }
+                else if (path.Contains("Item.csv"))
+                {
+                    ConfigItem data = new ConfigItem(config, i);
+                    this.CfgItem.Add(data._id, data);
+                }
+                else if (path.Contains("Drop.csv"))
+                {
+                    ConfigDrop data = new ConfigDrop(config, i);
+                    this.CfgDrop.Add(data._id, data);
+                }
+                else if (path.Contains("Monster.csv"))
+                {
+                    ConfigMonster data = new ConfigMonster(config, i);
+                    this.CfgMonster.Add(data._id, data);
+                }
+                else if (path.Contains("Equipment.csv"))
+                {
+                    ConfigEquipment data = new ConfigEquipment(config, i);
+                    this.CfgEquipment.Add(data._id, data);
+                }
+            }
         }
     }
 }
