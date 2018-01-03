@@ -27,6 +27,7 @@ public class BattleManager
     public void BattleOver(bool win)
     {
         MyLog.Log("battle win? " + win);
+        Process.Instance.Player.InBattle = false;
         if (win)
         {
             Process.Instance.CurEventData = new EventData(EventType.Drop, _monster.Drop);

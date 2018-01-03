@@ -55,5 +55,6 @@ public class Monster : Role
     {
         Process.Instance.Player.BeHurt(_atk);
         UIManager.Instance.mMainWindow.PlayBattleAtkAni();
+        Process.Instance.Player.InBattle = false;
     }
 }

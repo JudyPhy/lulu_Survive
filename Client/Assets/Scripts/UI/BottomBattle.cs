@@ -68,7 +68,10 @@ public class BottomBattle : BottomUI
 
     private void OnClickFight(EventContext context)
     {
-        Process.Instance.Player.PlayAtk();
+        if (!Process.Instance.Player.InBattle)
+        {
+            Process.Instance.Player.PlayAtk();
+        }
     }
 
     private void OnClickRun(EventContext context)

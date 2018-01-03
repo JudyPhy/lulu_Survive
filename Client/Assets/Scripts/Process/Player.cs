@@ -50,6 +50,8 @@ public class Player : Role
     public List<EquipmentData> EquipmentList { get { return _equipmentList; } }
     private List<EquipmentData> _equipmentList;
 
+    public bool InBattle = false;
+
     public void Create()
     {
         ConfigMonster player = ConfigManager.Instance.ReqMonster(GameConfig.PLAYER_CONFIG_ID);
@@ -219,6 +221,7 @@ public class Player : Role
 
     public void PlayAtk()
     {
+        InBattle = true;
         BattleManager.Instance.Monster.BeHurt(_atk + GetEquipAddAttrValue(BattleAttr.Atk));
         UIManager.Instance.mMainWindow.PlayBattleAtkAni();
     }
