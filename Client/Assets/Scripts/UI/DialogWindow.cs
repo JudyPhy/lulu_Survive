@@ -4,7 +4,7 @@ using FairyGUI;
 using UnityEngine;
 using DG.Tweening;
 
-public class DialogWindow : Window
+public class DialogWindow : BaseWindow
 {
     private GButton mBtn1;
     private GButton mBtn2;
@@ -12,8 +12,8 @@ public class DialogWindow : Window
     private GButton mBtnSkip;
     private List<GTextField> mTextFiledList = new List<GTextField>();
 
-    public ConfigStory mStoryInfo;
-    public UIType mSwitchScene;
+    private ConfigStory mStoryInfo;
+    private string mHideToScene;
 
     private List<string> mDialogList = new List<string>();
     private int mCurDialogIndex;
@@ -21,25 +21,23 @@ public class DialogWindow : Window
     private float mYStart = 50;
     private float mYSpace = 60;
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_storyA").asCom;
-        this.Center();
-        this.modal = true;
-
-        mBtn1 = this.contentPane.GetChild("btnChooseA").asButton;
+        mBtn1 = mWindowObj.GetChild("btnChooseA").asButton;
         mBtn1.onClick.Add(OnClickOptionBtn);       
-        mBtn2 = this.contentPane.GetChild("btnChooseB").asButton;
+        mBtn2 = mWindowObj.GetChild("btnChooseB").asButton;
         mBtn2.onClick.Add(OnClickOptionBtn);
 
-        mBtnOver = this.contentPane.GetChild("btnOver").asButton;
+        mBtnOver = mWindowObj.GetChild("btnOver").asButton;
         mBtnOver.onClick.Add(OnClickBtnOver);
-        mBtnSkip = this.contentPane.GetChild("btnSkip").asButton;
+        mBtnSkip = mWindowObj.GetChild("btnSkip").asButton;
         mBtnSkip.onClick.Add(OnClickBtnSkip);
     }
 
-    protected override void OnShown()
+    public override void OnEnable()
     {
+        base.OnEnable();
+        mHideToScene = mParam != null ? (string)mParam : WindowType.WINDOW_MAIN;
         HideAllText();
         HideBtns();
         mStoryInfo = ConfigManager.Instance.ReqStory(Process.Instance.NextStoryID);
@@ -54,20 +52,31 @@ public class DialogWindow : Window
         else
         {
             MyLog.LogError("Dialog[" + Process.Instance.NextStoryID + "] not exist");
-            UIManager.Instance.SwitchToUI(mSwitchScene);
+            SwitchToWindow();
+        }
+    }
+
+    private void SwitchToWindow()
+    {
+        if (mHideToScene == WindowType.WINDOW_SLEEP)
+        {
+            UIManager.Instance.ShowWindow<SleepWindow>(WindowType.WINDOW_SLEEP);
+        }
+        else
+        {
+            UIManager.Instance.ShowWindow<MainWindow>(WindowType.WINDOW_MAIN);
         }
     }
 
     private void OnClickOptionBtn(EventContext context)
     {       
-        //MyLog.Log("OnClickOptionBtn");
         int resultType = context.sender == mBtn1 ? mStoryInfo._optionList[0].type : mStoryInfo._optionList[1].type;
         int resultId = context.sender == mBtn1 ? mStoryInfo._optionList[0].result : mStoryInfo._optionList[1].result;
         switch (resultType)
         {
             case (int)DialogChooseResultType.ToNextDialog:
                 Process.Instance.TurnToNextDialog(resultId);
-                OnShown();
+                OnEnable();
                 break;
             default:
                 Process.Instance.TurnToNextDialog(0);
@@ -75,7 +84,7 @@ public class DialogWindow : Window
                 {
                     Process.Instance.SwitchScene(mStoryInfo._sceneId);
                 }
-                UIManager.Instance.SwitchToUI(mSwitchScene);
+                SwitchToWindow();
                 break;
         }
     }
@@ -85,26 +94,21 @@ public class DialogWindow : Window
         if (mStoryInfo._type == (int)DialogType.ToNextDialog)
         {
             Process.Instance.TurnToNextDialog(mStoryInfo._nextId);
-            OnShown();
+            OnEnable();
         }
         else
         {
             Process.Instance.TurnToNextDialog(0);
             if (mStoryInfo._type == 3 && Process.Instance.CurScene != mStoryInfo._sceneId)
             {
-                Process.Instance.SwitchScene(mStoryInfo._sceneId);                
+                Process.Instance.SwitchScene(mStoryInfo._sceneId);
             }
-            if (mSwitchScene == UIType.Idle)
-            {
-                mSwitchScene = UIType.Main;
-            }
-            UIManager.Instance.SwitchToUI(mSwitchScene);
+            SwitchToWindow();
         }
     }
 
     private void OnClickBtnSkip(EventContext context)
     {
-        //MyLog.Log("OnClickBtnSkip");
         Timers.inst.Remove(UpdateDialog);
         HideAllText();
         for (int i = 0; i < mDialogList.Count; i++)
@@ -132,7 +136,7 @@ public class DialogWindow : Window
             return mTextFiledList[index];
         }
         GComponent com = UIPackage.CreateObject("wuxia", "textBox").asCom;
-        this.contentPane.AddChild(com);
+        mWindowObj.AddChild(com);
         GTextField textField = com.GetChild("n0").asTextField;
         mTextFiledList.Add(textField);
         return textField;
@@ -155,7 +159,7 @@ public class DialogWindow : Window
 
     private void DialogOver()
     {
-        MyLog.Log("Dialog over, type=" + mStoryInfo._type);
+        //MyLog.Log("Dialog over, type=" + mStoryInfo._type);
         switch (mStoryInfo._type)
         {
             case 1:

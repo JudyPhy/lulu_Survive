@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class MainWindow : Window
+public class MainWindow : BaseWindow
 {
     private GTextField[] mTextTop = new GTextField[3];
 
@@ -17,13 +17,9 @@ public class MainWindow : Window
     private BottomBattle mBottomBattle;
     private BottomEvent mBottomEvent;
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_main").asCom;
-        this.Center();
-        this.modal = true;
-
-        GComponent top = this.contentPane.GetChild("titleList").asCom;
+        GComponent top = mWindowObj.GetChild("titleList").asCom;
         if (top != null)
         {
             for (int i = 0; i < mTextTop.Length; i++)
@@ -33,7 +29,7 @@ public class MainWindow : Window
             }
         }
 
-        GComponent attr = this.contentPane.GetChild("attbList").asCom;
+        GComponent attr = mWindowObj.GetChild("attbList").asCom;
         if (attr != null)
         {
             for (int i = 0; i < mTextValueInRect.Length; i++)
@@ -42,39 +38,36 @@ public class MainWindow : Window
                 mTextValueInRect[i] = item.GetChild("value").asTextField;
             }
         }
-
-        mBottomNormal = new BottomNormal();
-        this.contentPane.AddChild(mBottomNormal.mObj);
-        mBottomBattle = new BottomBattle();
-        this.contentPane.AddChild(mBottomBattle.mObj);
-        mBottomEvent = new BottomEvent();
-        this.contentPane.AddChild(mBottomEvent.mObj);
     }
 
-    override protected void DoShowAnimation()
+    public override void OnShownAni()
     {
-        this.SetScale(0.1f, 0.1f);
-        this.SetPivot(0.5f, 0.5f);
-        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
+        mWindowObj.SetScale(0.1f, 0.1f);
+        mWindowObj.SetPivot(0.5f, 0.5f);
+        mWindowObj.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad);
     }
 
-    override protected void DoHideAnimation()
+    protected override void OnRegisterEvent()
     {
-        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+        UIManager.mEventDispatch.AddEventListener(EventDefine.PLAY_ATK_ANI, PlayBattleAtkAni);
+        UIManager.mEventDispatch.AddEventListener(EventDefine.UPDATE_TIPS, Tips);
+        UIManager.mEventDispatch.AddEventListener(EventDefine.UPDATE_MAIN_UI, OnEnable);
     }
 
-    protected override void OnShown()
+    protected override void OnRemoveEvent()
     {
-        UpdateUI();
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.PLAY_ATK_ANI, PlayBattleAtkAni);
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.UPDATE_TIPS, Tips);
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.UPDATE_MAIN_UI, OnEnable);
     }
 
-    public void UpdateUI()
+    public override void OnEnable()
     {
         UpdateTop();
-        UpdateBottom();
+        ShowBottom();
     }
 
-    public void UpdateTop()
+    private void UpdateTop()
     {
         UpdateSceneInfo();
         UpdateHealthy();
@@ -85,7 +78,7 @@ public class MainWindow : Window
         UpdateMedicine();
     }
 
-    public void UpdateSceneInfo()
+    private void UpdateSceneInfo()
     {
         ConfigScene curSceneData = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
         if (curSceneData != null)
@@ -98,85 +91,74 @@ public class MainWindow : Window
         mTextValueInRect[7].text = "";
     }
 
-    public void UpdateHealthy()
+    private void UpdateHealthy()
     {
         mTextValueInRect[0].text = Process.Instance.Player.Healthy < 0 ? "0" : Process.Instance.Player.Healthy.ToString();
     }
 
-    public void UpdateEnergy()
+    private void UpdateEnergy()
     {
         mTextTop[1].text = Process.Instance.Player.Energy.ToString() + "/" + Process.Instance.Player.EnergyMax.ToString();
     }
 
-    public void UpdateHungry()
+    private void UpdateHungry()
     {
         mTextTop[2].text = Process.Instance.Player.Hungry < 0 ? "0/" + Process.Instance.Player.EnergyMax.ToString()
             : Process.Instance.Player.Hungry.ToString() + "/" + Process.Instance.Player.EnergyMax.ToString();
         mTextTop[2].color = Process.Instance.Player.Hungry < 0 ? Color.red : Color.white;
     }
 
-    public void UpdateBattleAttr()
+    private void UpdateBattleAttr()
     {
         mTextValueInRect[3].text = Process.Instance.Player.Atk.ToString();
         mTextValueInRect[4].text = Process.Instance.Player.Def.ToString();
         mTextValueInRect[5].text = Process.Instance.Player.Hp.ToString();
     }
 
-    public void UpdateGold()
+    private void UpdateGold()
     {
         mTextValueInRect[1].text = Process.Instance.Player.Gold < 0 ? "0" : Process.Instance.Player.Gold.ToString();
     }
 
-    public void UpdateMedicine()
+    private void UpdateMedicine()
     {
         ItemData item = Process.Instance.Player.ReqItem(GameConfig.MEDICINE_ID);
         mTextValueInRect[8].text = item.Count.ToString() + "个";
     }
 
-    public void UpdateBottom()
+    private void ShowBottom()
     {
         if (Process.Instance.CurEventData == null)
         {
             Process.Instance.CurEventData = new EventData(EventType.Idle, 0);
         }
-        EventType type = Process.Instance.CurEventData._type;
-        MyLog.Log("Bottom shown, type=" + type.ToString());
-        mBottomNormal.Show(type == EventType.Idle || type == EventType.Drop);
-        mBottomEvent.Show(type == EventType.Event);
-        mBottomBattle.Show(type == EventType.Battle);
-        switch (type)
+        switch (Process.Instance.CurEventData._type)
         {
             case EventType.Idle:
-                mBottomNormal.UpdateIdleUI(Process.Instance.CurEventData._desc);
-                break;
             case EventType.Drop:
-                mBottomNormal.UpdateDropUI(Process.Instance.CurEventData._id);
+                UIManager.Instance.ShowSubWindow<BottomNormal>(this, WindowType.SUBWINDOW_MAIN_NORMAL);
                 break;
             case EventType.Event:
-                mBottomEvent.UpdateUI(Process.Instance.CurEventData._id);
+                UIManager.Instance.ShowSubWindow<BottomEvent>(this, WindowType.SUBWINDOW_MAIN_EVENT);
                 break;
             case EventType.Battle:
-                mBottomBattle.UpdateUI(Process.Instance.CurEventData._id);
+                UIManager.Instance.ShowSubWindow<BottomBattle>(this, WindowType.SUBWINDOW_MAIN_BATTLE);
                 break;
             default:
                 break;
         }
     }
 
-    public void CommonTips(string content)
+    private void Tips(EventContext context)
     {
+        string content = (string)context.data;
         Process.Instance.CurEventData = new EventData(EventType.Idle, 0, content);
-        UpdateBottom();
+        ShowBottom();
     }
 
-    public void PlayBattleAtkAni()
+    private void PlayBattleAtkAni()
     {
-        TweenMove(new Vector2(10, 10), 0.05f).SetEase(Ease.OutExpo).OnComplete(() => { TweenMove(new Vector2(0, 0), 0.05f).SetEase(Ease.OutExpo); });
-    }
-
-    public void BattleUpdate(string tips)
-    {
-        mBottomBattle.UpdateMonsterUI(tips);
+        mWindowObj.TweenMove(new Vector2(10, 10), 0.05f).SetEase(Ease.OutExpo).OnComplete(() => { mWindowObj.TweenMove(new Vector2(0, 0), 0.05f).SetEase(Ease.OutExpo); });
     }
 
 }

@@ -31,13 +31,11 @@ public class BattleManager
         if (win)
         {
             Process.Instance.CurEventData = new EventData(EventType.Drop, _monster.Drop);
-            UIManager.Instance.mMainWindow.UpdateBottom();
         }
         else
         {
-
             Process.Instance.CurEventData = new EventData(EventType.Idle, 0, "战斗失败");
-            UIManager.Instance.mMainWindow.UpdateUI();
         }
+        UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_MAIN_UI);
     }
 }

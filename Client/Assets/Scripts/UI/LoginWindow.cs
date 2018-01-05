@@ -4,20 +4,16 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class LoginWindow : Window
+public class LoginWindow : BaseWindow
 {
     private GButton mBtnNew;
     private GButton mBtnContinue;
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_login").asCom;
-        this.Center();
-        this.modal = true;
-
-        mBtnNew = this.contentPane.GetChild("btnNewGame").asButton;
+        mBtnNew = mWindowObj.GetChild("btnNewGame").asButton;
         mBtnNew.onClick.Add(OnClickNew);
-        mBtnContinue = this.contentPane.GetChild("btnLoadGame").asButton;
+        mBtnContinue = mWindowObj.GetChild("btnLoadGame").asButton;
         mBtnContinue.visible = GameSaved.HasHistory();
         mBtnContinue.onClick.Add(OnClickContinue);
     }
@@ -39,16 +35,11 @@ public class LoginWindow : Window
         if (Process.Instance.NeedShowDialog())
         {
             MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
-            UIManager.Instance.mDialogWindow.mSwitchScene = UIType.Idle;
-            UIManager.Instance.SwitchToUI(UIType.Dialog);
+            UIManager.Instance.ShowWindow<DialogWindow>(WindowType.WINDOW_DIALOG, WindowType.WINDOW_MAIN);
         }
         else
         {
-            UIManager.Instance.SwitchToUI(UIType.Main);
+            UIManager.Instance.ShowWindow<MainWindow>(WindowType.WINDOW_MAIN);
         }
-    }
-
-    protected override void OnShown()
-    {
     }
 }

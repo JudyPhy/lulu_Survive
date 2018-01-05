@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class BottomBattle : BottomUI
+public class BottomBattle : BaseWindow
 {
     private GButton mBtnStatus;
     private GButton mBtnFight;
@@ -14,28 +14,37 @@ public class BottomBattle : BottomUI
     private GTextField mMonsterHp;
     private GTextField mDesc;
     private GTextField mRunRate;
-    
-    public BottomBattle()
+
+    public override void OnAwake()
     {
-        mObj = UIPackage.CreateObject("wuxia", "fn_moster").asCom;
-        mObj.visible = false;
-        mBtnStatus = this.mObj.GetChild("n5").asButton;
+        mBtnStatus = mWindowObj.GetChild("n5").asButton;
         mBtnStatus.onClick.Add(OnClickStatus);
 
-        mBtnFight = this.mObj.GetChild("n3").asButton;
+        mBtnFight = mWindowObj.GetChild("n3").asButton;
         mBtnFight.onClick.Add(OnClickFight);
-        mBtnRun = this.mObj.GetChild("n4").asButton;
+        mBtnRun = mWindowObj.GetChild("n4").asButton;
         mBtnRun.onClick.Add(OnClickRun);
 
-        mMonsterName = this.mObj.GetChild("textMonsterName").asTextField;
-        mMonsterHp = this.mObj.GetChild("textMosterHp").asTextField;
-        mDesc = this.mObj.GetChild("textEvent").asTextField;
-        mRunRate = this.mObj.GetChild("textRunPro").asTextField;
+        mMonsterName = mWindowObj.GetChild("textMonsterName").asTextField;
+        mMonsterHp = mWindowObj.GetChild("textMosterHp").asTextField;
+        mDesc = mWindowObj.GetChild("textEvent").asTextField;
+        mRunRate = mWindowObj.GetChild("textRunPro").asTextField;
     }
 
-    public void UpdateUI(int monsterId)
+    protected override void OnRegisterEvent()
     {
-        MyLog.Log("Enter battle, monster:" + monsterId);
+        UIManager.mEventDispatch.AddEventListener(EventDefine.UPDATE_MONSTER_UI, UpdateMonsterUI);
+    }
+
+    protected override void OnRemoveEvent()
+    {
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.UPDATE_MONSTER_UI, UpdateMonsterUI);
+    }
+
+    public override void OnEnable()
+    {
+        int monsterId = Process.Instance.CurEventData._id;
+        MyLog.Log("show battle, monster:" + monsterId);
         BattleManager.Instance.CreateMonster(monsterId);
         mMonsterName.text = BattleManager.Instance.Monster.Name;
         mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
@@ -80,7 +89,9 @@ public class BottomBattle : BottomUI
         if (rate > 50)
         {
             Process.Instance.CurEventData = null;
-            UIManager.Instance.mMainWindow.CommonTips("逃跑成功");
+            EventContext param = new EventContext();
+            param.data = "逃跑成功";
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_TIPS, param);
         }
         else
         {
@@ -88,9 +99,10 @@ public class BottomBattle : BottomUI
         }
     }
 
-    public void UpdateMonsterUI(string desc)
+    public void UpdateMonsterUI(EventContext context)
     {
-        mDesc.text = desc;
+        Debug.LogError("context.data:" + context.data);
+        mDesc.text = (string)context.data;
         mMonsterHp.text = "HP:" + BattleManager.Instance.Monster.Hp.ToString();
     }
 }

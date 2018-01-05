@@ -9,42 +9,33 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
     
-    private GComponent _mainView;
- 
-    public Dictionary<UIType, Window> mWindows = new Dictionary<UIType, Window>();
-    public LoginWindow mLoginWindow;
-    public MainWindow mMainWindow;
-    public BagWindow mBagWindow;
-    public DialogWindow mDialogWindow;
-    public SleepWindow mSleedpWindow;
-    public EquipWindow mEquipWindow;
-
+    public Dictionary<string, BaseWindow> mShownWindows = new Dictionary<string, BaseWindow>();
+    public static EventDispatcher mEventDispatch;
+    private BaseWindow mCurShownWindow;
     private int mCsvCount = 0;
 
     void Awake()
-    {
+    {        
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
         MyLog.Init(LogLevel.Log, 1000);
-
         UIConfig.defaultFont = "Microsoft YaHei";
 
         UIPackage.AddPackage("wuxia");
-        //ConfigManager.Instance.InitConfigs();
         LoadConfigs();
+        mEventDispatch = new EventDispatcher();
 
         //UIConfig.verticalScrollBar = "ui://Basics/ScrollBar_VT";
         //UIConfig.horizontalScrollBar = "ui://Basics/ScrollBar_HZ";
         //UIConfig.popupMenu = "ui://Basics/PopupMenu";
-        //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");
-        LoadAllUI();
+        //UIConfig.buttonSound = (AudioClip)UIPackage.GetItemAsset("Basics", "click");       
     }
 
     private void LoadConfigs()
     {
         List<string> filePathList = ResourcesManager.GetCsvFileList();
         mCsvCount = filePathList.Count;
-        MyLog.LogError("mCsvCount:" + mCsvCount);
+        MyLog.Log("Csv count:" + mCsvCount);
         ResourcesManager.CsvDict.Clear();
         for (int i = 0; i < filePathList.Count; i++)
         {
@@ -54,13 +45,16 @@ public class UIManager : MonoBehaviour
 
     IEnumerator LoadCsv(string path)
     {
+#if UNITY_EDITOR
+        path = "file://" + path;
+#endif
         WWW www = new WWW(path);
         yield return www;
         if (www.error == null)
         {
             MyLog.Log("Load :" + path);
             string[] array = www.text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-            ReadCsv config = new ReadCsv(array);
+            ReadCsv config = new ReadCsv(path, array);
             ResourcesManager.CsvDict.Add(path, config);
         }
         else
@@ -69,58 +63,64 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void LoadAllUI()
-    {
-        mLoginWindow = new LoginWindow();
-        mWindows.Add(UIType.Login, mLoginWindow);
-
-        mMainWindow = new MainWindow();
-        mWindows.Add(UIType.Main, mMainWindow);
-
-        mDialogWindow = new DialogWindow();
-        mWindows.Add(UIType.Dialog, mDialogWindow);
-
-        mBagWindow = new BagWindow();
-        mWindows.Add(UIType.Bag, mBagWindow);
-
-        mSleedpWindow = new SleepWindow();
-        mWindows.Add(UIType.Sleep, mSleedpWindow);
-
-        mEquipWindow = new EquipWindow();
-        mWindows.Add(UIType.Equip, mEquipWindow);
-    }
-
-    void Start()
+    private void Start()
     {
         Application.targetFrameRate = 60;
-        _mainView = this.GetComponent<UIPanel>().ui;        
-    }    
+    }
 
-    public void SwitchToUI(UIType type)
-    {
-        MyLog.Log("SwitchToUI:" + type.ToString());
-        foreach (UIType windowType in mWindows.Keys)
+    public void ShowWindow<T>(string componentName, object param = null, string packgeName = "wuxia") where T : BaseWindow
+    {         
+        string uiName = typeof(T).Name;
+        MyLog.Log("ShowWindow:" + uiName);
+        if (mCurShownWindow != null)
         {
-            //Debug.LogError("windowType:" + windowType.ToString() + ", type:" + type.ToString());
-            if (windowType == type)
-            {
-                mWindows[windowType].Show();
-            }
-            else
-            {
-                mWindows[windowType].Hide();
-            }
+            mCurShownWindow.Close();
+        }
+        if (!mShownWindows.ContainsKey(uiName))
+        {
+            T window = System.Activator.CreateInstance<T>();
+            window.Awake(packgeName, componentName);
+            window.Show(param);
+            mShownWindows.Add(uiName, window);
+            mCurShownWindow = window;
+        }
+        else
+        {
+            mShownWindows[uiName].Show(param);
+            mCurShownWindow = mShownWindows[uiName];
+        }
+    }
+
+    public void ShowSubWindow<T>(BaseWindow parent, string componentName, object param = null, string packgeName = "wuxia") where T : BaseWindow
+    {
+        string uiName = typeof(T).Name;
+        MyLog.Log("ShowSubWindow:" + uiName);
+        if (parent.mCurShownSubWindow != null)
+        {
+            parent.mCurShownSubWindow.Close();
+        }
+        if (!parent.mSubWindows.ContainsKey(uiName))
+        {
+            T window = System.Activator.CreateInstance<T>();
+            window.Awake(packgeName, componentName);
+            window.Show(param);
+            parent.mSubWindows.Add(uiName, window);
+            parent.mCurShownSubWindow = window;
+        }
+        else
+        {
+            parent.mSubWindows[uiName].Show(param);
         }
     }
 
     private void Update()
     {
         if (mCsvCount > 0 && ResourcesManager.CsvDict.Count == mCsvCount)
-        {
+        {            
             mCsvCount = 0;
             ConfigManager.Instance.InitConfigs();
-            _mainView.visible = false;
-            SwitchToUI(UIType.Login);
+            MyLog.Log("Load csv over.");
+            ShowWindow<LoginWindow>(WindowType.WINDOW_LOGIN);
         }
     }
 

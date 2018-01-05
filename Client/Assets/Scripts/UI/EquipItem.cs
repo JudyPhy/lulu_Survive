@@ -52,7 +52,7 @@ public class EquipItem
         if (mData.CanUpgrade())
         {
             mData.Upgrade();
-            UIManager.Instance.mEquipWindow.UpdateUI();
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_EQUIPMENT_UI);
             Process.Instance.Saved();
         }
     }

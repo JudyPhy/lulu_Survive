@@ -82,11 +82,14 @@ public class ConfigScene
         _name = config.GetDataByRowAndName(row, "Name");
         _desc = config.GetDataByRowAndName(row, "Describe");
         string stageStr = config.GetDataByRowAndName(row, "Stage");
-        string[] stageStrs = stageStr.Split(',');
-        _stage = new int[stageStrs.Length];
-        for (int i = 0; i < stageStrs.Length; i++)
+        if (!string.IsNullOrEmpty(stageStr))
         {
-            _stage[i] = int.Parse(stageStrs[i]);
+            string[] stageStrs = stageStr.Split(',');
+            _stage = new int[stageStrs.Length];
+            for (int i = 0; i < stageStrs.Length; i++)
+            {
+                _stage[i] = (int)float.Parse(stageStrs[i]);
+            }
         }
         _shop = (int)float.Parse(config.GetDataByRowAndName(row, "Shop"));
         _destination = (int)float.Parse(config.GetDataByRowAndName(row, "Destination"));
@@ -173,7 +176,7 @@ public class ConfigDrop
     public struct DropData
     {
         public int _itemId;
-        public int _count;
+        public int _countMax;
     }
 
     public int _id;
@@ -188,17 +191,29 @@ public class ConfigDrop
         _sceneId = (int)float.Parse(config.GetDataByRowAndName(row, "Scene"));
         _rate = (int)float.Parse(config.GetDataByRowAndName(row, "Rate"));
         _gold = (int)float.Parse(config.GetDataByRowAndName(row, "Gold"));
-        for (int i = 0; i < 4; i++)
+
+        string itemStr = config.GetDataByRowAndName(row, "Item");
+        if (!string.IsNullOrEmpty(itemStr))
         {
-            DropData data;
-            data._itemId = (int)float.Parse(config.GetDataByRowAndName(row, "Item" + (i + 1).ToString()));
-            if (data._itemId > 0)
+            string[] strs = itemStr.Split(';');
+            for (int i = 0; i < strs.Length; i++)
             {
-                data._count = (int)float.Parse(config.GetDataByRowAndName(row, "Num" + (i + 1).ToString()));
-                _itemList.Add(data);
+                string[] item = strs[i].Split(',');
+                if (item.Length == 2)
+                {
+                    DropData data;
+                    data._itemId = (int)float.Parse(item[0]);
+                    data._countMax = (int)float.Parse(item[1]);
+                    _itemList.Add(data);
+                }
+                else
+                {
+                    MyLog.LogError("drop[" + _id + "]'s items config error.");
+                }
             }
         }
     }
+
 }
 
 public class ConfigItem

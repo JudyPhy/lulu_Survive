@@ -6,14 +6,18 @@ using System.Text.RegularExpressions;
 
 public class ReadCsv {
 
+    private string _filePath;
     private string[][] Array;
     private int Row_;
 
-    public ReadCsv(string[] array)
+    public ReadCsv(string path, string[] array)
     {
-        string[] lineOfArray = array;
-        this.Array = new string[lineOfArray.Length][];
-        for (int i = 0; i < lineOfArray.Length; i++)
+        //Debug.LogError("path:" + path + ", array length:" + array.Length);
+        _filePath = path;
+        string[] lineOfArray = array;  
+        int arrayLength = lineOfArray.Length - 1; //用Split分割字符串时，最后一项为空，需去掉
+        this.Array = new string[arrayLength][];
+        for (int i = 0; i < arrayLength; i++)    
         {
             string line = lineOfArray[i];
             //先按照逗号分割
@@ -54,10 +58,7 @@ public class ReadCsv {
             this.Array[i] = new string[result.Count];
             for (int n = 0; n < result.Count; n++)
             {
-                //if (csvName == "Equipment")
-                //{
-                //    Debug.LogError("result:" + result[n]);
-                //}
+                //Debug.LogError("result:" + result[n]);
                 this.Array[i][n] = result[n];
             }
         }

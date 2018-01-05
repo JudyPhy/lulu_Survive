@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class EquipWindow : Window
+public class EquipWindow : BaseWindow
 {
     private GList mList;
     private GButton mBtnBack;
@@ -13,20 +13,16 @@ public class EquipWindow : Window
     private List<ConfigEquipment> mDataList = new List<ConfigEquipment>();
     private List<EquipItem> mItemList = new List<EquipItem>();
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_items").asCom;
-        this.Center();
-        this.modal = true;
-
-        mList = this.contentPane.GetChild("itemList").asList;
+        mList = mWindowObj.GetChild("itemList").asList;
         mList.itemRenderer = RenderListItem;
-        mBtnBack = this.contentPane.GetChild("n1").asButton;
+        mBtnBack = mWindowObj.GetChild("n1").asButton;
         mBtnBack.onClick.Add(OnClickBack);
         int index = 0;
         for (int i = 4; i < 7; i++)
         {
-            GComponent com = this.contentPane.GetChild("n" + i.ToString()).asCom;
+            GComponent com = mWindowObj.GetChild("n" + i.ToString()).asCom;
             mTextTop[index++] = com.GetChild("title").asTextField;
             mTextTop[index++] = com.GetChild("value").asTextField;
         }
@@ -35,18 +31,23 @@ public class EquipWindow : Window
     private void OnClickBack(EventContext context)
     {
         Process.Instance.CurEventData = null;
-        UIManager.Instance.SwitchToUI(UIType.Main);
+        UIManager.Instance.ShowWindow<MainWindow>(WindowType.WINDOW_MAIN);
     }
 
-    protected override void OnShown()
+    protected override void OnRegisterEvent()
     {
-        UpdateUI();
+        UIManager.mEventDispatch.AddEventListener(EventDefine.UPDATE_EQUIPMENT_UI, OnEnable);
     }
 
-    public void UpdateUI()
+    protected override void OnRemoveEvent()
+    {
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.UPDATE_EQUIPMENT_UI, OnEnable);
+    }
+
+    public override void OnEnable()
     {
         mDataList = ConfigManager.Instance.ReqEquipList();
-        MyLog.Log("Equipment count:" + mDataList.Count);
+        //MyLog.Log("Equipment count:" + mDataList.Count);
         mDataList.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
         mItemList.Clear();
         mList.numItems = mDataList.Count;

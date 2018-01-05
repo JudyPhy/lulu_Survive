@@ -43,7 +43,7 @@ public class Item
         {
             Process.Instance.Player.AddItem(mData.ID, -1);
             mData.Used();
-            UIManager.Instance.mBagWindow.UpdateUI();
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_BAG_UI);
             Process.Instance.Saved();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using FairyGUI;
 
 public class Player : Role
 {
@@ -50,7 +51,8 @@ public class Player : Role
     public List<EquipmentData> EquipmentList { get { return _equipmentList; } }
     private List<EquipmentData> _equipmentList;
 
-    public bool InBattle = false;
+    public bool InBattle { set { _inBattle = value; } get { return _inBattle; } }
+    private bool _inBattle = false;
 
     public void Create()
     {
@@ -221,9 +223,9 @@ public class Player : Role
 
     public void PlayAtk()
     {
-        InBattle = true;
+        _inBattle = true;
         BattleManager.Instance.Monster.BeHurt(_atk + GetEquipAddAttrValue(BattleAttr.Atk));
-        UIManager.Instance.mMainWindow.PlayBattleAtkAni();
+        UIManager.mEventDispatch.DispatchEvent(EventDefine.PLAY_ATK_ANI);
     }
 
     public void BeHurt(int atk)
@@ -243,9 +245,9 @@ public class Player : Role
         }
         else
         {
-            UIManager.Instance.mMainWindow.UpdateBattleAttr();
-            string curDesc = "你失去" + atk + "点生命";
-            UIManager.Instance.mMainWindow.BattleUpdate(curDesc);
+            EventContext param = new EventContext();
+            param.data = "你失去" + atk + "点生命";
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_MAIN_UI, param);
         }
     }
 

@@ -4,44 +4,35 @@ using UnityEngine;
 using FairyGUI;
 using DG.Tweening;
 
-public class SleepWindow : Window
+public class SleepWindow : BaseWindow
 {
     private GButton mBtnBack;
     private GList mList;
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_sleep").asCom;
-        this.Center();
-        this.modal = true;
-
-        mBtnBack = this.contentPane.GetChild("n2").asButton;
+        mBtnBack = mWindowObj.GetChild("n2").asButton;
         mBtnBack.onClick.Add(OnClickBack);
         mBtnBack.visible = false;
-        mList = this.contentPane.GetChild("n1").asList;       
+        mList = mWindowObj.GetChild("n1").asList;       
         mList.itemRenderer = RenderListItem;
     }
 
-    override protected void DoShowAnimation()
+    public override void OnShownAni()
     {
-        this.SetScale(0.1f, 0.1f);
-        this.SetPivot(0.5f, 0.5f);
-        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
-    }
-
-    override protected void DoHideAnimation()
-    {
-        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+        mWindowObj.SetScale(0.1f, 0.1f);
+        mWindowObj.SetPivot(0.5f, 0.5f);
+        mWindowObj.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad);
     }
 
     private void OnClickBack(EventContext context)
     {        
         Process.Instance.CurEventData = null;
-        UIManager.Instance.SwitchToUI(UIType.Main);
+        UIManager.Instance.ShowWindow<MainWindow>(WindowType.WINDOW_MAIN);
         mBtnBack.visible = false;
     }
 
-    protected override void OnShown()
+    public override void OnEnable()
     {        
         mList.numItems = 1;
         Process.Instance.Saved();

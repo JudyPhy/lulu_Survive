@@ -46,7 +46,9 @@ public class Monster : Role
         else
         {
             string curDesc = _name + "失去" + atk + "点生命";
-            UIManager.Instance.mMainWindow.BattleUpdate(curDesc);
+            EventContext param = new EventContext();
+            param.data = curDesc;
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_MONSTER_UI, param);
             Timers.inst.Add(1.5f, 1, PlayAtk);
         }
     }
@@ -54,7 +56,7 @@ public class Monster : Role
     public void PlayAtk(object param)
     {
         Process.Instance.Player.BeHurt(_atk);
-        UIManager.Instance.mMainWindow.PlayBattleAtkAni();
+        UIManager.mEventDispatch.DispatchEvent(EventDefine.PLAY_ATK_ANI);
         Process.Instance.Player.InBattle = false;
     }
 }

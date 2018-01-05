@@ -3,14 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
-
-public enum EventType
-{
-    Idle = 0,
-    Event,
-    Battle,
-    Drop,
-}
+using FairyGUI;
 
 public class Process
 {
@@ -30,17 +23,13 @@ public class Process
 
     public int TowardsStep { get { return _towardsStep; } }
     private int _towardsStep;
-
-    //public List<ConfigEvent> CurSceneEvents { get { return _curSceneEvents; } }
+    
     private List<ConfigEvent> _curSceneEvents = new List<ConfigEvent>();
-
-    //public List<ConfigMonster> CurSceneMonsters { get { return _curSceneMonsters; } }
+    
     private List<ConfigMonster> _curSceneMonsters = new List<ConfigMonster>();
-
-    //public List<ConfigDrop> CurSceneDrops { get { return _curSceneDrops; } }
+    
     private List<ConfigDrop> _curSceneDrops = new List<ConfigDrop>();
-
-    //public int LastStoryID { get { return _lastStoryId; } }
+    
     private int _lastStoryId;
 
     public int NextStoryID { get { return _nextStoryId; } }
@@ -271,15 +260,27 @@ public class Process
                 }
                 //event
                 _curEventData = GetRandomEvent();
-                UIManager.Instance.mMainWindow.UpdateUI();
+                UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_MAIN_UI);
                 Saved();
             }
         }
         else
         {
-            UIManager.Instance.mMainWindow.CommonTips("精力不足");
+            EventContext param = new EventContext();
+            param.data = "精力不足";
+            UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_TIPS, param);
         }
         MyLog.Log("Move over, event type=" + _curEventData._type);
+    }
+
+    public bool CanSwitchScene()
+    {
+        ConfigScene scene = ConfigManager.Instance.ReqSceneData(_curScene);
+        if (scene != null && scene._destination != 0)
+        {
+            return _towardsStep >= scene._distance;
+        }
+        return false;
     }
 
     private EventType GetCurEventType()
@@ -350,19 +351,6 @@ public class Process
             return null;
     }
 
-    public void UpdateAttr()
-    {
-        UIManager.Instance.mMainWindow.UpdateHealthy();
-        UIManager.Instance.mMainWindow.UpdateEnergy();
-        UIManager.Instance.mMainWindow.UpdateHungry();
-        UIManager.Instance.mMainWindow.UpdateBattleAttr();
-        UIManager.Instance.mBagWindow.UpdateTopAttr();
-        if (_player.Healthy <= 0)
-        {
-            GameOver();
-        }
-    }
-
     public void TurnToNextDialog(int nextId)
     {
         _lastStoryId = _nextStoryId;
@@ -387,7 +375,7 @@ public class Process
     public void GameOver()
     {
         MyLog.LogError("Game Over!");
-        UIManager.Instance.SwitchToUI(UIType.Login);
+        UIManager.Instance.ShowWindow<LoginWindow>(WindowType.WINDOW_LOGIN);
     }
 
 

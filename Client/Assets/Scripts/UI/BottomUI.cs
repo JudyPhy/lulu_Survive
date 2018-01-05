@@ -10,6 +10,17 @@ public class BottomUI
     public virtual void Show(bool show)
     {
         mObj.visible = show;
+        if (show)
+        {
+            RegisterEvent();
+        }
+        else
+        {
+            RemoveEvent();
+        }
     }
+
+    public virtual void RegisterEvent() { }
+    public virtual void RemoveEvent() { }
 
 }

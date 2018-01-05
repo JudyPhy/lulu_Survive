@@ -4,41 +4,37 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class BottomNormal : BottomUI
+public class BottomNormal : BaseWindow
 {
     private GButton[] mBtnList = new GButton[9];
     private GTextField mTextTips;
 
-    public BottomNormal()
+    public override void OnAwake()
     {
-
-        mObj = UIPackage.CreateObject("wuxia", "fn_nomal").asCom;
-        mObj.visible = false;
-        GComponent btnCom = mObj.GetChild("btnList").asCom;
+        GComponent btnCom = mWindowObj.GetChild("btnList").asCom;
         for (int i = 0; i < mBtnList.Length; i++)
         {
             mBtnList[i] = btnCom.GetChildAt(i).asButton;
             mBtnList[i].onClick.Add(OnClickBtn);
             mBtnList[i].visible = false;
         }
-        mTextTips = mObj.GetChild("textNormal").asTextField;
+        mTextTips = mWindowObj.GetChild("textNormal").asTextField;
         mTextTips.text = "";
     }
 
-    private void HideAllBtns()
-    {
-        for (int i = 0; i < mBtnList.Length; i++)
-        {
-            mBtnList[i].visible = false;
-        }
-    }
-
-    public override void Show(bool show)
+    public override void OnEnable()
     {
         MyLog.Log("Show normal bottom.");
-        base.Show(show);
         UpdateBtns();
         mTextTips.text = "";
+        if (Process.Instance.CurEventData._type == EventType.Idle)
+        {
+            UpdateIdleUI(Process.Instance.CurEventData._desc);
+        }
+        else if (Process.Instance.CurEventData._type == EventType.Drop)
+        {
+            UpdateDropUI(Process.Instance.CurEventData._id);
+        }
     }
 
     public void UpdateIdleUI(string text)
@@ -73,25 +69,27 @@ public class BottomNormal : BottomUI
                 }
             }
             //items
-            MyLog.Log("Drop item count:" + drop._itemList.Count);
+            //MyLog.Log("Drop item count:" + drop._itemList.Count);
             for (int i = 0; i < drop._itemList.Count; i++)
             {
                 ConfigItem item = ConfigManager.Instance.ReqItem(drop._itemList[i]._itemId);
                 if (item != null)
                 {
-                    MyLog.Log("get item id:" + drop._itemList[i]._itemId + ", count:" + drop._itemList[i]._count);
-                    if (drop._itemList[i]._count > 0)
+                    //MyLog.Log("get item id:" + drop._itemList[i]._itemId + ", count:" + drop._itemList[i]._countMax);
+                    if (drop._itemList[i]._countMax > 0)
                     {
-                        Process.Instance.Player.AddItem(drop._itemList[i]._itemId, drop._itemList[i]._count);
-                        content_get.Add(item._name + "x" + drop._itemList[i]._count);
+                        int getCount = drop._sceneId == 0 ? Random.Range(1, drop._itemList[i]._countMax) : Random.Range(0, drop._itemList[i]._countMax);
+                        Process.Instance.Player.AddItem(drop._itemList[i]._itemId, getCount);
+                        content_get.Add(item._name + "x" + getCount);
                     }
-                    else if (drop._itemList[i]._count < 0)
+                    else if (drop._itemList[i]._countMax < 0)
                     {
-                        int lossCount = Mathf.Min(Mathf.Abs(drop._itemList[i]._count), Process.Instance.Player.ReqItem(drop._itemList[i]._itemId).Count);
+                        int lossOrigCount = drop._sceneId == 0 ? Random.Range(1, Mathf.Abs(drop._itemList[i]._countMax)) : Random.Range(0, Mathf.Abs(drop._itemList[i]._countMax));
+                        int lossCount = Mathf.Min(lossOrigCount, Process.Instance.Player.ReqItem(drop._itemList[i]._itemId).Count);
                         Process.Instance.Player.AddItem(drop._itemList[i]._itemId, -lossCount);
                         if (lossCount > 0)
                         {
-                            content_loss.Add(item._name + "x" + Mathf.Abs(drop._itemList[i]._count));
+                            content_loss.Add(item._name + "x" + lossCount);
                         }
                     }
                 }
@@ -143,7 +141,10 @@ public class BottomNormal : BottomUI
     private void UpdateBtns()
     {
         MyLog.Log("Update normal bottom btns.");
-        HideAllBtns();
+        for (int i = 0; i < mBtnList.Length; i++)
+        {
+            mBtnList[i].visible = false;
+        }
         ConfigScene scene = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
         if (scene != null)
         {
@@ -165,7 +166,7 @@ public class BottomNormal : BottomUI
         GButton btn = (GButton)context.sender;
         if (btn == mBtnList[0])
         {
-            MyLog.Log("Click shop.");
+            MyLog.Log("Click shop.");            
         }
         else if (btn == mBtnList[3])
         {
@@ -173,33 +174,54 @@ public class BottomNormal : BottomUI
         }
         else if (btn == mBtnList[4])
         {
-            Process.Instance.MoveTowards();
+            OnClickTowards();
         }
         else if (btn == mBtnList[5])
         {
-            if (Process.Instance.NeedShowDialog())
-            {
-                MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
-                UIManager.Instance.mDialogWindow.mSwitchScene = UIType.Sleep;
-                UIManager.Instance.SwitchToUI(UIType.Dialog);
-            }
-            else
-            {
-                UIManager.Instance.SwitchToUI(UIType.Sleep);
-            }            
+            OnClickSleep();                     
         }
         else if (btn == mBtnList[6])
         {
-            UIManager.Instance.SwitchToUI(UIType.Equip);
+            UIManager.Instance.ShowWindow<EquipWindow>(WindowType.WINDOW_ITEMS);
         }
         else if (btn == mBtnList[8])
         {
-            UIManager.Instance.SwitchToUI(UIType.Bag);
+            UIManager.Instance.ShowWindow<BagWindow>(WindowType.WINDOW_ITEMS);
         }
     }
 
-    public void Tips(string tips)
+    private void OnClickTowards()
     {
-        mTextTips.text = tips;
+        if (Process.Instance.CanSwitchScene())
+        {
+            ConfigScene scene = ConfigManager.Instance.ReqSceneData(Process.Instance.CurScene);
+            Process.Instance.SwitchScene(scene._destination);
+            if (Process.Instance.NeedShowDialog())
+            {
+                MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+                UIManager.Instance.ShowWindow<DialogWindow>(WindowType.WINDOW_MAIN, WindowType.WINDOW_MAIN);
+            }
+            else
+            {
+                UIManager.mEventDispatch.DispatchEvent(EventDefine.UPDATE_MAIN_UI);
+            }
+        }
+        else
+        {
+            Process.Instance.MoveTowards();
+        }
+    }
+
+    private void OnClickSleep()
+    {
+        if (Process.Instance.NeedShowDialog())
+        {
+            MyLog.Log("Play dialog[" + Process.Instance.NextStoryID + "]");
+            UIManager.Instance.ShowWindow<DialogWindow>(WindowType.WINDOW_DIALOG, WindowType.WINDOW_SLEEP);
+        }
+        else
+        {
+            UIManager.Instance.ShowWindow<SleepWindow>(WindowType.WINDOW_SLEEP);
+        }
     }
 }

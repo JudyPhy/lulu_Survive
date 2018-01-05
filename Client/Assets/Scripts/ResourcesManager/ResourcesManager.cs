@@ -10,7 +10,7 @@ public class ResourcesManager
     public static List<string> GetCsvFileList()
     {
         List<string> list = new List<string>();
-        string dirPath = GetCsvConfigFilePath();
+        string dirPath = GetCsvDirPath();
         DirectoryInfo dir = new DirectoryInfo(dirPath);
         FileInfo[] fileInfo = dir.GetFiles();
         foreach (FileInfo file in fileInfo)
@@ -23,7 +23,7 @@ public class ResourcesManager
         return list;
     }
 
-    private static string GetCsvConfigFilePath()
+    private static string GetCsvDirPath()
     {
 #if UNITY_EDITOR
         string filepath = Application.dataPath + "/StreamingAssets/csv/";

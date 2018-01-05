@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using FairyGUI;
 using DG.Tweening;
 
-public class BagWindow : Window
+public class BagWindow : BaseWindow
 {
     private GList mList;
     private GButton mBtnBack;
@@ -13,20 +13,16 @@ public class BagWindow : Window
     private List<ConfigItem> mDataList = new List<ConfigItem>();
     private List<Item> mItemList = new List<Item>();
 
-    protected override void OnInit()
+    public override void OnAwake()
     {
-        this.contentPane = UIPackage.CreateObject("wuxia", "UI_items").asCom;
-        this.Center();
-        this.modal = true;
-
-        mList = this.contentPane.GetChild("itemList").asList;
+        mList = mWindowObj.GetChild("itemList").asList;
         mList.itemRenderer = RenderListItem;
-        mBtnBack = this.contentPane.GetChild("n1").asButton;
+        mBtnBack = mWindowObj.GetChild("n1").asButton;
         mBtnBack.onClick.Add(OnClickBack);
         int index = 0;
         for (int i = 4; i < 7; i++)
         {
-            GComponent com = this.contentPane.GetChild("n" + i.ToString()).asCom;
+            GComponent com = mWindowObj.GetChild("n" + i.ToString()).asCom;
             mTextTop[index] = com.GetChild("title").asTextField;
             index++;
             mTextTop[index] = com.GetChild("value").asTextField;
@@ -34,38 +30,38 @@ public class BagWindow : Window
         }
     }
 
-    override protected void DoShowAnimation()
+    protected override void OnRegisterEvent()
     {
-        this.SetScale(0.1f, 0.1f);
-        this.SetPivot(0.5f, 0.5f);
-        this.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.OnShown);
+        UIManager.mEventDispatch.AddEventListener(EventDefine.UPDATE_BAG_UI, OnEnable);
     }
 
-    override protected void DoHideAnimation()
+    protected override void OnRemoveEvent()
     {
-        this.TweenScale(new Vector2(0.1f, 0.1f), 0.3f).SetEase(Ease.OutQuad).OnComplete(this.HideImmediately);
+        UIManager.mEventDispatch.RemoveEventListener(EventDefine.UPDATE_BAG_UI, OnEnable);
+    }
+
+    public override void OnShownAni()
+    {
+        mWindowObj.SetScale(0.1f, 0.1f);
+        mWindowObj.SetPivot(0.5f, 0.5f);
+        mWindowObj.TweenScale(new Vector2(1, 1), 0.3f).SetEase(Ease.OutQuad);
     }
 
     private void OnClickBack(EventContext context)
     {
         Process.Instance.CurEventData = null;
-        UIManager.Instance.SwitchToUI(UIType.Main);
+        UIManager.Instance.ShowWindow<MainWindow>(WindowType.WINDOW_MAIN);
     }
 
-    protected override void OnShown()
+    public override void OnEnable()
     {
-        UpdateUI();
-    }
-    
-    public void UpdateUI()
-    {        
         List<ConfigItem> costList = Process.Instance.GetItemList(ItemType.Cost);
         List<ConfigItem> materialList = Process.Instance.GetItemList(ItemType.Material);
         mDataList = new List<ConfigItem>(costList);
         mDataList.AddRange(materialList);
         mDataList.Sort((data1, data2) => { return data1._id.CompareTo(data2._id); });
         mItemList.Clear();
-        mList.numItems = mDataList.Count;        
+        mList.numItems = mDataList.Count;
         UpdateTopAttr();
     }
 
