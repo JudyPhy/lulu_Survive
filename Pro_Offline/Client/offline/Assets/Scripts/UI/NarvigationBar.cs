@@ -29,6 +29,7 @@ public class NarvigationBar : BaseWindow
         if (btn == mButtons[NarvigationType.Home])
         {
             MyLog.Log("click home");
+            UIManager.Instance.ShowWindow<HomeUI>(DefineWindow.WindowID.Home);
         }
         else if (btn == mButtons[NarvigationType.Bag])
         {

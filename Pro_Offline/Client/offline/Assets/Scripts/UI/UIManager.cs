@@ -24,14 +24,7 @@ public class UIManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GameObject defaultObj = GameObject.Find("UIPanel");
-        defaultObj.name = "NarvigationBar";
-        UIPanel panel = defaultObj.GetComponent<UIPanel>();
-        panel.packageName = DefineWindow.OFFLINE;
-        panel.componentName = "bottomMenu";
-        mNavBar = defaultObj.AddComponent<NarvigationBar>();
-
-        ShowWindow<BattleUI>(DefineWindow.WindowID.Battle);
+        EnterGame();
     }
 
     // Update is called once per frame
@@ -55,7 +48,8 @@ public class UIManager : MonoBehaviour
         else
         {
             string comName = DefineWindow.WindowCom(id);
-            T script = AddObjTo<T>(GRoot.inst, DefineWindow.OFFLINE, comName);          
+            T script = AddObjTo<T>(GRoot.inst, DefineWindow.OFFLINE, comName);
+            mShownWindows.Add(id, script);
         }
         mCurWindow = id;
     }
@@ -73,22 +67,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public T AddObjTo<T>(Transform parent, string packName, string comName) where T : BaseWindow
-    {
-        GameObject obj = new GameObject(comName);
-        obj.layer = LayerMask.NameToLayer("UI");
-        if (parent != null)
-            obj.transform.parent = parent;
-        obj.transform.localScale = Vector3.one;
-        obj.transform.localEulerAngles = Vector3.zero;
-
-        UIPanel panel = obj.AddComponent<UIPanel>();
-        panel.packageName = packName;
-        panel.componentName = comName;
-        T script = obj.AddComponent<T>();
-        return script;
-    }
-
     public T AddObjTo<T>(GComponent parent, string packName, string comName) where T : BaseWindow
     {
         GameObject obj = new GameObject(comName);
@@ -99,10 +77,30 @@ public class UIManager : MonoBehaviour
         UIPanel panel = obj.AddComponent<UIPanel>();
         panel.packageName = packName;
         panel.componentName = comName;
+        panel.CreateUI();
         if (parent != null)
             parent.AddChild(panel.ui);       
         T script = obj.AddComponent<T>();        
         return script;
+    }
+
+    public void StartGame()
+    {
+        string id = SystemInfo.deviceUniqueIdentifier;
+        LoginMsgHandler.Instance.SendLogin(id);
+    }
+
+    public void EnterGame()
+    {
+        GameObject defaultObj = GameObject.Find("UIPanel");
+        defaultObj.name = "NarvigationBar";
+        UIPanel panel = defaultObj.GetComponent<UIPanel>();
+        panel.packageName = DefineWindow.OFFLINE;
+        panel.componentName = "bottomMenu";
+        panel.CreateUI();
+        mNavBar = defaultObj.AddComponent<NarvigationBar>();
+
+        ShowWindow<HomeUI>(DefineWindow.WindowID.Home);
     }
 
 }
