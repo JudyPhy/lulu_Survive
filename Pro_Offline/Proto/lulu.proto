@@ -1,0 +1,63 @@
+package pb;
+
+enum ErrorCode
+{
+	SUCCESS = 1;
+	FAIL = 2;
+}
+
+message PlayerInfo
+{
+	required int32 OID = 1;
+	required string NickName = 2;
+	required string HeadIcon = 3;
+	required int32 Lev = 4;
+	required int32 Exp = 5;
+	required int32 Gold = 6;	
+	required int32 Diamond = 8;
+	optional ItemData Items = 7;
+}
+
+message Reward
+{
+	required int32 Exp = 1;
+	required int32 Gold = 2;
+	repeated ItemData Items = 3;
+}
+
+message ItemData
+{
+	required int32 ID = 1;
+	required int32 Count = 2;
+}
+
+/////////////////////////////////////////////////////////////////////
+message C2GSLogin
+{
+	required string OID = 1;
+}
+
+message GS2CLoginRet
+{
+	required ErrorCode errorCode = 1;
+	optional PlayerInfo playerInfo = 2;
+	optional Reward reward = 3;
+}
+
+message C2GSSwitchMap
+{
+	required int32 mapID = 1;
+}
+
+message GS2CSwitchMapRet
+{
+	required ErrorCode errorCode = 1;
+	required int32 mapID = 2;
+}
+
+message GS2CBattleInfo
+{
+	required int32 mosterID = 1;
+	required bool result = 2;
+	optional Reward reward = 3;
+}
