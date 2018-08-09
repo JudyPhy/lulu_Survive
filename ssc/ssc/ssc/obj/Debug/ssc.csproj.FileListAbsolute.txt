@@ -1,0 +1,9 @@
+D:\Project\lulu_Survival\ssc\ssc\ssc\bin\Debug\ssc.exe.config
+D:\Project\lulu_Survival\ssc\ssc\ssc\bin\Debug\ssc.exe
+D:\Project\lulu_Survival\ssc\ssc\ssc\bin\Debug\ssc.pdb
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.csprojResolveAssemblyReference.cache
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.Form1.resources
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.Properties.Resources.resources
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.csproj.GenerateResource.Cache
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.exe
+D:\Project\lulu_Survival\ssc\ssc\ssc\obj\Debug\ssc.pdb
