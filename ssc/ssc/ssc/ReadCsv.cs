@@ -1,100 +1,132 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
 
-public class DataStruct
+namespace ssc
 {
-    public float odd;
-    public float even;
-    public float big;
-    public float little;
-
-    public int count_odd;
-    public int count_even;
-    public int count_big;
-    public int count_little;
-}
-
-public class ReadCsv
-{
-    private Dictionary<string, uint> TimeNumDict = new Dictionary<string, uint>();
-
-    public ReadCsv(string csvName)
+    public class ReadCsv
     {
-        string filePath = csvName;
-        string[] lineOfArray = File.ReadAllLines(filePath);
-        for (int i = 1; i < lineOfArray.Length; i++)
+        private List<Data> DataList = new List<Data>();
+        private KillNum Kill;
+
+        public ReadCsv(string csvName)
         {
-            string[] str = lineOfArray[i].Split(',');
-            string time = str[0];
-            TimeNumDict.Add(time, uint.Parse(str[str.Length - 1]));
+            string filePath = csvName;
+            string[] lineOfArray = File.ReadAllLines(filePath);
+            initUnitData(lineOfArray);
+            initKillNum(lineOfArray);
         }
-    }
 
-    public int GetRow()
-    {
-        return TimeNumDict.Count;
-    }
-
-    public DataStruct GetAllResult()
-    {
-        DataStruct data = new DataStruct();
-        int count_odd = 0;
-        int count_big = 0;
-        foreach (uint value in TimeNumDict.Values)
+        private void initKillNum(string[] lineOfArray)
         {
-            if (value % 2 != 0)
+            Kill = new KillNum();
+            for (int i = 0; i < lineOfArray.Length; i++)
             {
-                count_odd++;
-            }
-            if (value > 4)
-            {
-                count_big++;
-            }
-        }
-        data.odd = count_odd * 100.00f / TimeNumDict.Count;
-        data.even = (TimeNumDict.Count - count_odd) / TimeNumDict.Count;
-        data.big = count_big * 100.00f / TimeNumDict.Count;
-        data.little = (TimeNumDict.Count - count_big) / TimeNumDict.Count;
-
-        data.count_odd = count_odd;
-        data.count_even = TimeNumDict.Count - count_odd;
-        data.count_big = count_big;
-        data.count_little = TimeNumDict.Count - count_big;
-        return data;
-    }
-
-    public DataStruct GetDayResult(string day)
-    {
-        DataStruct data = new DataStruct();
-        int count_day = 0;
-        int count_odd = 0;
-        int count_big = 0;
-        foreach (string key in TimeNumDict.Keys)
-        {
-            string curDay = key.Trim().Substring(0, 6);
-            if (curDay == day.Trim())
-            {
-                count_day++;
-                if (TimeNumDict[key] % 2 != 0)
+                string[] str = lineOfArray[i].Split(',');
+                if (str.Length != 6)
                 {
-                    count_odd++;
+                    Console.WriteLine("str.Length error:" + str.Length);
+                    continue;
                 }
-                if (TimeNumDict[key] > 4)
+                string time = str[0].Trim().Substring(0, 6);
+                int term = int.Parse(str[0].Trim().Substring(6));
+                int[] nums = new int[5];
+                nums[0] = int.Parse(str[1].Trim());
+                nums[1] = int.Parse(str[2].Trim());
+                nums[2] = int.Parse(str[3].Trim());
+                nums[3] = int.Parse(str[4].Trim());
+                nums[4] = int.Parse(str[5].Trim());
+
+                bool find = false;
+                for (int n = 0; n < Kill.termNum.Count; n++)
                 {
-                    count_big++;
+                    if (Kill.termNum[n].time == time && Kill.termNum[n].term == term)
+                    {
+                        find = true;
+                        break;
+                    }                    
+                }
+                if (!find)
+                {
+                    KillTerm data = new KillTerm(time, term, nums);
+                    Kill.termNum.Add(data);
                 }
             }
         }
-        data.odd = count_odd * 100.00f / count_day;
-        data.even = (count_day - count_odd) / count_day;
-        data.big = count_big * 100.00f / count_day;
-        data.little = (count_day - count_big) / count_day;
 
-        data.count_odd = count_odd;
-        data.count_even = count_day - count_odd;
-        data.count_big = count_big;
-        data.count_little = count_day - count_big;
-        return data;
+        private void initUnitData(string[] lineOfArray)
+        {
+            for (int i = 0; i < lineOfArray.Length; i++)
+            {
+                string[] str = lineOfArray[i].Split(',');
+                string time = str[0].Trim().Substring(0, 6);
+                int term = int.Parse(str[0].Trim().Substring(6));
+                uint num = uint.Parse(str[str.Length - 1].Trim());
+
+                bool find = false;
+                for (int n = 0; n < DataList.Count; n++)
+                {
+                    if (DataList[n].time == time)
+                    {
+                        find = true;
+                        DataList[n].termNum.Add(new Term(term, num));
+                        break;
+                    }
+                }
+                if (!find)
+                {
+                    Data data = new Data();
+                    data.time = time;
+                    data.termNum.Add(new Term(term, num));
+                    DataList.Add(data);
+                }
+            }
+        }
+
+        public List<string> GetDays()
+        {
+            List<string> result = new List<string>();
+            for (int i = 0; i < DataList.Count; i++)
+            {
+                result.Add(DataList[i].time);
+            }
+            return result;
+        }
+
+        public Data GetDayResult(string day)
+        {
+            for (int i = 0; i < DataList.Count; i++)
+            {
+                if (DataList[i].time == day)
+                    return DataList[i];
+            }
+            return null;
+        }
+
+        public List<AfterInfo> GetAfterInfo(string day)
+        {
+            for (int i = 0; i < DataList.Count; i++)
+            {
+                if (DataList[i].time == day)
+                    return DataList[i].GetAfterInfo();
+            }
+            return null;
+        }
+
+        public List<KillTerm> GetRecentTenData()
+        {
+            return Kill.GetRecentTenData();
+        }
+
+        public List<int> GetKilledNum()
+        {
+            return Kill.GetKilledNum();
+        }
+
+        public string GetKilledTime()
+        {
+            return Kill.killedTerm;
+        }
+
     }
-
 }
