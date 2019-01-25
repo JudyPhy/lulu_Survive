@@ -1,0 +1,15 @@
+package pb;
+
+message C2GSLogin {
+  required string user = 1;
+  required string password = 2;
+}
+
+message GS2CLoginRet {
+  required string user = 1;
+  required ErrorCode errorCode = 2;
+  enum ErrorCode{
+	Success = 1;
+	Fail = 2;
+  }
+}
