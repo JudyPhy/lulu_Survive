@@ -49,7 +49,7 @@ export class Network extends cc.Component {
                 console.log('connect is closing');
             } else if (this.connectState == 3) {
                 console.log('connect failed');
-                this.reconnect();
+                // this.reconnect();
             }
         }
     }
