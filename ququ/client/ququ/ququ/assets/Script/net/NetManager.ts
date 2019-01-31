@@ -1,8 +1,10 @@
-import {EventDispatch} from "./../handler/EventDispatch"
+import { EventDispatch } from "./../handler/EventDispatch"
+import { EventType } from "./../handler/EventType"
+
 
 export class NetManager {
 
-    private CONNECT_SUCCESS: string="NET.CONNECT_SUCCESS";
+    private ws: WebSocket = null;
 
     private static instance: NetManager = null;
     public static getInstance(): NetManager {
@@ -12,31 +14,35 @@ export class NetManager {
         return this.instance;
     }
 
-    public connectGS(url: String) {
+    public connectGS(url: string) {
+        console.log("connectGS url=" + url);
         let self = this;
-        let ws = new WebSocket("ws://localhost:9000");
-        ws.onopen = function () {
-            alert("connect success:");
-            EventDispatch.fire(self.CONNECT_SUCCESS,"connect");
+        self.ws = new WebSocket(url);
+        self.ws.onopen = function () {
+            console.log("connect success:");
+            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
         };
 
-        ws.onmessage = function (evt) {
+        self.ws.onmessage = function (evt) {
             var received_msg = evt.data;
-            alert("recieve meddage:" + received_msg);
-            EventDispatch.fire(self.CONNECT_SUCCESS,"connect");
+            console.log("recieve message:" + received_msg);
+            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
         };
 
-        ws.onclose = function () {
-            alert("close ws");
+        self.ws.onclose = function () {
+            console.log("close ws");
         };
 
-        ws.onerror = function () {
-            alert("ws error");
+        self.ws.onerror = function () {
+            console.log("ws error");
         };
     }
 
-
-
-
+    public getConnectState(): number {
+        if (this.ws != null) {
+            return this.ws.readyState;
+        }
+        return -1;
+    }
 
 }
