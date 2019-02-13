@@ -10,17 +10,18 @@
 
 const { ccclass, property } = cc._decorator;
 
+import { NetManager } from "./../net/NetManager"
+import { MessageID } from "./../net/messageID"
+import { pb } from "./../pbProc/pb"
+
 @ccclass
 export class Login extends cc.Component {
 
-    @property(cc.EditBox)
-    userEdit: cc.EditBox = null;
+    private userEdit: cc.EditBox = null;
 
-    @property(cc.EditBox)
-    passwordEdit: cc.EditBox = null;
+    private passwordEdit: cc.EditBox = null;
 
-    @property(cc.Button)
-    buttonLogin: cc.Button = null;
+    private buttonLogin: cc.Button = null;
 
     onLoad() {
         this.userEdit = cc.find("Container/User", this.node).getComponent(cc.EditBox);
@@ -35,9 +36,13 @@ export class Login extends cc.Component {
 
     onClickLogin(button) {
         console.log("onClickLogin");
+        // let msg = pb.C2GSLogin.create({ user: this.userEdit.string, password: this.passwordEdit.string });
+        let msg = pb.C2GSLogin.create({ user: "lulu", password: "123456" });
+        let buffer = pb.C2GSLogin.encode(msg).finish();
+        NetManager.Instance.SendToGS(MessageID.MSG_C2GS_LOGIN, buffer);
     }
 
     update(dt) {
-        
+
     }
 }

@@ -1,48 +1,83 @@
-import { EventDispatch } from "./../handler/EventDispatch"
-import { EventType } from "./../handler/EventType"
+// Learn TypeScript:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/typescript.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
+// Learn Attribute:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
+const { ccclass, property } = cc._decorator;
 
-export class NetManager {
+import { Network } from "./../net/Network"
+import { MyTool } from "./../myTool/myTool"
 
-    private ws: WebSocket = null;
+@ccclass
+export class NetManager extends cc.Component {
 
-    private static instance: NetManager = null;
-    public static getInstance(): NetManager {
-        if (this.instance == null) {
-            this.instance = new NetManager();
-        }
-        return this.instance;
+    private connectState: number = 0;
+
+    private reconnectTime: number = 0;
+    private reconnectTimeLimite: number = 5;
+
+    public static Instance: NetManager;
+    private gameNet: Network;
+
+    onLoad() {
+        NetManager.Instance = this;
+        this.gameNet = new Network();
+        this.gameNet.connectGS("ws://localhost:9000");
     }
 
-    public connectGS(url: string) {
-        console.log("connectGS url=" + url);
-        let self = this;
-        self.ws = new WebSocket(url);
-        self.ws.onopen = function () {
-            console.log("connect success:");
-            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
-        };
-
-        self.ws.onmessage = function (evt) {
-            var received_msg = evt.data;
-            console.log("recieve message:" + received_msg);
-            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
-        };
-
-        self.ws.onclose = function () {
-            console.log("close ws");
-        };
-
-        self.ws.onerror = function () {
-            console.log("ws error");
-        };
+    start() {
+        this.registerNetHandler();
     }
 
-    public getConnectState(): number {
-        if (this.ws != null) {
-            return this.ws.readyState;
+    registerNetHandler() {
+        // RegisterMessageHandler((int)MsgDef.GS2CLoginRet, GameMsgHandler.Instance.RevMsgGS2CLoginRet);
+    }
+
+    reconnect() {
+        if (this.reconnectTime >= this.reconnectTimeLimite) {
+            return;
         }
-        return -1;
+        this.reconnectTime++;
+        console.log("reconnectTime=" + this.reconnectTime);
+        this.gameNet.connectGS("ws://localhost:9000");
+    }
+
+    update(dt) {
+        let curState = this.gameNet.getConnectState();
+        if (curState != this.connectState) {
+            console.log('net connect state changed:' + curState);
+            this.connectState = curState;
+            if (this.connectState == 1) {
+                // console.log('connect success');
+                this.connectedCallback();
+            } else if (this.connectState == 2) {
+                console.log('connect is closing');
+            } else if (this.connectState == 3) {
+                console.log('connect failed');
+                // this.reconnect();
+            }
+        }
+    }
+
+    connectedCallback() {
+        let login = MyTool.AddChild(this.node, "Prefabs/login");
+    }
+
+    public SendToGS(id: number, msg: Uint8Array) {
+        console.log("SendToGS [id:" + id + "]" + "[msg:" + msg + "]");
+        if (null == this.gameNet || !this.gameNet.IsConnected()) {
+            console.log("ws disconnect，can't send message[msgid:" + id + "]");
+            return false;
+        }
+        this.gameNet.Send(id, msg);
+        this.scheduleOnce(function () {
+            console.log("message send timeout: id[" + id + "]");
+        }, 5);
     }
 
 }
