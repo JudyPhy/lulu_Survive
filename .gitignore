@@ -10,3 +10,8 @@
 /Client/obj/
 /Client/Assembly-CSharp.csproj
 /Client/Assembly-CSharp-Editor.csproj
+
+/ququ/client/ququ/.vscode
+/ququ/client/ququ/temp
+/ququ/client/ququ/library
+/ququ/client/ququ/local
