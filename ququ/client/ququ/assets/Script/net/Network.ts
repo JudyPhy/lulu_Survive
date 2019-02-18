@@ -146,6 +146,7 @@ export class Network {
         addPackageHead_buffer.set(buffer.subarray(0, buffer.length), 4);
 
         // 2 step: send message
+        console.log("send ws");
         this.ws.send(addPackageHead_buffer.buffer);
     }
 
