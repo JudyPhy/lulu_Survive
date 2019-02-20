@@ -10,9 +10,7 @@
 
 const { ccclass, property } = cc._decorator;
 
-import { NetManager } from "./../net/NetManager"
-import { MessageID } from "./../net/messageID"
-import { pb } from "./../pbProc/pb"
+import { GameMessageHandler } from "./gameMessageHandler"
 
 @ccclass
 export class Login extends cc.Component {
@@ -36,10 +34,14 @@ export class Login extends cc.Component {
 
     onClickLogin(button) {
         console.log("onClickLogin");
-        // let msg = pb.C2GSLogin.create({ user: this.userEdit.string, password: this.passwordEdit.string });
-        let msg = pb.C2GSLogin.create({ user: "lulu", password: "123456" });
-        let buffer = pb.C2GSLogin.encode(msg).finish();
-        NetManager.Instance.SendToGS(MessageID.MSG_C2GS_LOGIN, buffer);
+        let user = this.userEdit.string;
+        let password = this.passwordEdit.string;
+        if (user == null || user.length == 0 || password == null || password.length == 0) {
+            // return;
+            user = 'lulu';
+            password = '123456';
+        }        
+        GameMessageHandler.getInstance().SendC2GSLogin(user,password);
     }
 
     update(dt) {

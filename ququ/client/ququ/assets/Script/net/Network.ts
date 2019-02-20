@@ -11,19 +11,20 @@ export class Network {
 
     private msgIncompleteBuffer: Uint8Array = null;
 
+    public RevMessageArray: Array<WsMessage> = new Array<WsMessage>();
+
     public connectGS(url: string) {
         console.log("connectGS url=" + url);
         let self = this;
         self.ws = new WebSocket(url);
         self.ws.onopen = function () {
             console.log("connect success");
-            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
+            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS);
         };
 
         self.ws.onmessage = function (evt) {
             let msg = self.splitMessage(evt);
-
-            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS, "connect");
+            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS);
         };
 
         self.ws.onclose = function () {
@@ -85,8 +86,10 @@ export class Network {
 
     //拆出一个包转为消息存储
     private BuildMessage(buffer: Uint8Array, msgId: number) {
-        let data = pb.GS2CLoginRet.decode(buffer);
-        console.log(data.user, data.errorCode);
+        let wsMsg = new WsMessage();
+        wsMsg.pid = msgId;
+        wsMsg.buffer = buffer;
+        this.RevMessageArray.push(wsMsg);
     }
 
     /**
@@ -138,10 +141,12 @@ export class Network {
         let idBinary = this.IntToUint8Array(id, 16);
         let idUnit8 = new Uint8Array(idBinary);
         addPackageHead_buffer.set(idUnit8, 0);
+        // console.log("id:", idUnit8)
 
         let lenBinary = this.IntToUint8Array(buffer.length + 2, 16);
         let lenUnit8 = new Uint8Array(lenBinary);
         addPackageHead_buffer.set(lenUnit8, 2);
+        // console.log("length:", lenUnit8)
 
         addPackageHead_buffer.set(buffer.subarray(0, buffer.length), 4);
 
@@ -151,3 +156,8 @@ export class Network {
     }
 
 }
+
+class WsMessage {
+    public pid: number;
+    public buffer: Uint8Array;
+} 

@@ -11,7 +11,12 @@
 const { ccclass, property } = cc._decorator;
 
 import { Network } from "./../net/Network"
-import { MyTool } from "./../myTool/myTool"
+import { UIManager } from "./../uimanager/uimanager"
+import { WindowId } from "./../uimanager/windowDefine"
+import { EventDispatch } from "./../handler/EventDispatch"
+import { EventType } from "./../handler/EventType"
+import { MessageID } from "./../net/messageID"
+import { GameMessageHandler } from "./../ui/gameMessageHandler"
 
 @ccclass
 export class NetManager extends cc.Component {
@@ -24,6 +29,8 @@ export class NetManager extends cc.Component {
     public static Instance: NetManager;
     private gameNet: Network;
 
+    private messageHandlerArray: Array<MessageHandler> = new Array<MessageHandler>();
+
     onLoad() {
         NetManager.Instance = this;
         this.gameNet = new Network();
@@ -32,10 +39,28 @@ export class NetManager extends cc.Component {
 
     start() {
         this.registerNetHandler();
+        EventDispatch.register(EventType.NET_CONNECT_SUCCESS, this.connectedCallback, null);
     }
 
     registerNetHandler() {
-        // RegisterMessageHandler((int)MsgDef.GS2CLoginRet, GameMsgHandler.Instance.RevMsgGS2CLoginRet);
+        this.registerMessageHandler(MessageID.MSG_GS2C_LOGIN_RET, GameMessageHandler.getInstance().RecieveGS2CLoginRet);
+    }
+
+    registerMessageHandler(msgId: number, func: Function) {
+        let find = false;
+        for (let msg of this.messageHandlerArray) {
+            if (msg.pid == msgId) {
+                find = true;
+                console.log("MsgHandler[" + msg.pid + "] has registered.");
+                break;
+            }
+        }
+        if (!find) {
+            let handler = new MessageHandler();
+            handler.pid = msgId;
+            handler.function = func;
+            this.messageHandlerArray.push(handler);
+        }
     }
 
     reconnect() {
@@ -54,7 +79,7 @@ export class NetManager extends cc.Component {
             this.connectState = curState;
             if (this.connectState == 1) {
                 // console.log('connect success');
-                this.connectedCallback();
+                // this.connectedCallback();
             } else if (this.connectState == 2) {
                 console.log('connect is closing');
             } else if (this.connectState == 3) {
@@ -62,10 +87,11 @@ export class NetManager extends cc.Component {
                 // this.reconnect();
             }
         }
+        this.procRevMsgLogic();
     }
 
     connectedCallback() {
-        let login = MyTool.AddChild(this.node, "Prefabs/login");
+        UIManager.Instance.showWindow(WindowId.Login);
     }
 
     public SendToGS(id: number, msg: Uint8Array) {
@@ -75,9 +101,40 @@ export class NetManager extends cc.Component {
             return false;
         }
         this.gameNet.Send(id, msg);
-        this.scheduleOnce(function () {
-            console.log("message send timeout: id[" + id + "]");
-        }, 5);
+    }
+
+    private procRevMsgLogic() {
+        let count = 10;
+        while (this.gameNet.RevMessageArray.length > 0 && count > 0) {
+            count--;
+            let revMsg = this.gameNet.RevMessageArray.shift();
+            if (null == revMsg) {
+                continue;
+            }
+            let find = false;
+            for (let handler of this.messageHandlerArray) {
+                if (handler.pid == revMsg.pid) {
+                    find = true;
+                    handler.function(revMsg.buffer);
+                    break;
+                }
+            }
+            if (!find) {
+                console.log("消息id: ", revMsg.pid, "没有注册处理函数句柄!");
+            }
+        }
     }
 
 }
+
+export class MessageHandler {
+    public pid: number;
+    public function: Function;
+
+    public init(id: number, func: Function) {
+        this.pid = id;
+        this.function = func;
+    }
+}
+
+
