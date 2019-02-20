@@ -1,12 +1,14 @@
 package gate
 
 import (
-	"github.com/name5566/leaf/chanrpc"
-	"github.com/name5566/leaf/log"
-	"github.com/name5566/leaf/network"
+	"encoding/binary"
 	"net"
 	"reflect"
 	"time"
+
+	"github.com/name5566/leaf/chanrpc"
+	"github.com/name5566/leaf/log"
+	"github.com/name5566/leaf/network"
 )
 
 type Gate struct {
@@ -96,19 +98,19 @@ func (a *agent) Run() {
 			log.Debug("read message: %v", err)
 			break
 		}
-
-		if a.gate.Processor != nil {
-			msg, err := a.gate.Processor.Unmarshal(data)
-			if err != nil {
-				log.Debug("unmarshal message error: %v", err)
-				break
-			}
-			err = a.gate.Processor.Route(msg, a)
-			if err != nil {
-				log.Debug("route message error: %v", err)
-				break
-			}
-		}
+		a.splitMsg(data)
+		// if a.gate.Processor != nil {
+		// 	msg, err := a.gate.Processor.Unmarshal(data)
+		// 	if err != nil {
+		// 		log.Debug("unmarshal message error: %v", err)
+		// 		break
+		// 	}
+		// 	err = a.gate.Processor.Route(msg, a)
+		// 	if err != nil {
+		// 		log.Debug("route message error: %v", err)
+		// 		break
+		// 	}
+		// }
 	}
 }
 
@@ -157,4 +159,65 @@ func (a *agent) UserData() interface{} {
 
 func (a *agent) SetUserData(data interface{}) {
 	a.userData = data
+}
+
+var mIncompleteBuffer []byte = nil
+var headPackageSize int = 4
+
+func (a *agent) parseLength(data []byte) int {
+	length := binary.BigEndian.Uint16(data)
+	return int(length)
+}
+
+func (a *agent) BuildMessage(data []byte) {
+	if a.gate.Processor != nil {
+		msg, err := a.gate.Processor.Unmarshal(data)
+		if err != nil {
+			log.Debug("unmarshal message error: %v", err)
+		} else {
+			err = a.gate.Processor.Route(msg, a)
+			if err != nil {
+				log.Debug("route message error: %v", err)
+			}
+		}
+	}
+}
+
+func (a *agent) splitMsg(data []byte) {
+	var msgBuffer []byte = nil
+	if mIncompleteBuffer == nil {
+		msgBuffer = data
+	} else {
+		completeBuffer := make([]byte, 0)
+		completeBuffer = append(completeBuffer, mIncompleteBuffer...)
+		completeBuffer = append(completeBuffer, data...)
+		mIncompleteBuffer = nil
+		msgBuffer = completeBuffer
+	}
+
+	curPos := 0 // split package pos
+	for {
+		if curPos == len(msgBuffer) {
+			break
+		}
+		//包头长度不符，等待下一个包
+		if len(msgBuffer)-curPos <= headPackageSize {
+			incompleteBuffer := make([]byte, 0) //临时缓冲区
+			incompleteBuffer = append(incompleteBuffer, msgBuffer[curPos:]...)
+			mIncompleteBuffer = incompleteBuffer //存储没有处理的消息
+			break
+		}
+		//消息长度不符，等待下一个包
+		lenArray := msgBuffer[2:4] //包头后2个字节是总长度（id+proto消息）
+		sizePackage := a.parseLength(lenArray) + 2
+		if sizePackage > len(msgBuffer)-curPos {
+			incompleteBuffer := make([]byte, 0) //临时缓冲区
+			incompleteBuffer = append(incompleteBuffer, msgBuffer[curPos:]...)
+			mIncompleteBuffer = incompleteBuffer //存储没有处理的消息
+			break
+		}
+		//消息完整，取出解析
+		a.BuildMessage(msgBuffer[curPos : curPos+sizePackage])
+		curPos += sizePackage
+	}
 }
