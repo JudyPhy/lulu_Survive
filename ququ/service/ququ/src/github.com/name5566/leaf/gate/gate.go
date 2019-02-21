@@ -208,7 +208,7 @@ func (a *agent) splitMsg(data []byte) {
 			break
 		}
 		//消息长度不符，等待下一个包
-		lenArray := msgBuffer[2:4] //包头后2个字节是总长度（id+proto消息）
+		lenArray := msgBuffer[curPos+2 : curPos+4] //包头后2个字节是总长度（id+proto消息）
 		sizePackage := a.parseLength(lenArray) + 2
 		if sizePackage > len(msgBuffer)-curPos {
 			incompleteBuffer := make([]byte, 0) //临时缓冲区
