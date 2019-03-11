@@ -1,12 +1,20 @@
 package pb;
 
+message PlayerInfo{
+    required int32 playerId = 1;
+    required string nickname = 2;
+    required string headicon = 3;
+    required int32 card = 4;
+    required int32 coin = 5;
+}
+
 message C2GSLogin {
   required string user = 1;
   required string password = 2;
 }
 
 message GS2CLoginRet {
-  required string user = 1;
+  required PlayerInfo user = 1;
   required ErrorCode errorCode = 2;
   enum ErrorCode{
 	Success = 1;

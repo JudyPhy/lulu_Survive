@@ -18,6 +18,282 @@ $root.pb = (function() {
      */
     var pb = {};
 
+    pb.PlayerInfo = (function() {
+
+        /**
+         * Properties of a PlayerInfo.
+         * @memberof pb
+         * @interface IPlayerInfo
+         * @property {number} playerId PlayerInfo playerId
+         * @property {string} nickname PlayerInfo nickname
+         * @property {string} headicon PlayerInfo headicon
+         * @property {number} card PlayerInfo card
+         * @property {number} coin PlayerInfo coin
+         */
+
+        /**
+         * Constructs a new PlayerInfo.
+         * @memberof pb
+         * @classdesc Represents a PlayerInfo.
+         * @implements IPlayerInfo
+         * @constructor
+         * @param {pb.IPlayerInfo=} [properties] Properties to set
+         */
+        function PlayerInfo(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * PlayerInfo playerId.
+         * @member {number} playerId
+         * @memberof pb.PlayerInfo
+         * @instance
+         */
+        PlayerInfo.prototype.playerId = 0;
+
+        /**
+         * PlayerInfo nickname.
+         * @member {string} nickname
+         * @memberof pb.PlayerInfo
+         * @instance
+         */
+        PlayerInfo.prototype.nickname = "";
+
+        /**
+         * PlayerInfo headicon.
+         * @member {string} headicon
+         * @memberof pb.PlayerInfo
+         * @instance
+         */
+        PlayerInfo.prototype.headicon = "";
+
+        /**
+         * PlayerInfo card.
+         * @member {number} card
+         * @memberof pb.PlayerInfo
+         * @instance
+         */
+        PlayerInfo.prototype.card = 0;
+
+        /**
+         * PlayerInfo coin.
+         * @member {number} coin
+         * @memberof pb.PlayerInfo
+         * @instance
+         */
+        PlayerInfo.prototype.coin = 0;
+
+        /**
+         * Creates a new PlayerInfo instance using the specified properties.
+         * @function create
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {pb.IPlayerInfo=} [properties] Properties to set
+         * @returns {pb.PlayerInfo} PlayerInfo instance
+         */
+        PlayerInfo.create = function create(properties) {
+            return new PlayerInfo(properties);
+        };
+
+        /**
+         * Encodes the specified PlayerInfo message. Does not implicitly {@link pb.PlayerInfo.verify|verify} messages.
+         * @function encode
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {pb.IPlayerInfo} message PlayerInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        PlayerInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.playerId);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nickname);
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.headicon);
+            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.card);
+            writer.uint32(/* id 5, wireType 0 =*/40).int32(message.coin);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified PlayerInfo message, length delimited. Does not implicitly {@link pb.PlayerInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {pb.IPlayerInfo} message PlayerInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        PlayerInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a PlayerInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.PlayerInfo} PlayerInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        PlayerInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.PlayerInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.playerId = reader.int32();
+                    break;
+                case 2:
+                    message.nickname = reader.string();
+                    break;
+                case 3:
+                    message.headicon = reader.string();
+                    break;
+                case 4:
+                    message.card = reader.int32();
+                    break;
+                case 5:
+                    message.coin = reader.int32();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("playerId"))
+                throw $util.ProtocolError("missing required 'playerId'", { instance: message });
+            if (!message.hasOwnProperty("nickname"))
+                throw $util.ProtocolError("missing required 'nickname'", { instance: message });
+            if (!message.hasOwnProperty("headicon"))
+                throw $util.ProtocolError("missing required 'headicon'", { instance: message });
+            if (!message.hasOwnProperty("card"))
+                throw $util.ProtocolError("missing required 'card'", { instance: message });
+            if (!message.hasOwnProperty("coin"))
+                throw $util.ProtocolError("missing required 'coin'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a PlayerInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.PlayerInfo} PlayerInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        PlayerInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a PlayerInfo message.
+         * @function verify
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        PlayerInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.playerId))
+                return "playerId: integer expected";
+            if (!$util.isString(message.nickname))
+                return "nickname: string expected";
+            if (!$util.isString(message.headicon))
+                return "headicon: string expected";
+            if (!$util.isInteger(message.card))
+                return "card: integer expected";
+            if (!$util.isInteger(message.coin))
+                return "coin: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates a PlayerInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.PlayerInfo} PlayerInfo
+         */
+        PlayerInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.PlayerInfo)
+                return object;
+            var message = new $root.pb.PlayerInfo();
+            if (object.playerId != null)
+                message.playerId = object.playerId | 0;
+            if (object.nickname != null)
+                message.nickname = String(object.nickname);
+            if (object.headicon != null)
+                message.headicon = String(object.headicon);
+            if (object.card != null)
+                message.card = object.card | 0;
+            if (object.coin != null)
+                message.coin = object.coin | 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a PlayerInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.PlayerInfo
+         * @static
+         * @param {pb.PlayerInfo} message PlayerInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        PlayerInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.playerId = 0;
+                object.nickname = "";
+                object.headicon = "";
+                object.card = 0;
+                object.coin = 0;
+            }
+            if (message.playerId != null && message.hasOwnProperty("playerId"))
+                object.playerId = message.playerId;
+            if (message.nickname != null && message.hasOwnProperty("nickname"))
+                object.nickname = message.nickname;
+            if (message.headicon != null && message.hasOwnProperty("headicon"))
+                object.headicon = message.headicon;
+            if (message.card != null && message.hasOwnProperty("card"))
+                object.card = message.card;
+            if (message.coin != null && message.hasOwnProperty("coin"))
+                object.coin = message.coin;
+            return object;
+        };
+
+        /**
+         * Converts this PlayerInfo to JSON.
+         * @function toJSON
+         * @memberof pb.PlayerInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        PlayerInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return PlayerInfo;
+    })();
+
     pb.C2GSLogin = (function() {
 
         /**
@@ -234,7 +510,7 @@ $root.pb = (function() {
          * Properties of a GS2CLoginRet.
          * @memberof pb
          * @interface IGS2CLoginRet
-         * @property {string} user GS2CLoginRet user
+         * @property {pb.IPlayerInfo} user GS2CLoginRet user
          * @property {pb.GS2CLoginRet.ErrorCode} errorCode GS2CLoginRet errorCode
          */
 
@@ -255,11 +531,11 @@ $root.pb = (function() {
 
         /**
          * GS2CLoginRet user.
-         * @member {string} user
+         * @member {pb.IPlayerInfo} user
          * @memberof pb.GS2CLoginRet
          * @instance
          */
-        GS2CLoginRet.prototype.user = "";
+        GS2CLoginRet.prototype.user = null;
 
         /**
          * GS2CLoginRet errorCode.
@@ -293,7 +569,7 @@ $root.pb = (function() {
         GS2CLoginRet.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.user);
+            $root.pb.PlayerInfo.encode(message.user, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
             writer.uint32(/* id 2, wireType 0 =*/16).int32(message.errorCode);
             return writer;
         };
@@ -330,7 +606,7 @@ $root.pb = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.user = reader.string();
+                    message.user = $root.pb.PlayerInfo.decode(reader, reader.uint32());
                     break;
                 case 2:
                     message.errorCode = reader.int32();
@@ -374,8 +650,11 @@ $root.pb = (function() {
         GS2CLoginRet.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (!$util.isString(message.user))
-                return "user: string expected";
+            {
+                var error = $root.pb.PlayerInfo.verify(message.user);
+                if (error)
+                    return "user." + error;
+            }
             switch (message.errorCode) {
             default:
                 return "errorCode: enum value expected";
@@ -398,8 +677,11 @@ $root.pb = (function() {
             if (object instanceof $root.pb.GS2CLoginRet)
                 return object;
             var message = new $root.pb.GS2CLoginRet();
-            if (object.user != null)
-                message.user = String(object.user);
+            if (object.user != null) {
+                if (typeof object.user !== "object")
+                    throw TypeError(".pb.GS2CLoginRet.user: object expected");
+                message.user = $root.pb.PlayerInfo.fromObject(object.user);
+            }
             switch (object.errorCode) {
             case "Success":
             case 1:
@@ -427,11 +709,11 @@ $root.pb = (function() {
                 options = {};
             var object = {};
             if (options.defaults) {
-                object.user = "";
+                object.user = null;
                 object.errorCode = options.enums === String ? "Success" : 1;
             }
             if (message.user != null && message.hasOwnProperty("user"))
-                object.user = message.user;
+                object.user = $root.pb.PlayerInfo.toObject(message.user, options);
             if (message.errorCode != null && message.hasOwnProperty("errorCode"))
                 object.errorCode = options.enums === String ? $root.pb.GS2CLoginRet.ErrorCode[message.errorCode] : message.errorCode;
             return object;
