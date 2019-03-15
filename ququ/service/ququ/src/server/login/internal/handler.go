@@ -2,7 +2,9 @@ package internal
 
 import (
 	"reflect"
+	"server/database"
 	"server/pb"
+	"server/playerManager"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/name5566/leaf/gate"
@@ -21,24 +23,76 @@ func init() {
 func recvC2GSLogin(args []interface{}) {
 	log.Debug("recvC2GSLogin=>%v", args)
 	m := args[0].(*pb.C2GSLogin)
-	log.Debug("User=%v", m.GetUser())
 	a := args[1].(gate.Agent)
 
-	//	// get data from db
-	//	var playerOid int32 = 10000
-	//	player := &pb.PlayerInfo{
-	//		Oid:      proto.Int32(playerOid),
-	//		NickName: proto.String(m.GetAccount()),
-	//		HeadIcon: proto.String(""),
-	//		Gold:     proto.Int32(99),
-	//		Diamond:  proto.Int32(100)}
+	// get data from db
+	account, err := database.GetAccount(m.GetUser())
+	if err != nil {
+		log.Debug("account database error")
+		sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //account database error
+	} else {
+		if account == nil {
+			id, err := database.NewAccount(m.GetUser(), m.GetPassword())
+			if err != nil {
+				log.Debug("create new account error")
+				sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //create new account error
+			} else {
+				player, err := database.NewPlayerInfo(id)
+				if err == nil {
+					playerManager.UpdatePlayerAgent(a, player.Id)
+					sendGS2CLoginRet(a, toPbPlayerInfo(player), pb.GS2CLoginRet_Success.Enum())
+				} else {
+					log.Debug("create new player info error")
+					sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //create new player info error
+				}
+			}
+		} else {
+			if account.Password != m.GetPassword() {
+				log.Debug("password error")
+				sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //password error
+			} else {
+				player, err := database.GetPlayerInfo(account.Id)
+				if err != nil {
+					log.Debug("playerinfo database error")
+					sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //playerinfo database error
+				} else {
+					if player == nil {
+						log.Debug("account[%v] has no role, create new role", account.Name)
+						player, err := database.NewPlayerInfo(account.Id)
+						if err == nil {
+							playerManager.UpdatePlayerAgent(a, player.Id)
+							sendGS2CLoginRet(a, toPbPlayerInfo(player), pb.GS2CLoginRet_Success.Enum())
+						} else {
+							log.Debug("create new player info error")
+							sendGS2CLoginRet(a, nil, pb.GS2CLoginRet_Fail.Enum()) //create new player info error
+						}
+					} else {
+						playerManager.UpdatePlayerAgent(a, player.Id)
+						sendGS2CLoginRet(a, toPbPlayerInfo(player), pb.GS2CLoginRet_Success.Enum())
+					}
+				}
+			}
+		}
+	}
 
 	//	chanPlayer := roomMgr.NewPlayer(player)
 	//	roomMgr.AddChanPlayerInfo(a, chanPlayer)
+}
 
-	//ret to client
+func toPbPlayerInfo(info *database.PlayerInfo) *pb.PlayerInfo {
+	player := &pb.PlayerInfo{}
+	player.PlayerId = proto.Int64(info.Id)
+	player.Nickname = proto.String(info.Nickname)
+	player.Headicon = proto.String(info.Headicon)
+	player.Card = proto.Int64(info.Card)
+	player.Coin = proto.Int64(info.Coin)
+	return player
+}
+
+func sendGS2CLoginRet(a gate.Agent, player *pb.PlayerInfo, errorCode *pb.GS2CLoginRet_ErrorCode) {
+	log.Debug("sendGS2CLoginRet: %v", player)
 	ret := &pb.GS2CLoginRet{}
-	ret.ErrorCode = pb.GS2CLoginRet_Success.Enum()
-	ret.User = proto.String(m.GetUser())
+	ret.ErrorCode = errorCode
+	ret.User = player
 	a.WriteMsg(ret)
 }
