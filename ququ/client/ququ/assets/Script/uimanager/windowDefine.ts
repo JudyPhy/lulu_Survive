@@ -1,7 +1,7 @@
 export enum WindowId {
     Init = "Init",
     Login = "Login",
-    Home = "Prefabs/home"
+    Hall = "Hall"
 }
 
 export class ResManager {
@@ -10,8 +10,8 @@ export class ResManager {
         switch (windowId) {
             case WindowId.Login:
                 return "Prefabs/login";
-            case WindowId.Home:
-                return "Prefabs/home";
+            case WindowId.Hall:
+                return "Prefabs/hall";
             default:
                 return '';
         }

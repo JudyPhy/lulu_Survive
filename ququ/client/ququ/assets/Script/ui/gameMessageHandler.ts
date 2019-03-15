@@ -1,6 +1,9 @@
 import { NetManager } from "./../net/NetManager"
 import { MessageID } from "./../net/messageID"
 import { pb } from "./../pbProc/pb"
+import { PlayerManager } from "./../player/playerManager"
+import { UIManager } from "../uimanager/uimanager";
+import { WindowId } from "../uimanager/windowDefine";
 
 export class GameMessageHandler {
 
@@ -21,6 +24,12 @@ export class GameMessageHandler {
     public RecieveGS2CLoginRet(buffer: Uint8Array) {
         let data = pb.GS2CLoginRet.decode(buffer);
         console.log(data.user, data.errorCode);
+        if (data.errorCode == pb.GS2CLoginRet.ErrorCode.Success) {
+            PlayerManager.getInstance().initMy(data.user);
+            UIManager.Instance.showWindow(WindowId.Hall);
+        } else {
+            console.error("login failed");
+        }
     }
 
 }

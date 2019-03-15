@@ -1,23 +1,66 @@
 package pb;
 
+enum PayMode{
+    SHARE = 0;
+    OWNER = 1;
+}
+
+enum GameRound{
+    ROUND4 = 0;
+    ROUND8 = 1;
+}
+
 message PlayerInfo{
-    required int32 playerId = 1;
+    required int64 playerId = 1;
     required string nickname = 2;
     required string headicon = 3;
-    required int32 card = 4;
-    required int32 coin = 5;
+    required int64 card = 4;
+    required int64 coin = 5;
+}
+
+message RoomInfo{
+    required int64 roomId = 1;
+    required string password = 2;
+    required PayMode pay = 3;
+    required GameRound round = 4;
+    required bool exit_pay = 5;
 }
 
 message C2GSLogin {
-  required string user = 1;
-  required string password = 2;
+    required string user = 1;
+    required string password = 2;
 }
 
 message GS2CLoginRet {
-  required PlayerInfo user = 1;
-  required ErrorCode errorCode = 2;
-  enum ErrorCode{
-	Success = 1;
-	Fail = 2;
-  }
+    required PlayerInfo user = 1;
+    required ErrorCode errorCode = 2;
+    enum ErrorCode{
+        Success = 1;
+        Fail = 2;
+    }
 }
+
+message C2GSCreateRoom {
+    required PayMode pay = 1;
+    required GameRound round = 2;
+    required bool exit_pay = 3;
+    required int64 password = 4;
+}
+
+message C2GSEnterRoom {
+    optional int64 roomId = 1;
+    optional int64 password = 2;
+}
+
+message GS2CEnterRoomRet {
+    required int64 roomId = 1;
+    required ErrorCode errorCode = 2;
+    enum ErrorCode{
+        Success = 1;
+        Fail = 2;
+        GameStart = 3;
+        NeedPassword = 4;
+    }
+}
+
+
