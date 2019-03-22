@@ -32,4 +32,24 @@ export class GameMessageHandler {
         }
     }
 
+    public SendC2GSEnterRoom(room: number, psw: number) {
+        let msg = pb.C2GSEnterRoom.create({ roomId: room, password: psw });
+        let buffer = pb.C2GSEnterRoom.encode(msg).finish();
+        NetManager.Instance.SendToGS(MessageID.MSG_C2GS_ENTERROOM, buffer);
+    }
+
+    public RecieveGS2CEnterRoomRet(buffer: Uint8Array) {
+        let data = pb.GS2CEnterRoomRet.decode(buffer);
+        console.log(data.roomId, data.errorCode);
+        if (data.errorCode == pb.GS2CEnterRoomRet.ErrorCode.Success) {
+
+        } else if (data.errorCode == pb.GS2CEnterRoomRet.ErrorCode.GameStart) {
+            console.error("game start");
+        } else if (data.errorCode == pb.GS2CEnterRoomRet.ErrorCode.NeedPassword) {
+
+        } else {
+            console.error("fail");
+        }
+    }
+
 }

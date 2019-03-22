@@ -69,13 +69,3 @@ func getRoomById(roomId int64) *RoomInfo {
 		return nil
 	}
 }
-
-func enterRandomRoom(playerId int64) *RoomInfo {
-	for _, roomInfo := range roomMap {
-		if roomInfo.password == 0 && roomInfo.state == RoomState_Idle {
-			roomInfo.players = append(roomInfo.players, playerId)
-			return roomInfo
-		}
-	}
-	return nil
-}

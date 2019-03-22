@@ -44,6 +44,7 @@ export class NetManager extends cc.Component {
 
     registerNetHandler() {
         this.registerMessageHandler(MessageID.MSG_GS2C_LOGIN_RET, GameMessageHandler.getInstance().RecieveGS2CLoginRet);
+        this.registerMessageHandler(MessageID.MSG_C2GS_ENTERROOM_RET, GameMessageHandler.getInstance().RecieveGS2CEnterRoomRet);
     }
 
     registerMessageHandler(msgId: number, func: Function) {

@@ -16,6 +16,9 @@ It has these top-level messages:
 	C2GSCreateRoom
 	C2GSEnterRoom
 	GS2CEnterRoomRet
+	C2GSCommonRoomPay
+	GS2CCommonRoomPayRet
+	GS2CCommonRoomResults
 */
 package pb
 
@@ -161,6 +164,45 @@ func (x *GS2CEnterRoomRet_ErrorCode) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = GS2CEnterRoomRet_ErrorCode(value)
+	return nil
+}
+
+type GS2CCommonRoomPayRet_ErrorCode int32
+
+const (
+	GS2CCommonRoomPayRet_Success    GS2CCommonRoomPayRet_ErrorCode = 1
+	GS2CCommonRoomPayRet_IndexError GS2CCommonRoomPayRet_ErrorCode = 2
+	GS2CCommonRoomPayRet_CoinLess   GS2CCommonRoomPayRet_ErrorCode = 3
+	GS2CCommonRoomPayRet_Fail       GS2CCommonRoomPayRet_ErrorCode = 4
+)
+
+var GS2CCommonRoomPayRet_ErrorCode_name = map[int32]string{
+	1: "Success",
+	2: "IndexError",
+	3: "CoinLess",
+	4: "Fail",
+}
+var GS2CCommonRoomPayRet_ErrorCode_value = map[string]int32{
+	"Success":    1,
+	"IndexError": 2,
+	"CoinLess":   3,
+	"Fail":       4,
+}
+
+func (x GS2CCommonRoomPayRet_ErrorCode) Enum() *GS2CCommonRoomPayRet_ErrorCode {
+	p := new(GS2CCommonRoomPayRet_ErrorCode)
+	*p = x
+	return p
+}
+func (x GS2CCommonRoomPayRet_ErrorCode) String() string {
+	return proto.EnumName(GS2CCommonRoomPayRet_ErrorCode_name, int32(x))
+}
+func (x *GS2CCommonRoomPayRet_ErrorCode) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(GS2CCommonRoomPayRet_ErrorCode_value, data, "GS2CCommonRoomPayRet_ErrorCode")
+	if err != nil {
+		return err
+	}
+	*x = GS2CCommonRoomPayRet_ErrorCode(value)
 	return nil
 }
 
@@ -396,9 +438,74 @@ func (m *GS2CEnterRoomRet) GetErrorCode() GS2CEnterRoomRet_ErrorCode {
 	return GS2CEnterRoomRet_Success
 }
 
+type C2GSCommonRoomPay struct {
+	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
+	Pay              *int64 `protobuf:"varint,2,req,name=pay" json:"pay,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *C2GSCommonRoomPay) Reset()         { *m = C2GSCommonRoomPay{} }
+func (m *C2GSCommonRoomPay) String() string { return proto.CompactTextString(m) }
+func (*C2GSCommonRoomPay) ProtoMessage()    {}
+
+func (m *C2GSCommonRoomPay) GetRountIndex() int32 {
+	if m != nil && m.RountIndex != nil {
+		return *m.RountIndex
+	}
+	return 0
+}
+
+func (m *C2GSCommonRoomPay) GetPay() int64 {
+	if m != nil && m.Pay != nil {
+		return *m.Pay
+	}
+	return 0
+}
+
+type GS2CCommonRoomPayRet struct {
+	ErrorCode        *GS2CCommonRoomPayRet_ErrorCode `protobuf:"varint,1,req,name=errorCode,enum=pb.GS2CCommonRoomPayRet_ErrorCode" json:"errorCode,omitempty"`
+	XXX_unrecognized []byte                          `json:"-"`
+}
+
+func (m *GS2CCommonRoomPayRet) Reset()         { *m = GS2CCommonRoomPayRet{} }
+func (m *GS2CCommonRoomPayRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CCommonRoomPayRet) ProtoMessage()    {}
+
+func (m *GS2CCommonRoomPayRet) GetErrorCode() GS2CCommonRoomPayRet_ErrorCode {
+	if m != nil && m.ErrorCode != nil {
+		return *m.ErrorCode
+	}
+	return GS2CCommonRoomPayRet_Success
+}
+
+type GS2CCommonRoomResults struct {
+	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
+	Results          *bool  `protobuf:"varint,2,req,name=results" json:"results,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GS2CCommonRoomResults) Reset()         { *m = GS2CCommonRoomResults{} }
+func (m *GS2CCommonRoomResults) String() string { return proto.CompactTextString(m) }
+func (*GS2CCommonRoomResults) ProtoMessage()    {}
+
+func (m *GS2CCommonRoomResults) GetRountIndex() int32 {
+	if m != nil && m.RountIndex != nil {
+		return *m.RountIndex
+	}
+	return 0
+}
+
+func (m *GS2CCommonRoomResults) GetResults() bool {
+	if m != nil && m.Results != nil {
+		return *m.Results
+	}
+	return false
+}
+
 func init() {
 	proto.RegisterEnum("pb.PayMode", PayMode_name, PayMode_value)
 	proto.RegisterEnum("pb.GameRound", GameRound_name, GameRound_value)
 	proto.RegisterEnum("pb.GS2CLoginRet_ErrorCode", GS2CLoginRet_ErrorCode_name, GS2CLoginRet_ErrorCode_value)
 	proto.RegisterEnum("pb.GS2CEnterRoomRet_ErrorCode", GS2CEnterRoomRet_ErrorCode_name, GS2CEnterRoomRet_ErrorCode_value)
+	proto.RegisterEnum("pb.GS2CCommonRoomPayRet_ErrorCode", GS2CCommonRoomPayRet_ErrorCode_name, GS2CCommonRoomPayRet_ErrorCode_value)
 }

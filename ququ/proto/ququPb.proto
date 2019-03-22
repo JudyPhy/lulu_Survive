@@ -63,4 +63,23 @@ message GS2CEnterRoomRet {
     }
 }
 
+message C2GSCommonRoomPay {    
+    required int32 rountIndex = 1;
+    required int64 pay = 2;
+}
+
+message GS2CCommonRoomPayRet {    
+    required ErrorCode errorCode = 1;
+    enum ErrorCode{
+        Success = 1;
+        IndexError = 2;
+        CoinLess = 3;
+        Fail = 4;
+    }
+}
+
+message GS2CCommonRoomResults {    
+    required int32 rountIndex = 1;
+    required bool results = 2;
+}
 

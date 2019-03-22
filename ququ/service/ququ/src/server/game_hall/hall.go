@@ -36,16 +36,12 @@ func RecvC2GSEnterRoom(args []interface{}) {
 	a := args[1].(gate.Agent)
 	playerId := playerManager.GetPlayerId(a)
 	if playerId == 0 {
-		log.Error("can't find playerid of agent[%v]", a)
+		log.Error("[hall]can't find playerid of agent[%v]", a)
 	} else {
 		if m.GetRoomId() == 0 {
-			//quicklly enter
-			roomInfo := enterRandomRoom(playerId)
-			if roomInfo != nil {
-				sendGS2CEnterRoomRet(a, roomInfo.roomId, pb.GS2CEnterRoomRet_Success.Enum())
-			} else {
-				sendGS2CEnterRoomRet(a, 0, pb.GS2CEnterRoomRet_Fail.Enum())
-			}
+			//common room
+			enterCommonRoom(playerId)
+			sendGS2CEnterRoomRet(a, 0, pb.GS2CEnterRoomRet_Success.Enum())
 		} else {
 			//input roomid to enter
 			roomInfo := getRoomById(m.GetRoomId())
