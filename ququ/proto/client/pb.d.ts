@@ -653,6 +653,9 @@ export namespace pb {
         /** GS2CEnterRoomRet roomId */
         roomId: (number|Long);
 
+        /** GS2CEnterRoomRet rountIndex */
+        rountIndex: number;
+
         /** GS2CEnterRoomRet errorCode */
         errorCode: pb.GS2CEnterRoomRet.ErrorCode;
     }
@@ -668,6 +671,9 @@ export namespace pb {
 
         /** GS2CEnterRoomRet roomId. */
         public roomId: (number|Long);
+
+        /** GS2CEnterRoomRet rountIndex. */
+        public rountIndex: number;
 
         /** GS2CEnterRoomRet errorCode. */
         public errorCode: pb.GS2CEnterRoomRet.ErrorCode;
@@ -752,5 +758,760 @@ export namespace pb {
             GameStart = 3,
             NeedPassword = 4
         }
+    }
+
+    /** Properties of a GS2CTurnToBet. */
+    interface IGS2CTurnToBet {
+
+        /** GS2CTurnToBet roomId */
+        roomId?: (number|Long|null);
+    }
+
+    /** Represents a GS2CTurnToBet. */
+    class GS2CTurnToBet implements IGS2CTurnToBet {
+
+        /**
+         * Constructs a new GS2CTurnToBet.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CTurnToBet);
+
+        /** GS2CTurnToBet roomId. */
+        public roomId: (number|Long);
+
+        /**
+         * Creates a new GS2CTurnToBet instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CTurnToBet instance
+         */
+        public static create(properties?: pb.IGS2CTurnToBet): pb.GS2CTurnToBet;
+
+        /**
+         * Encodes the specified GS2CTurnToBet message. Does not implicitly {@link pb.GS2CTurnToBet.verify|verify} messages.
+         * @param message GS2CTurnToBet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CTurnToBet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CTurnToBet message, length delimited. Does not implicitly {@link pb.GS2CTurnToBet.verify|verify} messages.
+         * @param message GS2CTurnToBet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CTurnToBet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CTurnToBet message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CTurnToBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CTurnToBet;
+
+        /**
+         * Decodes a GS2CTurnToBet message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CTurnToBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CTurnToBet;
+
+        /**
+         * Verifies a GS2CTurnToBet message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CTurnToBet message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CTurnToBet
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CTurnToBet;
+
+        /**
+         * Creates a plain object from a GS2CTurnToBet message. Also converts values to other types if specified.
+         * @param message GS2CTurnToBet
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CTurnToBet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CTurnToBet to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a C2GSBet. */
+    interface IC2GSBet {
+
+        /** C2GSBet roomId */
+        roomId: (number|Long);
+
+        /** C2GSBet rountIndex */
+        rountIndex: number;
+
+        /** C2GSBet betSide */
+        betSide: number;
+
+        /** C2GSBet bet */
+        bet: (number|Long);
+    }
+
+    /** Represents a C2GSBet. */
+    class C2GSBet implements IC2GSBet {
+
+        /**
+         * Constructs a new C2GSBet.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IC2GSBet);
+
+        /** C2GSBet roomId. */
+        public roomId: (number|Long);
+
+        /** C2GSBet rountIndex. */
+        public rountIndex: number;
+
+        /** C2GSBet betSide. */
+        public betSide: number;
+
+        /** C2GSBet bet. */
+        public bet: (number|Long);
+
+        /**
+         * Creates a new C2GSBet instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns C2GSBet instance
+         */
+        public static create(properties?: pb.IC2GSBet): pb.C2GSBet;
+
+        /**
+         * Encodes the specified C2GSBet message. Does not implicitly {@link pb.C2GSBet.verify|verify} messages.
+         * @param message C2GSBet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IC2GSBet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified C2GSBet message, length delimited. Does not implicitly {@link pb.C2GSBet.verify|verify} messages.
+         * @param message C2GSBet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IC2GSBet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a C2GSBet message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns C2GSBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.C2GSBet;
+
+        /**
+         * Decodes a C2GSBet message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns C2GSBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.C2GSBet;
+
+        /**
+         * Verifies a C2GSBet message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a C2GSBet message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns C2GSBet
+         */
+        public static fromObject(object: { [k: string]: any }): pb.C2GSBet;
+
+        /**
+         * Creates a plain object from a C2GSBet message. Also converts values to other types if specified.
+         * @param message C2GSBet
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.C2GSBet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this C2GSBet to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GS2CBetRet. */
+    interface IGS2CBetRet {
+
+        /** GS2CBetRet errorCode */
+        errorCode: pb.GS2CBetRet.ErrorCode;
+    }
+
+    /** Represents a GS2CBetRet. */
+    class GS2CBetRet implements IGS2CBetRet {
+
+        /**
+         * Constructs a new GS2CBetRet.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CBetRet);
+
+        /** GS2CBetRet errorCode. */
+        public errorCode: pb.GS2CBetRet.ErrorCode;
+
+        /**
+         * Creates a new GS2CBetRet instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CBetRet instance
+         */
+        public static create(properties?: pb.IGS2CBetRet): pb.GS2CBetRet;
+
+        /**
+         * Encodes the specified GS2CBetRet message. Does not implicitly {@link pb.GS2CBetRet.verify|verify} messages.
+         * @param message GS2CBetRet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CBetRet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CBetRet message, length delimited. Does not implicitly {@link pb.GS2CBetRet.verify|verify} messages.
+         * @param message GS2CBetRet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CBetRet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CBetRet message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CBetRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CBetRet;
+
+        /**
+         * Decodes a GS2CBetRet message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CBetRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CBetRet;
+
+        /**
+         * Verifies a GS2CBetRet message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CBetRet message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CBetRet
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CBetRet;
+
+        /**
+         * Creates a plain object from a GS2CBetRet message. Also converts values to other types if specified.
+         * @param message GS2CBetRet
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CBetRet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CBetRet to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    namespace GS2CBetRet {
+
+        /** ErrorCode enum. */
+        enum ErrorCode {
+            Success = 1,
+            IndexError = 2,
+            CoinLess = 3,
+            Fail = 4
+        }
+    }
+
+    /** Properties of a GS2CNewRoundStart. */
+    interface IGS2CNewRoundStart {
+
+        /** GS2CNewRoundStart rountIndex */
+        rountIndex: number;
+    }
+
+    /** Represents a GS2CNewRoundStart. */
+    class GS2CNewRoundStart implements IGS2CNewRoundStart {
+
+        /**
+         * Constructs a new GS2CNewRoundStart.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CNewRoundStart);
+
+        /** GS2CNewRoundStart rountIndex. */
+        public rountIndex: number;
+
+        /**
+         * Creates a new GS2CNewRoundStart instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CNewRoundStart instance
+         */
+        public static create(properties?: pb.IGS2CNewRoundStart): pb.GS2CNewRoundStart;
+
+        /**
+         * Encodes the specified GS2CNewRoundStart message. Does not implicitly {@link pb.GS2CNewRoundStart.verify|verify} messages.
+         * @param message GS2CNewRoundStart message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CNewRoundStart, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CNewRoundStart message, length delimited. Does not implicitly {@link pb.GS2CNewRoundStart.verify|verify} messages.
+         * @param message GS2CNewRoundStart message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CNewRoundStart, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CNewRoundStart message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CNewRoundStart
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CNewRoundStart;
+
+        /**
+         * Decodes a GS2CNewRoundStart message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CNewRoundStart
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CNewRoundStart;
+
+        /**
+         * Verifies a GS2CNewRoundStart message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CNewRoundStart message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CNewRoundStart
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CNewRoundStart;
+
+        /**
+         * Creates a plain object from a GS2CNewRoundStart message. Also converts values to other types if specified.
+         * @param message GS2CNewRoundStart
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CNewRoundStart, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CNewRoundStart to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GS2CGameResults. */
+    interface IGS2CGameResults {
+
+        /** GS2CGameResults results */
+        results: boolean;
+
+        /** GS2CGameResults winCoin */
+        winCoin: (number|Long);
+    }
+
+    /** Represents a GS2CGameResults. */
+    class GS2CGameResults implements IGS2CGameResults {
+
+        /**
+         * Constructs a new GS2CGameResults.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CGameResults);
+
+        /** GS2CGameResults results. */
+        public results: boolean;
+
+        /** GS2CGameResults winCoin. */
+        public winCoin: (number|Long);
+
+        /**
+         * Creates a new GS2CGameResults instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CGameResults instance
+         */
+        public static create(properties?: pb.IGS2CGameResults): pb.GS2CGameResults;
+
+        /**
+         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @param message GS2CGameResults message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @param message GS2CGameResults message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CGameResults;
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CGameResults;
+
+        /**
+         * Verifies a GS2CGameResults message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CGameResults
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CGameResults;
+
+        /**
+         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
+         * @param message GS2CGameResults
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CGameResults, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CGameResults to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GS2CGameOver. */
+    interface IGS2CGameOver {
+
+        /** GS2CGameOver roomId */
+        roomId?: (number|Long|null);
+    }
+
+    /** Represents a GS2CGameOver. */
+    class GS2CGameOver implements IGS2CGameOver {
+
+        /**
+         * Constructs a new GS2CGameOver.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CGameOver);
+
+        /** GS2CGameOver roomId. */
+        public roomId: (number|Long);
+
+        /**
+         * Creates a new GS2CGameOver instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CGameOver instance
+         */
+        public static create(properties?: pb.IGS2CGameOver): pb.GS2CGameOver;
+
+        /**
+         * Encodes the specified GS2CGameOver message. Does not implicitly {@link pb.GS2CGameOver.verify|verify} messages.
+         * @param message GS2CGameOver message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CGameOver, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CGameOver message, length delimited. Does not implicitly {@link pb.GS2CGameOver.verify|verify} messages.
+         * @param message GS2CGameOver message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CGameOver, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CGameOver message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CGameOver
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CGameOver;
+
+        /**
+         * Decodes a GS2CGameOver message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CGameOver
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CGameOver;
+
+        /**
+         * Verifies a GS2CGameOver message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CGameOver message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CGameOver
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CGameOver;
+
+        /**
+         * Creates a plain object from a GS2CGameOver message. Also converts values to other types if specified.
+         * @param message GS2CGameOver
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CGameOver, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CGameOver to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a C2GSGMAddCoin. */
+    interface IC2GSGMAddCoin {
+
+        /** C2GSGMAddCoin value */
+        value: (number|Long);
+    }
+
+    /** Represents a C2GSGMAddCoin. */
+    class C2GSGMAddCoin implements IC2GSGMAddCoin {
+
+        /**
+         * Constructs a new C2GSGMAddCoin.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IC2GSGMAddCoin);
+
+        /** C2GSGMAddCoin value. */
+        public value: (number|Long);
+
+        /**
+         * Creates a new C2GSGMAddCoin instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns C2GSGMAddCoin instance
+         */
+        public static create(properties?: pb.IC2GSGMAddCoin): pb.C2GSGMAddCoin;
+
+        /**
+         * Encodes the specified C2GSGMAddCoin message. Does not implicitly {@link pb.C2GSGMAddCoin.verify|verify} messages.
+         * @param message C2GSGMAddCoin message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IC2GSGMAddCoin, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified C2GSGMAddCoin message, length delimited. Does not implicitly {@link pb.C2GSGMAddCoin.verify|verify} messages.
+         * @param message C2GSGMAddCoin message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IC2GSGMAddCoin, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a C2GSGMAddCoin message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns C2GSGMAddCoin
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.C2GSGMAddCoin;
+
+        /**
+         * Decodes a C2GSGMAddCoin message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns C2GSGMAddCoin
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.C2GSGMAddCoin;
+
+        /**
+         * Verifies a C2GSGMAddCoin message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a C2GSGMAddCoin message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns C2GSGMAddCoin
+         */
+        public static fromObject(object: { [k: string]: any }): pb.C2GSGMAddCoin;
+
+        /**
+         * Creates a plain object from a C2GSGMAddCoin message. Also converts values to other types if specified.
+         * @param message C2GSGMAddCoin
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.C2GSGMAddCoin, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this C2GSGMAddCoin to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GS2CGMAddCoinRet. */
+    interface IGS2CGMAddCoinRet {
+
+        /** GS2CGMAddCoinRet user */
+        user: pb.IPlayerInfo;
+    }
+
+    /** Represents a GS2CGMAddCoinRet. */
+    class GS2CGMAddCoinRet implements IGS2CGMAddCoinRet {
+
+        /**
+         * Constructs a new GS2CGMAddCoinRet.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CGMAddCoinRet);
+
+        /** GS2CGMAddCoinRet user. */
+        public user: pb.IPlayerInfo;
+
+        /**
+         * Creates a new GS2CGMAddCoinRet instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CGMAddCoinRet instance
+         */
+        public static create(properties?: pb.IGS2CGMAddCoinRet): pb.GS2CGMAddCoinRet;
+
+        /**
+         * Encodes the specified GS2CGMAddCoinRet message. Does not implicitly {@link pb.GS2CGMAddCoinRet.verify|verify} messages.
+         * @param message GS2CGMAddCoinRet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CGMAddCoinRet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CGMAddCoinRet message, length delimited. Does not implicitly {@link pb.GS2CGMAddCoinRet.verify|verify} messages.
+         * @param message GS2CGMAddCoinRet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CGMAddCoinRet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CGMAddCoinRet message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CGMAddCoinRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CGMAddCoinRet;
+
+        /**
+         * Decodes a GS2CGMAddCoinRet message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CGMAddCoinRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CGMAddCoinRet;
+
+        /**
+         * Verifies a GS2CGMAddCoinRet message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CGMAddCoinRet message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CGMAddCoinRet
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CGMAddCoinRet;
+
+        /**
+         * Creates a plain object from a GS2CGMAddCoinRet message. Also converts values to other types if specified.
+         * @param message GS2CGMAddCoinRet
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CGMAddCoinRet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CGMAddCoinRet to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
     }
 }

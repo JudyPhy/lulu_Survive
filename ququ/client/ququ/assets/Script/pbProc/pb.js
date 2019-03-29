@@ -1672,6 +1672,7 @@ $root.pb = (function() {
          * @memberof pb
          * @interface IGS2CEnterRoomRet
          * @property {number|Long} roomId GS2CEnterRoomRet roomId
+         * @property {number} rountIndex GS2CEnterRoomRet rountIndex
          * @property {pb.GS2CEnterRoomRet.ErrorCode} errorCode GS2CEnterRoomRet errorCode
          */
 
@@ -1697,6 +1698,14 @@ $root.pb = (function() {
          * @instance
          */
         GS2CEnterRoomRet.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * GS2CEnterRoomRet rountIndex.
+         * @member {number} rountIndex
+         * @memberof pb.GS2CEnterRoomRet
+         * @instance
+         */
+        GS2CEnterRoomRet.prototype.rountIndex = 0;
 
         /**
          * GS2CEnterRoomRet errorCode.
@@ -1731,7 +1740,8 @@ $root.pb = (function() {
             if (!writer)
                 writer = $Writer.create();
             writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
-            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.errorCode);
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.rountIndex);
+            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.errorCode);
             return writer;
         };
 
@@ -1770,6 +1780,9 @@ $root.pb = (function() {
                     message.roomId = reader.int64();
                     break;
                 case 2:
+                    message.rountIndex = reader.int32();
+                    break;
+                case 3:
                     message.errorCode = reader.int32();
                     break;
                 default:
@@ -1779,6 +1792,8 @@ $root.pb = (function() {
             }
             if (!message.hasOwnProperty("roomId"))
                 throw $util.ProtocolError("missing required 'roomId'", { instance: message });
+            if (!message.hasOwnProperty("rountIndex"))
+                throw $util.ProtocolError("missing required 'rountIndex'", { instance: message });
             if (!message.hasOwnProperty("errorCode"))
                 throw $util.ProtocolError("missing required 'errorCode'", { instance: message });
             return message;
@@ -1813,6 +1828,8 @@ $root.pb = (function() {
                 return "object expected";
             if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
                 return "roomId: integer|Long expected";
+            if (!$util.isInteger(message.rountIndex))
+                return "rountIndex: integer expected";
             switch (message.errorCode) {
             default:
                 return "errorCode: enum value expected";
@@ -1846,6 +1863,8 @@ $root.pb = (function() {
                     message.roomId = object.roomId;
                 else if (typeof object.roomId === "object")
                     message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
+            if (object.rountIndex != null)
+                message.rountIndex = object.rountIndex | 0;
             switch (object.errorCode) {
             case "Success":
             case 1:
@@ -1886,6 +1905,7 @@ $root.pb = (function() {
                     object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                 } else
                     object.roomId = options.longs === String ? "0" : 0;
+                object.rountIndex = 0;
                 object.errorCode = options.enums === String ? "Success" : 1;
             }
             if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -1893,6 +1913,8 @@ $root.pb = (function() {
                     object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
                 else
                     object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
+            if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
+                object.rountIndex = message.rountIndex;
             if (message.errorCode != null && message.hasOwnProperty("errorCode"))
                 object.errorCode = options.enums === String ? $root.pb.GS2CEnterRoomRet.ErrorCode[message.errorCode] : message.errorCode;
             return object;
@@ -1928,6 +1950,1723 @@ $root.pb = (function() {
         })();
 
         return GS2CEnterRoomRet;
+    })();
+
+    pb.GS2CTurnToBet = (function() {
+
+        /**
+         * Properties of a GS2CTurnToBet.
+         * @memberof pb
+         * @interface IGS2CTurnToBet
+         * @property {number|Long|null} [roomId] GS2CTurnToBet roomId
+         */
+
+        /**
+         * Constructs a new GS2CTurnToBet.
+         * @memberof pb
+         * @classdesc Represents a GS2CTurnToBet.
+         * @implements IGS2CTurnToBet
+         * @constructor
+         * @param {pb.IGS2CTurnToBet=} [properties] Properties to set
+         */
+        function GS2CTurnToBet(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CTurnToBet roomId.
+         * @member {number|Long} roomId
+         * @memberof pb.GS2CTurnToBet
+         * @instance
+         */
+        GS2CTurnToBet.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new GS2CTurnToBet instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {pb.IGS2CTurnToBet=} [properties] Properties to set
+         * @returns {pb.GS2CTurnToBet} GS2CTurnToBet instance
+         */
+        GS2CTurnToBet.create = function create(properties) {
+            return new GS2CTurnToBet(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CTurnToBet message. Does not implicitly {@link pb.GS2CTurnToBet.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {pb.IGS2CTurnToBet} message GS2CTurnToBet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CTurnToBet.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CTurnToBet message, length delimited. Does not implicitly {@link pb.GS2CTurnToBet.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {pb.IGS2CTurnToBet} message GS2CTurnToBet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CTurnToBet.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CTurnToBet message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CTurnToBet} GS2CTurnToBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CTurnToBet.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CTurnToBet();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.roomId = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CTurnToBet message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CTurnToBet} GS2CTurnToBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CTurnToBet.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CTurnToBet message.
+         * @function verify
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CTurnToBet.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
+                    return "roomId: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a GS2CTurnToBet message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CTurnToBet} GS2CTurnToBet
+         */
+        GS2CTurnToBet.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CTurnToBet)
+                return object;
+            var message = new $root.pb.GS2CTurnToBet();
+            if (object.roomId != null)
+                if ($util.Long)
+                    (message.roomId = $util.Long.fromValue(object.roomId)).unsigned = false;
+                else if (typeof object.roomId === "string")
+                    message.roomId = parseInt(object.roomId, 10);
+                else if (typeof object.roomId === "number")
+                    message.roomId = object.roomId;
+                else if (typeof object.roomId === "object")
+                    message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CTurnToBet message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CTurnToBet
+         * @static
+         * @param {pb.GS2CTurnToBet} message GS2CTurnToBet
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CTurnToBet.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.roomId = options.longs === String ? "0" : 0;
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (typeof message.roomId === "number")
+                    object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
+                else
+                    object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
+            return object;
+        };
+
+        /**
+         * Converts this GS2CTurnToBet to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CTurnToBet
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CTurnToBet.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CTurnToBet;
+    })();
+
+    pb.C2GSBet = (function() {
+
+        /**
+         * Properties of a C2GSBet.
+         * @memberof pb
+         * @interface IC2GSBet
+         * @property {number|Long} roomId C2GSBet roomId
+         * @property {number} rountIndex C2GSBet rountIndex
+         * @property {number} betSide C2GSBet betSide
+         * @property {number|Long} bet C2GSBet bet
+         */
+
+        /**
+         * Constructs a new C2GSBet.
+         * @memberof pb
+         * @classdesc Represents a C2GSBet.
+         * @implements IC2GSBet
+         * @constructor
+         * @param {pb.IC2GSBet=} [properties] Properties to set
+         */
+        function C2GSBet(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * C2GSBet roomId.
+         * @member {number|Long} roomId
+         * @memberof pb.C2GSBet
+         * @instance
+         */
+        C2GSBet.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * C2GSBet rountIndex.
+         * @member {number} rountIndex
+         * @memberof pb.C2GSBet
+         * @instance
+         */
+        C2GSBet.prototype.rountIndex = 0;
+
+        /**
+         * C2GSBet betSide.
+         * @member {number} betSide
+         * @memberof pb.C2GSBet
+         * @instance
+         */
+        C2GSBet.prototype.betSide = 0;
+
+        /**
+         * C2GSBet bet.
+         * @member {number|Long} bet
+         * @memberof pb.C2GSBet
+         * @instance
+         */
+        C2GSBet.prototype.bet = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new C2GSBet instance using the specified properties.
+         * @function create
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {pb.IC2GSBet=} [properties] Properties to set
+         * @returns {pb.C2GSBet} C2GSBet instance
+         */
+        C2GSBet.create = function create(properties) {
+            return new C2GSBet(properties);
+        };
+
+        /**
+         * Encodes the specified C2GSBet message. Does not implicitly {@link pb.C2GSBet.verify|verify} messages.
+         * @function encode
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {pb.IC2GSBet} message C2GSBet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        C2GSBet.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.rountIndex);
+            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.betSide);
+            writer.uint32(/* id 4, wireType 0 =*/32).int64(message.bet);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified C2GSBet message, length delimited. Does not implicitly {@link pb.C2GSBet.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {pb.IC2GSBet} message C2GSBet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        C2GSBet.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a C2GSBet message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.C2GSBet} C2GSBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        C2GSBet.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.C2GSBet();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.roomId = reader.int64();
+                    break;
+                case 2:
+                    message.rountIndex = reader.int32();
+                    break;
+                case 3:
+                    message.betSide = reader.int32();
+                    break;
+                case 4:
+                    message.bet = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("roomId"))
+                throw $util.ProtocolError("missing required 'roomId'", { instance: message });
+            if (!message.hasOwnProperty("rountIndex"))
+                throw $util.ProtocolError("missing required 'rountIndex'", { instance: message });
+            if (!message.hasOwnProperty("betSide"))
+                throw $util.ProtocolError("missing required 'betSide'", { instance: message });
+            if (!message.hasOwnProperty("bet"))
+                throw $util.ProtocolError("missing required 'bet'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a C2GSBet message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.C2GSBet} C2GSBet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        C2GSBet.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a C2GSBet message.
+         * @function verify
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        C2GSBet.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
+                return "roomId: integer|Long expected";
+            if (!$util.isInteger(message.rountIndex))
+                return "rountIndex: integer expected";
+            if (!$util.isInteger(message.betSide))
+                return "betSide: integer expected";
+            if (!$util.isInteger(message.bet) && !(message.bet && $util.isInteger(message.bet.low) && $util.isInteger(message.bet.high)))
+                return "bet: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a C2GSBet message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.C2GSBet} C2GSBet
+         */
+        C2GSBet.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.C2GSBet)
+                return object;
+            var message = new $root.pb.C2GSBet();
+            if (object.roomId != null)
+                if ($util.Long)
+                    (message.roomId = $util.Long.fromValue(object.roomId)).unsigned = false;
+                else if (typeof object.roomId === "string")
+                    message.roomId = parseInt(object.roomId, 10);
+                else if (typeof object.roomId === "number")
+                    message.roomId = object.roomId;
+                else if (typeof object.roomId === "object")
+                    message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
+            if (object.rountIndex != null)
+                message.rountIndex = object.rountIndex | 0;
+            if (object.betSide != null)
+                message.betSide = object.betSide | 0;
+            if (object.bet != null)
+                if ($util.Long)
+                    (message.bet = $util.Long.fromValue(object.bet)).unsigned = false;
+                else if (typeof object.bet === "string")
+                    message.bet = parseInt(object.bet, 10);
+                else if (typeof object.bet === "number")
+                    message.bet = object.bet;
+                else if (typeof object.bet === "object")
+                    message.bet = new $util.LongBits(object.bet.low >>> 0, object.bet.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a C2GSBet message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.C2GSBet
+         * @static
+         * @param {pb.C2GSBet} message C2GSBet
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        C2GSBet.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.roomId = options.longs === String ? "0" : 0;
+                object.rountIndex = 0;
+                object.betSide = 0;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.bet = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.bet = options.longs === String ? "0" : 0;
+            }
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (typeof message.roomId === "number")
+                    object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
+                else
+                    object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
+            if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
+                object.rountIndex = message.rountIndex;
+            if (message.betSide != null && message.hasOwnProperty("betSide"))
+                object.betSide = message.betSide;
+            if (message.bet != null && message.hasOwnProperty("bet"))
+                if (typeof message.bet === "number")
+                    object.bet = options.longs === String ? String(message.bet) : message.bet;
+                else
+                    object.bet = options.longs === String ? $util.Long.prototype.toString.call(message.bet) : options.longs === Number ? new $util.LongBits(message.bet.low >>> 0, message.bet.high >>> 0).toNumber() : message.bet;
+            return object;
+        };
+
+        /**
+         * Converts this C2GSBet to JSON.
+         * @function toJSON
+         * @memberof pb.C2GSBet
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        C2GSBet.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return C2GSBet;
+    })();
+
+    pb.GS2CBetRet = (function() {
+
+        /**
+         * Properties of a GS2CBetRet.
+         * @memberof pb
+         * @interface IGS2CBetRet
+         * @property {pb.GS2CBetRet.ErrorCode} errorCode GS2CBetRet errorCode
+         */
+
+        /**
+         * Constructs a new GS2CBetRet.
+         * @memberof pb
+         * @classdesc Represents a GS2CBetRet.
+         * @implements IGS2CBetRet
+         * @constructor
+         * @param {pb.IGS2CBetRet=} [properties] Properties to set
+         */
+        function GS2CBetRet(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CBetRet errorCode.
+         * @member {pb.GS2CBetRet.ErrorCode} errorCode
+         * @memberof pb.GS2CBetRet
+         * @instance
+         */
+        GS2CBetRet.prototype.errorCode = 1;
+
+        /**
+         * Creates a new GS2CBetRet instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {pb.IGS2CBetRet=} [properties] Properties to set
+         * @returns {pb.GS2CBetRet} GS2CBetRet instance
+         */
+        GS2CBetRet.create = function create(properties) {
+            return new GS2CBetRet(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CBetRet message. Does not implicitly {@link pb.GS2CBetRet.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {pb.IGS2CBetRet} message GS2CBetRet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CBetRet.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.errorCode);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CBetRet message, length delimited. Does not implicitly {@link pb.GS2CBetRet.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {pb.IGS2CBetRet} message GS2CBetRet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CBetRet.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CBetRet message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CBetRet} GS2CBetRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CBetRet.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CBetRet();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.errorCode = reader.int32();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("errorCode"))
+                throw $util.ProtocolError("missing required 'errorCode'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CBetRet message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CBetRet} GS2CBetRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CBetRet.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CBetRet message.
+         * @function verify
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CBetRet.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            switch (message.errorCode) {
+            default:
+                return "errorCode: enum value expected";
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                break;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GS2CBetRet message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CBetRet} GS2CBetRet
+         */
+        GS2CBetRet.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CBetRet)
+                return object;
+            var message = new $root.pb.GS2CBetRet();
+            switch (object.errorCode) {
+            case "Success":
+            case 1:
+                message.errorCode = 1;
+                break;
+            case "IndexError":
+            case 2:
+                message.errorCode = 2;
+                break;
+            case "CoinLess":
+            case 3:
+                message.errorCode = 3;
+                break;
+            case "Fail":
+            case 4:
+                message.errorCode = 4;
+                break;
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CBetRet message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CBetRet
+         * @static
+         * @param {pb.GS2CBetRet} message GS2CBetRet
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CBetRet.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.errorCode = options.enums === String ? "Success" : 1;
+            if (message.errorCode != null && message.hasOwnProperty("errorCode"))
+                object.errorCode = options.enums === String ? $root.pb.GS2CBetRet.ErrorCode[message.errorCode] : message.errorCode;
+            return object;
+        };
+
+        /**
+         * Converts this GS2CBetRet to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CBetRet
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CBetRet.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * ErrorCode enum.
+         * @name pb.GS2CBetRet.ErrorCode
+         * @enum {string}
+         * @property {number} Success=1 Success value
+         * @property {number} IndexError=2 IndexError value
+         * @property {number} CoinLess=3 CoinLess value
+         * @property {number} Fail=4 Fail value
+         */
+        GS2CBetRet.ErrorCode = (function() {
+            var valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[1] = "Success"] = 1;
+            values[valuesById[2] = "IndexError"] = 2;
+            values[valuesById[3] = "CoinLess"] = 3;
+            values[valuesById[4] = "Fail"] = 4;
+            return values;
+        })();
+
+        return GS2CBetRet;
+    })();
+
+    pb.GS2CNewRoundStart = (function() {
+
+        /**
+         * Properties of a GS2CNewRoundStart.
+         * @memberof pb
+         * @interface IGS2CNewRoundStart
+         * @property {number} rountIndex GS2CNewRoundStart rountIndex
+         */
+
+        /**
+         * Constructs a new GS2CNewRoundStart.
+         * @memberof pb
+         * @classdesc Represents a GS2CNewRoundStart.
+         * @implements IGS2CNewRoundStart
+         * @constructor
+         * @param {pb.IGS2CNewRoundStart=} [properties] Properties to set
+         */
+        function GS2CNewRoundStart(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CNewRoundStart rountIndex.
+         * @member {number} rountIndex
+         * @memberof pb.GS2CNewRoundStart
+         * @instance
+         */
+        GS2CNewRoundStart.prototype.rountIndex = 0;
+
+        /**
+         * Creates a new GS2CNewRoundStart instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {pb.IGS2CNewRoundStart=} [properties] Properties to set
+         * @returns {pb.GS2CNewRoundStart} GS2CNewRoundStart instance
+         */
+        GS2CNewRoundStart.create = function create(properties) {
+            return new GS2CNewRoundStart(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CNewRoundStart message. Does not implicitly {@link pb.GS2CNewRoundStart.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {pb.IGS2CNewRoundStart} message GS2CNewRoundStart message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CNewRoundStart.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.rountIndex);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CNewRoundStart message, length delimited. Does not implicitly {@link pb.GS2CNewRoundStart.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {pb.IGS2CNewRoundStart} message GS2CNewRoundStart message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CNewRoundStart.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CNewRoundStart message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CNewRoundStart} GS2CNewRoundStart
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CNewRoundStart.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CNewRoundStart();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.rountIndex = reader.int32();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("rountIndex"))
+                throw $util.ProtocolError("missing required 'rountIndex'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CNewRoundStart message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CNewRoundStart} GS2CNewRoundStart
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CNewRoundStart.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CNewRoundStart message.
+         * @function verify
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CNewRoundStart.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.rountIndex))
+                return "rountIndex: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates a GS2CNewRoundStart message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CNewRoundStart} GS2CNewRoundStart
+         */
+        GS2CNewRoundStart.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CNewRoundStart)
+                return object;
+            var message = new $root.pb.GS2CNewRoundStart();
+            if (object.rountIndex != null)
+                message.rountIndex = object.rountIndex | 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CNewRoundStart message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CNewRoundStart
+         * @static
+         * @param {pb.GS2CNewRoundStart} message GS2CNewRoundStart
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CNewRoundStart.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.rountIndex = 0;
+            if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
+                object.rountIndex = message.rountIndex;
+            return object;
+        };
+
+        /**
+         * Converts this GS2CNewRoundStart to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CNewRoundStart
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CNewRoundStart.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CNewRoundStart;
+    })();
+
+    pb.GS2CGameResults = (function() {
+
+        /**
+         * Properties of a GS2CGameResults.
+         * @memberof pb
+         * @interface IGS2CGameResults
+         * @property {boolean} results GS2CGameResults results
+         * @property {number|Long} winCoin GS2CGameResults winCoin
+         */
+
+        /**
+         * Constructs a new GS2CGameResults.
+         * @memberof pb
+         * @classdesc Represents a GS2CGameResults.
+         * @implements IGS2CGameResults
+         * @constructor
+         * @param {pb.IGS2CGameResults=} [properties] Properties to set
+         */
+        function GS2CGameResults(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CGameResults results.
+         * @member {boolean} results
+         * @memberof pb.GS2CGameResults
+         * @instance
+         */
+        GS2CGameResults.prototype.results = false;
+
+        /**
+         * GS2CGameResults winCoin.
+         * @member {number|Long} winCoin
+         * @memberof pb.GS2CGameResults
+         * @instance
+         */
+        GS2CGameResults.prototype.winCoin = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new GS2CGameResults instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults=} [properties] Properties to set
+         * @returns {pb.GS2CGameResults} GS2CGameResults instance
+         */
+        GS2CGameResults.create = function create(properties) {
+            return new GS2CGameResults(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameResults.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).bool(message.results);
+            writer.uint32(/* id 2, wireType 0 =*/16).int64(message.winCoin);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameResults.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameResults.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CGameResults();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.results = reader.bool();
+                    break;
+                case 2:
+                    message.winCoin = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("results"))
+                throw $util.ProtocolError("missing required 'results'", { instance: message });
+            if (!message.hasOwnProperty("winCoin"))
+                throw $util.ProtocolError("missing required 'winCoin'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameResults.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CGameResults message.
+         * @function verify
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CGameResults.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (typeof message.results !== "boolean")
+                return "results: boolean expected";
+            if (!$util.isInteger(message.winCoin) && !(message.winCoin && $util.isInteger(message.winCoin.low) && $util.isInteger(message.winCoin.high)))
+                return "winCoin: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         */
+        GS2CGameResults.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CGameResults)
+                return object;
+            var message = new $root.pb.GS2CGameResults();
+            if (object.results != null)
+                message.results = Boolean(object.results);
+            if (object.winCoin != null)
+                if ($util.Long)
+                    (message.winCoin = $util.Long.fromValue(object.winCoin)).unsigned = false;
+                else if (typeof object.winCoin === "string")
+                    message.winCoin = parseInt(object.winCoin, 10);
+                else if (typeof object.winCoin === "number")
+                    message.winCoin = object.winCoin;
+                else if (typeof object.winCoin === "object")
+                    message.winCoin = new $util.LongBits(object.winCoin.low >>> 0, object.winCoin.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.GS2CGameResults} message GS2CGameResults
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CGameResults.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.results = false;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.winCoin = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.winCoin = options.longs === String ? "0" : 0;
+            }
+            if (message.results != null && message.hasOwnProperty("results"))
+                object.results = message.results;
+            if (message.winCoin != null && message.hasOwnProperty("winCoin"))
+                if (typeof message.winCoin === "number")
+                    object.winCoin = options.longs === String ? String(message.winCoin) : message.winCoin;
+                else
+                    object.winCoin = options.longs === String ? $util.Long.prototype.toString.call(message.winCoin) : options.longs === Number ? new $util.LongBits(message.winCoin.low >>> 0, message.winCoin.high >>> 0).toNumber() : message.winCoin;
+            return object;
+        };
+
+        /**
+         * Converts this GS2CGameResults to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CGameResults
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CGameResults.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CGameResults;
+    })();
+
+    pb.GS2CGameOver = (function() {
+
+        /**
+         * Properties of a GS2CGameOver.
+         * @memberof pb
+         * @interface IGS2CGameOver
+         * @property {number|Long|null} [roomId] GS2CGameOver roomId
+         */
+
+        /**
+         * Constructs a new GS2CGameOver.
+         * @memberof pb
+         * @classdesc Represents a GS2CGameOver.
+         * @implements IGS2CGameOver
+         * @constructor
+         * @param {pb.IGS2CGameOver=} [properties] Properties to set
+         */
+        function GS2CGameOver(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CGameOver roomId.
+         * @member {number|Long} roomId
+         * @memberof pb.GS2CGameOver
+         * @instance
+         */
+        GS2CGameOver.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new GS2CGameOver instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {pb.IGS2CGameOver=} [properties] Properties to set
+         * @returns {pb.GS2CGameOver} GS2CGameOver instance
+         */
+        GS2CGameOver.create = function create(properties) {
+            return new GS2CGameOver(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CGameOver message. Does not implicitly {@link pb.GS2CGameOver.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {pb.IGS2CGameOver} message GS2CGameOver message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameOver.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CGameOver message, length delimited. Does not implicitly {@link pb.GS2CGameOver.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {pb.IGS2CGameOver} message GS2CGameOver message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameOver.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CGameOver message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CGameOver} GS2CGameOver
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameOver.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CGameOver();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.roomId = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CGameOver message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CGameOver} GS2CGameOver
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameOver.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CGameOver message.
+         * @function verify
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CGameOver.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
+                    return "roomId: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a GS2CGameOver message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CGameOver} GS2CGameOver
+         */
+        GS2CGameOver.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CGameOver)
+                return object;
+            var message = new $root.pb.GS2CGameOver();
+            if (object.roomId != null)
+                if ($util.Long)
+                    (message.roomId = $util.Long.fromValue(object.roomId)).unsigned = false;
+                else if (typeof object.roomId === "string")
+                    message.roomId = parseInt(object.roomId, 10);
+                else if (typeof object.roomId === "number")
+                    message.roomId = object.roomId;
+                else if (typeof object.roomId === "object")
+                    message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CGameOver message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CGameOver
+         * @static
+         * @param {pb.GS2CGameOver} message GS2CGameOver
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CGameOver.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.roomId = options.longs === String ? "0" : 0;
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (typeof message.roomId === "number")
+                    object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
+                else
+                    object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
+            return object;
+        };
+
+        /**
+         * Converts this GS2CGameOver to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CGameOver
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CGameOver.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CGameOver;
+    })();
+
+    pb.C2GSGMAddCoin = (function() {
+
+        /**
+         * Properties of a C2GSGMAddCoin.
+         * @memberof pb
+         * @interface IC2GSGMAddCoin
+         * @property {number|Long} value C2GSGMAddCoin value
+         */
+
+        /**
+         * Constructs a new C2GSGMAddCoin.
+         * @memberof pb
+         * @classdesc Represents a C2GSGMAddCoin.
+         * @implements IC2GSGMAddCoin
+         * @constructor
+         * @param {pb.IC2GSGMAddCoin=} [properties] Properties to set
+         */
+        function C2GSGMAddCoin(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * C2GSGMAddCoin value.
+         * @member {number|Long} value
+         * @memberof pb.C2GSGMAddCoin
+         * @instance
+         */
+        C2GSGMAddCoin.prototype.value = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new C2GSGMAddCoin instance using the specified properties.
+         * @function create
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {pb.IC2GSGMAddCoin=} [properties] Properties to set
+         * @returns {pb.C2GSGMAddCoin} C2GSGMAddCoin instance
+         */
+        C2GSGMAddCoin.create = function create(properties) {
+            return new C2GSGMAddCoin(properties);
+        };
+
+        /**
+         * Encodes the specified C2GSGMAddCoin message. Does not implicitly {@link pb.C2GSGMAddCoin.verify|verify} messages.
+         * @function encode
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {pb.IC2GSGMAddCoin} message C2GSGMAddCoin message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        C2GSGMAddCoin.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.value);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified C2GSGMAddCoin message, length delimited. Does not implicitly {@link pb.C2GSGMAddCoin.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {pb.IC2GSGMAddCoin} message C2GSGMAddCoin message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        C2GSGMAddCoin.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a C2GSGMAddCoin message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.C2GSGMAddCoin} C2GSGMAddCoin
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        C2GSGMAddCoin.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.C2GSGMAddCoin();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.value = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("value"))
+                throw $util.ProtocolError("missing required 'value'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a C2GSGMAddCoin message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.C2GSGMAddCoin} C2GSGMAddCoin
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        C2GSGMAddCoin.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a C2GSGMAddCoin message.
+         * @function verify
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        C2GSGMAddCoin.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.value) && !(message.value && $util.isInteger(message.value.low) && $util.isInteger(message.value.high)))
+                return "value: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a C2GSGMAddCoin message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.C2GSGMAddCoin} C2GSGMAddCoin
+         */
+        C2GSGMAddCoin.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.C2GSGMAddCoin)
+                return object;
+            var message = new $root.pb.C2GSGMAddCoin();
+            if (object.value != null)
+                if ($util.Long)
+                    (message.value = $util.Long.fromValue(object.value)).unsigned = false;
+                else if (typeof object.value === "string")
+                    message.value = parseInt(object.value, 10);
+                else if (typeof object.value === "number")
+                    message.value = object.value;
+                else if (typeof object.value === "object")
+                    message.value = new $util.LongBits(object.value.low >>> 0, object.value.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a C2GSGMAddCoin message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.C2GSGMAddCoin
+         * @static
+         * @param {pb.C2GSGMAddCoin} message C2GSGMAddCoin
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        C2GSGMAddCoin.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.value = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.value = options.longs === String ? "0" : 0;
+            if (message.value != null && message.hasOwnProperty("value"))
+                if (typeof message.value === "number")
+                    object.value = options.longs === String ? String(message.value) : message.value;
+                else
+                    object.value = options.longs === String ? $util.Long.prototype.toString.call(message.value) : options.longs === Number ? new $util.LongBits(message.value.low >>> 0, message.value.high >>> 0).toNumber() : message.value;
+            return object;
+        };
+
+        /**
+         * Converts this C2GSGMAddCoin to JSON.
+         * @function toJSON
+         * @memberof pb.C2GSGMAddCoin
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        C2GSGMAddCoin.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return C2GSGMAddCoin;
+    })();
+
+    pb.GS2CGMAddCoinRet = (function() {
+
+        /**
+         * Properties of a GS2CGMAddCoinRet.
+         * @memberof pb
+         * @interface IGS2CGMAddCoinRet
+         * @property {pb.IPlayerInfo} user GS2CGMAddCoinRet user
+         */
+
+        /**
+         * Constructs a new GS2CGMAddCoinRet.
+         * @memberof pb
+         * @classdesc Represents a GS2CGMAddCoinRet.
+         * @implements IGS2CGMAddCoinRet
+         * @constructor
+         * @param {pb.IGS2CGMAddCoinRet=} [properties] Properties to set
+         */
+        function GS2CGMAddCoinRet(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CGMAddCoinRet user.
+         * @member {pb.IPlayerInfo} user
+         * @memberof pb.GS2CGMAddCoinRet
+         * @instance
+         */
+        GS2CGMAddCoinRet.prototype.user = null;
+
+        /**
+         * Creates a new GS2CGMAddCoinRet instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {pb.IGS2CGMAddCoinRet=} [properties] Properties to set
+         * @returns {pb.GS2CGMAddCoinRet} GS2CGMAddCoinRet instance
+         */
+        GS2CGMAddCoinRet.create = function create(properties) {
+            return new GS2CGMAddCoinRet(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CGMAddCoinRet message. Does not implicitly {@link pb.GS2CGMAddCoinRet.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {pb.IGS2CGMAddCoinRet} message GS2CGMAddCoinRet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGMAddCoinRet.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            $root.pb.PlayerInfo.encode(message.user, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CGMAddCoinRet message, length delimited. Does not implicitly {@link pb.GS2CGMAddCoinRet.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {pb.IGS2CGMAddCoinRet} message GS2CGMAddCoinRet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGMAddCoinRet.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CGMAddCoinRet message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CGMAddCoinRet} GS2CGMAddCoinRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGMAddCoinRet.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CGMAddCoinRet();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.user = $root.pb.PlayerInfo.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("user"))
+                throw $util.ProtocolError("missing required 'user'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CGMAddCoinRet message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CGMAddCoinRet} GS2CGMAddCoinRet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGMAddCoinRet.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CGMAddCoinRet message.
+         * @function verify
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CGMAddCoinRet.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            {
+                var error = $root.pb.PlayerInfo.verify(message.user);
+                if (error)
+                    return "user." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GS2CGMAddCoinRet message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CGMAddCoinRet} GS2CGMAddCoinRet
+         */
+        GS2CGMAddCoinRet.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CGMAddCoinRet)
+                return object;
+            var message = new $root.pb.GS2CGMAddCoinRet();
+            if (object.user != null) {
+                if (typeof object.user !== "object")
+                    throw TypeError(".pb.GS2CGMAddCoinRet.user: object expected");
+                message.user = $root.pb.PlayerInfo.fromObject(object.user);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CGMAddCoinRet message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CGMAddCoinRet
+         * @static
+         * @param {pb.GS2CGMAddCoinRet} message GS2CGMAddCoinRet
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CGMAddCoinRet.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.user = null;
+            if (message.user != null && message.hasOwnProperty("user"))
+                object.user = $root.pb.PlayerInfo.toObject(message.user, options);
+            return object;
+        };
+
+        /**
+         * Converts this GS2CGMAddCoinRet to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CGMAddCoinRet
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CGMAddCoinRet.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CGMAddCoinRet;
     })();
 
     return pb;

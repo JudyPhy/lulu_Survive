@@ -54,7 +54,8 @@ message C2GSEnterRoom {
 
 message GS2CEnterRoomRet {
     required int64 roomId = 1;
-    required ErrorCode errorCode = 2;
+    required int32 rountIndex = 2;
+    required ErrorCode errorCode = 3;
     enum ErrorCode{
         Success = 1;
         Fail = 2;
@@ -63,12 +64,18 @@ message GS2CEnterRoomRet {
     }
 }
 
-message C2GSCommonRoomPay {    
-    required int32 rountIndex = 1;
-    required int64 pay = 2;
+message GS2CTurnToBet {
+    optional int64 roomId = 1;
 }
 
-message GS2CCommonRoomPayRet {    
+message C2GSBet {    
+    required int64 roomId = 1;
+    required int32 rountIndex = 2;
+    required int32 betSide = 3;
+    required int64 bet = 4;
+}
+
+message GS2CBetRet {    
     required ErrorCode errorCode = 1;
     enum ErrorCode{
         Success = 1;
@@ -78,8 +85,24 @@ message GS2CCommonRoomPayRet {
     }
 }
 
-message GS2CCommonRoomResults {    
+message GS2CNewRoundStart {    
     required int32 rountIndex = 1;
-    required bool results = 2;
+}
+
+message GS2CGameResults {
+    required bool results = 1;
+    required int64 winCoin = 2;
+}
+
+message GS2CGameOver {
+    optional int64 roomId = 1;
+}
+
+message C2GSGMAddCoin {
+    required int64 value = 1;
+}
+
+message GS2CGMAddCoinRet {
+    required PlayerInfo user = 1;
 }
 

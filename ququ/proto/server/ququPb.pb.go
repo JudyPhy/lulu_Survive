@@ -16,9 +16,14 @@ It has these top-level messages:
 	C2GSCreateRoom
 	C2GSEnterRoom
 	GS2CEnterRoomRet
-	C2GSCommonRoomPay
-	GS2CCommonRoomPayRet
-	GS2CCommonRoomResults
+	GS2CTurnToBet
+	C2GSBet
+	GS2CBetRet
+	GS2CNewRoundStart
+	GS2CGameResults
+	GS2CGameOver
+	C2GSGMAddCoin
+	GS2CGMAddCoinRet
 */
 package pb
 
@@ -167,42 +172,42 @@ func (x *GS2CEnterRoomRet_ErrorCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type GS2CCommonRoomPayRet_ErrorCode int32
+type GS2CBetRet_ErrorCode int32
 
 const (
-	GS2CCommonRoomPayRet_Success    GS2CCommonRoomPayRet_ErrorCode = 1
-	GS2CCommonRoomPayRet_IndexError GS2CCommonRoomPayRet_ErrorCode = 2
-	GS2CCommonRoomPayRet_CoinLess   GS2CCommonRoomPayRet_ErrorCode = 3
-	GS2CCommonRoomPayRet_Fail       GS2CCommonRoomPayRet_ErrorCode = 4
+	GS2CBetRet_Success    GS2CBetRet_ErrorCode = 1
+	GS2CBetRet_IndexError GS2CBetRet_ErrorCode = 2
+	GS2CBetRet_CoinLess   GS2CBetRet_ErrorCode = 3
+	GS2CBetRet_Fail       GS2CBetRet_ErrorCode = 4
 )
 
-var GS2CCommonRoomPayRet_ErrorCode_name = map[int32]string{
+var GS2CBetRet_ErrorCode_name = map[int32]string{
 	1: "Success",
 	2: "IndexError",
 	3: "CoinLess",
 	4: "Fail",
 }
-var GS2CCommonRoomPayRet_ErrorCode_value = map[string]int32{
+var GS2CBetRet_ErrorCode_value = map[string]int32{
 	"Success":    1,
 	"IndexError": 2,
 	"CoinLess":   3,
 	"Fail":       4,
 }
 
-func (x GS2CCommonRoomPayRet_ErrorCode) Enum() *GS2CCommonRoomPayRet_ErrorCode {
-	p := new(GS2CCommonRoomPayRet_ErrorCode)
+func (x GS2CBetRet_ErrorCode) Enum() *GS2CBetRet_ErrorCode {
+	p := new(GS2CBetRet_ErrorCode)
 	*p = x
 	return p
 }
-func (x GS2CCommonRoomPayRet_ErrorCode) String() string {
-	return proto.EnumName(GS2CCommonRoomPayRet_ErrorCode_name, int32(x))
+func (x GS2CBetRet_ErrorCode) String() string {
+	return proto.EnumName(GS2CBetRet_ErrorCode_name, int32(x))
 }
-func (x *GS2CCommonRoomPayRet_ErrorCode) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(GS2CCommonRoomPayRet_ErrorCode_value, data, "GS2CCommonRoomPayRet_ErrorCode")
+func (x *GS2CBetRet_ErrorCode) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(GS2CBetRet_ErrorCode_value, data, "GS2CBetRet_ErrorCode")
 	if err != nil {
 		return err
 	}
-	*x = GS2CCommonRoomPayRet_ErrorCode(value)
+	*x = GS2CBetRet_ErrorCode(value)
 	return nil
 }
 
@@ -416,7 +421,8 @@ func (m *C2GSEnterRoom) GetPassword() int64 {
 
 type GS2CEnterRoomRet struct {
 	RoomId           *int64                      `protobuf:"varint,1,req,name=roomId" json:"roomId,omitempty"`
-	ErrorCode        *GS2CEnterRoomRet_ErrorCode `protobuf:"varint,2,req,name=errorCode,enum=pb.GS2CEnterRoomRet_ErrorCode" json:"errorCode,omitempty"`
+	RountIndex       *int32                      `protobuf:"varint,2,req,name=rountIndex" json:"rountIndex,omitempty"`
+	ErrorCode        *GS2CEnterRoomRet_ErrorCode `protobuf:"varint,3,req,name=errorCode,enum=pb.GS2CEnterRoomRet_ErrorCode" json:"errorCode,omitempty"`
 	XXX_unrecognized []byte                      `json:"-"`
 }
 
@@ -431,6 +437,13 @@ func (m *GS2CEnterRoomRet) GetRoomId() int64 {
 	return 0
 }
 
+func (m *GS2CEnterRoomRet) GetRountIndex() int32 {
+	if m != nil && m.RountIndex != nil {
+		return *m.RountIndex
+	}
+	return 0
+}
+
 func (m *GS2CEnterRoomRet) GetErrorCode() GS2CEnterRoomRet_ErrorCode {
 	if m != nil && m.ErrorCode != nil {
 		return *m.ErrorCode
@@ -438,68 +451,164 @@ func (m *GS2CEnterRoomRet) GetErrorCode() GS2CEnterRoomRet_ErrorCode {
 	return GS2CEnterRoomRet_Success
 }
 
-type C2GSCommonRoomPay struct {
-	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
-	Pay              *int64 `protobuf:"varint,2,req,name=pay" json:"pay,omitempty"`
+type GS2CTurnToBet struct {
+	RoomId           *int64 `protobuf:"varint,1,opt,name=roomId" json:"roomId,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *C2GSCommonRoomPay) Reset()         { *m = C2GSCommonRoomPay{} }
-func (m *C2GSCommonRoomPay) String() string { return proto.CompactTextString(m) }
-func (*C2GSCommonRoomPay) ProtoMessage()    {}
+func (m *GS2CTurnToBet) Reset()         { *m = GS2CTurnToBet{} }
+func (m *GS2CTurnToBet) String() string { return proto.CompactTextString(m) }
+func (*GS2CTurnToBet) ProtoMessage()    {}
 
-func (m *C2GSCommonRoomPay) GetRountIndex() int32 {
+func (m *GS2CTurnToBet) GetRoomId() int64 {
+	if m != nil && m.RoomId != nil {
+		return *m.RoomId
+	}
+	return 0
+}
+
+type C2GSBet struct {
+	RoomId           *int64 `protobuf:"varint,1,req,name=roomId" json:"roomId,omitempty"`
+	RountIndex       *int32 `protobuf:"varint,2,req,name=rountIndex" json:"rountIndex,omitempty"`
+	BetSide          *int32 `protobuf:"varint,3,req,name=betSide" json:"betSide,omitempty"`
+	Bet              *int64 `protobuf:"varint,4,req,name=bet" json:"bet,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *C2GSBet) Reset()         { *m = C2GSBet{} }
+func (m *C2GSBet) String() string { return proto.CompactTextString(m) }
+func (*C2GSBet) ProtoMessage()    {}
+
+func (m *C2GSBet) GetRoomId() int64 {
+	if m != nil && m.RoomId != nil {
+		return *m.RoomId
+	}
+	return 0
+}
+
+func (m *C2GSBet) GetRountIndex() int32 {
 	if m != nil && m.RountIndex != nil {
 		return *m.RountIndex
 	}
 	return 0
 }
 
-func (m *C2GSCommonRoomPay) GetPay() int64 {
-	if m != nil && m.Pay != nil {
-		return *m.Pay
+func (m *C2GSBet) GetBetSide() int32 {
+	if m != nil && m.BetSide != nil {
+		return *m.BetSide
 	}
 	return 0
 }
 
-type GS2CCommonRoomPayRet struct {
-	ErrorCode        *GS2CCommonRoomPayRet_ErrorCode `protobuf:"varint,1,req,name=errorCode,enum=pb.GS2CCommonRoomPayRet_ErrorCode" json:"errorCode,omitempty"`
-	XXX_unrecognized []byte                          `json:"-"`
+func (m *C2GSBet) GetBet() int64 {
+	if m != nil && m.Bet != nil {
+		return *m.Bet
+	}
+	return 0
 }
 
-func (m *GS2CCommonRoomPayRet) Reset()         { *m = GS2CCommonRoomPayRet{} }
-func (m *GS2CCommonRoomPayRet) String() string { return proto.CompactTextString(m) }
-func (*GS2CCommonRoomPayRet) ProtoMessage()    {}
+type GS2CBetRet struct {
+	ErrorCode        *GS2CBetRet_ErrorCode `protobuf:"varint,1,req,name=errorCode,enum=pb.GS2CBetRet_ErrorCode" json:"errorCode,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
+}
 
-func (m *GS2CCommonRoomPayRet) GetErrorCode() GS2CCommonRoomPayRet_ErrorCode {
+func (m *GS2CBetRet) Reset()         { *m = GS2CBetRet{} }
+func (m *GS2CBetRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CBetRet) ProtoMessage()    {}
+
+func (m *GS2CBetRet) GetErrorCode() GS2CBetRet_ErrorCode {
 	if m != nil && m.ErrorCode != nil {
 		return *m.ErrorCode
 	}
-	return GS2CCommonRoomPayRet_Success
+	return GS2CBetRet_Success
 }
 
-type GS2CCommonRoomResults struct {
+type GS2CNewRoundStart struct {
 	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
-	Results          *bool  `protobuf:"varint,2,req,name=results" json:"results,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GS2CCommonRoomResults) Reset()         { *m = GS2CCommonRoomResults{} }
-func (m *GS2CCommonRoomResults) String() string { return proto.CompactTextString(m) }
-func (*GS2CCommonRoomResults) ProtoMessage()    {}
+func (m *GS2CNewRoundStart) Reset()         { *m = GS2CNewRoundStart{} }
+func (m *GS2CNewRoundStart) String() string { return proto.CompactTextString(m) }
+func (*GS2CNewRoundStart) ProtoMessage()    {}
 
-func (m *GS2CCommonRoomResults) GetRountIndex() int32 {
+func (m *GS2CNewRoundStart) GetRountIndex() int32 {
 	if m != nil && m.RountIndex != nil {
 		return *m.RountIndex
 	}
 	return 0
 }
 
-func (m *GS2CCommonRoomResults) GetResults() bool {
+type GS2CGameResults struct {
+	Results          *bool  `protobuf:"varint,1,req,name=results" json:"results,omitempty"`
+	WinCoin          *int64 `protobuf:"varint,2,req,name=winCoin" json:"winCoin,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GS2CGameResults) Reset()         { *m = GS2CGameResults{} }
+func (m *GS2CGameResults) String() string { return proto.CompactTextString(m) }
+func (*GS2CGameResults) ProtoMessage()    {}
+
+func (m *GS2CGameResults) GetResults() bool {
 	if m != nil && m.Results != nil {
 		return *m.Results
 	}
 	return false
+}
+
+func (m *GS2CGameResults) GetWinCoin() int64 {
+	if m != nil && m.WinCoin != nil {
+		return *m.WinCoin
+	}
+	return 0
+}
+
+type GS2CGameOver struct {
+	RoomId           *int64 `protobuf:"varint,1,opt,name=roomId" json:"roomId,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GS2CGameOver) Reset()         { *m = GS2CGameOver{} }
+func (m *GS2CGameOver) String() string { return proto.CompactTextString(m) }
+func (*GS2CGameOver) ProtoMessage()    {}
+
+func (m *GS2CGameOver) GetRoomId() int64 {
+	if m != nil && m.RoomId != nil {
+		return *m.RoomId
+	}
+	return 0
+}
+
+type C2GSGMAddCoin struct {
+	Value            *int64 `protobuf:"varint,1,req,name=value" json:"value,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *C2GSGMAddCoin) Reset()         { *m = C2GSGMAddCoin{} }
+func (m *C2GSGMAddCoin) String() string { return proto.CompactTextString(m) }
+func (*C2GSGMAddCoin) ProtoMessage()    {}
+
+func (m *C2GSGMAddCoin) GetValue() int64 {
+	if m != nil && m.Value != nil {
+		return *m.Value
+	}
+	return 0
+}
+
+type GS2CGMAddCoinRet struct {
+	User             *PlayerInfo `protobuf:"bytes,1,req,name=user" json:"user,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *GS2CGMAddCoinRet) Reset()         { *m = GS2CGMAddCoinRet{} }
+func (m *GS2CGMAddCoinRet) String() string { return proto.CompactTextString(m) }
+func (*GS2CGMAddCoinRet) ProtoMessage()    {}
+
+func (m *GS2CGMAddCoinRet) GetUser() *PlayerInfo {
+	if m != nil {
+		return m.User
+	}
+	return nil
 }
 
 func init() {
@@ -507,5 +616,5 @@ func init() {
 	proto.RegisterEnum("pb.GameRound", GameRound_name, GameRound_value)
 	proto.RegisterEnum("pb.GS2CLoginRet_ErrorCode", GS2CLoginRet_ErrorCode_name, GS2CLoginRet_ErrorCode_value)
 	proto.RegisterEnum("pb.GS2CEnterRoomRet_ErrorCode", GS2CEnterRoomRet_ErrorCode_name, GS2CEnterRoomRet_ErrorCode_value)
-	proto.RegisterEnum("pb.GS2CCommonRoomPayRet_ErrorCode", GS2CCommonRoomPayRet_ErrorCode_name, GS2CCommonRoomPayRet_ErrorCode_value)
+	proto.RegisterEnum("pb.GS2CBetRet_ErrorCode", GS2CBetRet_ErrorCode_name, GS2CBetRet_ErrorCode_value)
 }

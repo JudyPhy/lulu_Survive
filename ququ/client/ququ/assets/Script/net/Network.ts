@@ -24,7 +24,7 @@ export class Network {
 
         self.ws.onmessage = function (evt) {
             let msg = self.splitMessage(evt);
-            EventDispatch.fire(EventType.NET_CONNECT_SUCCESS);
+            // EventDispatch.fire(EventType.NET_CONNECT_SUCCESS);
         };
 
         self.ws.onclose = function () {

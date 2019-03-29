@@ -27,10 +27,11 @@ func GetPlayerId(a gate.Agent) int64 {
 	return 0
 }
 
-func GetAllAgent() []gate.Agent {
-	agentList := make([]gate.Agent, 0)
-	for a, _ := range agentPlayerMap {
-		agentList = append(agentList, a)
+func GetAgent(playerId int64) gate.Agent {
+	for a, id := range agentPlayerMap {
+		if id == playerId {
+			return a
+		}
 	}
-	return agentList
+	return nil
 }

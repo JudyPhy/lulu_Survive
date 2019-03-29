@@ -45,6 +45,10 @@ export class NetManager extends cc.Component {
     registerNetHandler() {
         this.registerMessageHandler(MessageID.MSG_GS2C_LOGIN_RET, GameMessageHandler.getInstance().RecieveGS2CLoginRet);
         this.registerMessageHandler(MessageID.MSG_C2GS_ENTERROOM_RET, GameMessageHandler.getInstance().RecieveGS2CEnterRoomRet);
+        this.registerMessageHandler(MessageID.MSG_GS2C_NEW_ROUND, GameMessageHandler.getInstance().RecieveGS2CNewRoundStart);
+        this.registerMessageHandler(MessageID.MSG_GS2C_TURN_TO_BET, GameMessageHandler.getInstance().RecieveGS2CTurnToBet);
+        // this.registerMessageHandler(MessageID.MSG_GS2C_BET_RET, GameMessageHandler.getInstance().RecieveGS2CBetRet);
+        this.registerMessageHandler(MessageID.MSG_GS2C_GM_ADD_COIN_RET, GameMessageHandler.getInstance().RecieveGS2CGMAddCoinRet);
     }
 
     registerMessageHandler(msgId: number, func: Function) {

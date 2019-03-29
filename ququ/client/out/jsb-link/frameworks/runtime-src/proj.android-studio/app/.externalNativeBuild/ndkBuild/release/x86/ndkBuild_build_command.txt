@@ -1,0 +1,21 @@
+Executable : D:\Tool\android-ndk-r14b\ndk-build.cmd
+arguments : 
+NDK_PROJECT_PATH=null
+APP_BUILD_SCRIPT=D:\Project\lulu_Survival\ququ\client\out\jsb-link\frameworks\runtime-src\proj.android-studio\app\jni\Android.mk
+NDK_APPLICATION_MK=D:\Project\lulu_Survival\ququ\client\out\jsb-link\frameworks\runtime-src\proj.android-studio\app\jni\Application.mk
+APP_ABI=x86
+NDK_ALL_ABIS=x86
+NDK_DEBUG=0
+APP_PLATFORM=android-16
+NDK_OUT=D:/Project/lulu_Survival/ququ/client/out/jsb-link/frameworks/runtime-src/proj.android-studio/app/build/intermediates/ndkBuild/release/obj
+NDK_LIBS_OUT=D:\Project\lulu_Survival\ququ\client\out\jsb-link\frameworks\runtime-src\proj.android-studio\app\build\intermediates\ndkBuild\release\lib
+NDK_TOOLCHAIN_VERSION=4.9
+NDK_MODULE_PATH=D:\Tool\CocosCreator\resources\cocos2d-x;D:\Tool\CocosCreator\resources\cocos2d-x\cocos;D:\Tool\CocosCreator\resources\cocos2d-x\external
+-j4
+NDK_DEBUG=0
+APP_SHORT_COMMANDS=false
+LOCAL_SHORT_COMMANDS=false
+-B
+-n
+jvmArgs : 
+

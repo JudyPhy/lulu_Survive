@@ -52,3 +52,18 @@ func GetPlayerInfo(id int64) (*PlayerInfo, error) {
 		return nil, err
 	}
 }
+
+func UpdatePlayerInfo(info *PlayerInfo) error {
+	log.Debug("UpdatePlayerInfo: %v", info)
+	sess := engine.NewSession()
+	defer sess.Close()
+	if err := sess.Begin(); err != nil {
+		return err
+	}
+	if _, err := sess.Update(info); err != nil {
+		sess.Rollback()
+		return err
+	}
+	sess.Commit()
+	return nil
+}

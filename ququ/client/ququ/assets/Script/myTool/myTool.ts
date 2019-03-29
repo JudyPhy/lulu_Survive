@@ -1,7 +1,6 @@
 export class MyTool {
 
-    public static AddChild(parent: cc.Node, resUrl: string): cc.Node {
-        let obj = null;
+    public static AddChild(parent: cc.Node, resUrl: string) {
         cc.loader.loadRes(resUrl, function (error, prefab) {
             if (error) {
                 console.log("载入资源失败, 原因:" + error);
@@ -11,10 +10,9 @@ export class MyTool {
                 console.log('载入的不是预制资源!');
                 return;
             }
-            obj = cc.instantiate(prefab);
+            let obj = cc.instantiate(prefab);
             parent.addChild(obj);
         });
-        return obj;
     }
 
     public static getObj(resUrl: string): cc.Node {

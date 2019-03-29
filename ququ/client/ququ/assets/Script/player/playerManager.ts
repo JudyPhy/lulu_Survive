@@ -11,10 +11,10 @@ export class PlayerManager {
         return PlayerManager.instance;
     }
 
-    public mMy: Player;
+    public mMy: Player = new Player();
 
     initMy(info: pb.IPlayerInfo) {
-        this.mMy = new Player();
         this.mMy.newPlayer(info);
     }
+
 }

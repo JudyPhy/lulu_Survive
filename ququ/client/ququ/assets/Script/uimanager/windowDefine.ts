@@ -1,7 +1,9 @@
 export enum WindowId {
-    Init = "Init",
-    Login = "Login",
-    Hall = "Hall"
+    Init = "init",
+    Login = "login",
+    PlayerInfo = "playerInfo",
+    Hall = "hall",
+    Room = "room"
 }
 
 export class ResManager {
@@ -12,6 +14,10 @@ export class ResManager {
                 return "Prefabs/login";
             case WindowId.Hall:
                 return "Prefabs/hall";
+            case WindowId.Room:
+                return "Prefabs/room";
+            case WindowId.PlayerInfo:
+                return "Prefabs/playerInfo";
             default:
                 return '';
         }

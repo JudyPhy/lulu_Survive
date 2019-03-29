@@ -13,4 +13,8 @@ func init() {
 
 	msg.Processor.SetRouter(&pb.C2GSCreateRoom{}, game.ChanRPC)
 	msg.Processor.SetRouter(&pb.C2GSEnterRoom{}, game.ChanRPC)
+	msg.Processor.SetRouter(&pb.C2GSBet{}, game.ChanRPC)
+
+	//GM
+	msg.Processor.SetRouter(&pb.C2GSGMAddCoin{}, game.ChanRPC)
 }

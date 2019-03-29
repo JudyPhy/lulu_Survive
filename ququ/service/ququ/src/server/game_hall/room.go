@@ -2,18 +2,37 @@ package game_hall
 
 import (
 	"math/rand"
+	"server/database"
 	"server/pb"
+	"server/playerManager"
 	"time"
 
+	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/log"
 )
 
 type RoomState int
+type Side int32
 
 const (
 	RoomState_Idle    = 1
-	RoomState_Playing = 2
+	RoomState_BlueBet = 2
+	RoomState_RedBet  = 3
+	RoomState_Racing  = 4
+	RoomState_Result  = 5
 )
+
+const (
+	Side_Blue = 1
+	Side_Red  = 2
+)
+
+type RoomPlayer struct {
+	playerId int64
+	bet_side Side
+	bet      int64
+	side     Side
+}
 
 type RoomInfo struct {
 	roomId      int64
@@ -22,15 +41,50 @@ type RoomInfo struct {
 	round       pb.GameRound
 	exit_pay    bool
 	password    int64
-	players     []int64
-	state       int
-	round_index int
+	players     []*RoomPlayer
+	state       RoomState
+	round_index int32
 }
 
 var roomMap map[int64]*RoomInfo
 
 func init() {
 	roomMap = make(map[int64]*RoomInfo)
+	createRobotRoom()
+}
+
+func getSide() Side {
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+	num := rnd.Intn(10)
+	side := int32(num % 2)
+	if side == Side_Blue {
+		return Side_Blue
+	} else {
+		return Side_Red
+	}
+}
+
+func createRobotRoom() {
+	count := make([]int, 10)
+	for _ = range count {
+		id := getRoomId()
+		roomMap[id] = &RoomInfo{}
+		roomMap[id].roomId = id
+		roomMap[id].owner = 0
+		roomMap[id].payMode = pb.PayMode_OWNER
+		roomMap[id].round = pb.GameRound_ROUND4
+		roomMap[id].exit_pay = false
+		roomMap[id].password = 0
+		roomMap[id].round_index = 1
+		roomMap[id].state = RoomState_Idle
+		roomMap[id].players = make([]*RoomPlayer, 0)
+		robot := &RoomPlayer{}
+		robot.playerId = 0
+		robot.bet_side = 0
+		robot.bet = 0
+		robot.side = getSide()
+		roomMap[id].players = append(roomMap[id].players, robot)
+	}
 }
 
 func getRoomId() int64 {
@@ -54,10 +108,15 @@ func newRoom(playerId int64, payMode pb.PayMode, round pb.GameRound, exit_pay bo
 	room.round = round
 	room.exit_pay = exit_pay
 	room.password = password
-	room.players = make([]int64, 0)
-	room.players = append(room.players, playerId)
 	room.state = RoomState_Idle
 	room.round_index = 0
+	room.players = make([]*RoomPlayer, 0)
+	player := &RoomPlayer{}
+	player.playerId = 0
+	player.bet = 0
+	player.side = getSide()
+	player.bet_side = 0
+	room.players = append(room.players, player)
 	return room
 }
 
@@ -67,5 +126,146 @@ func getRoomById(roomId int64) *RoomInfo {
 		return roomInfo
 	} else {
 		return nil
+	}
+}
+
+func getResults() bool {
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+	num1 := rnd.Int63n(1000000)
+	num2 := rnd.Int63n(1000000)
+	return num1 >= num2
+}
+
+func (roomInfo *RoomInfo) startGame() {
+	roomInfo.toBet(Side_Blue)
+}
+
+func (roomInfo *RoomInfo) toBet(side Side) {
+	log.Debug("toBet: side=%v", side)
+	if side == Side_Blue {
+		roomInfo.state = RoomState_BlueBet
+	} else if side == Side_Red {
+		roomInfo.state = RoomState_RedBet
+	}
+	for _, player := range roomInfo.players {
+		log.Debug("player: id=%v, side=%v", player.playerId, player.side)
+		if player.side == side {
+			if player.playerId == 0 {
+				player.bet_side = getRobotBetSide()
+				player.bet = getRobotBet()
+				// if robot is the last bet, turn to playing
+				if roomInfo.state == RoomState_RedBet {
+					roomInfo.playingGame()
+					break
+				}
+			} else {
+				a := playerManager.GetAgent(player.playerId)
+				sendGS2CTurnToBet(a, roomInfo.roomId)
+				break
+			}
+		}
+	}
+}
+
+func (roomInfo *RoomInfo) playingGame() {
+	log.Debug("playing game:")
+	roomInfo.state = RoomState_Racing
+	result := getResults()
+	var win_side Side
+	if result {
+		win_side = Side_Blue
+	} else {
+		win_side = Side_Red
+	}
+	win_players := make([]int64, 0)
+	all_bet := float64(0)
+	for _, player := range roomInfo.players {
+		all_bet += float64(player.bet)
+		if player.bet_side == win_side {
+			win_players = append(win_players, player.playerId)
+		} else {
+			a := playerManager.GetAgent(player.playerId)
+			sendGS2CGameResults(a, false, 0)
+		}
+	}
+	all_bet = all_bet * 0.1
+	ave_coin := int64(all_bet / float64(len(win_players)))
+	for _, playerId := range win_players {
+		if playerId != 0 {
+			playerInfo, _ := database.GetPlayerInfo(playerId)
+			playerInfo.Coin += ave_coin
+			database.UpdatePlayerInfo(playerInfo) //update database
+			a := playerManager.GetAgent(playerId)
+			sendGS2CGameResults(a, true, ave_coin)
+		}
+	}
+	log.Debug("win side=%v, win players=%v, win bet=%v", win_side, win_players, ave_coin)
+	roomInfo.overGame()
+}
+
+func (roomInfo *RoomInfo) overGame() {
+	roomInfo.state = RoomState_Result
+	roomInfo.round_index += 1
+	roundMax := int32(0)
+	if roomInfo.round == pb.GameRound_ROUND4 {
+		roundMax = 4
+	} else if roomInfo.round == pb.GameRound_ROUND8 {
+		roundMax = 8
+	}
+	if roomInfo.round_index > roundMax {
+		for _, player := range roomInfo.players {
+			if player.playerId != 0 {
+				a := playerManager.GetAgent(player.playerId)
+				sendGS2CGameOver(a)
+			}
+		}
+		delete(roomMap, roomInfo.roomId)
+		roomInfo = nil
+	} else {
+		for _, player := range roomInfo.players {
+			if player.playerId != 0 {
+				a := playerManager.GetAgent(player.playerId)
+				sendGS2CNewRoundStart(a, roomInfo.round_index)
+			}
+		}
+		roomInfo.startGame()
+	}
+}
+
+func (roomInfo *RoomInfo) bet(a gate.Agent, roundIndex int32, betSide int32, value int64) {
+	playerId := playerManager.GetPlayerId(a)
+	if roomInfo.round_index == roundIndex {
+		playerInfo, _ := database.GetPlayerInfo(playerId)
+		if playerInfo != nil {
+			if playerInfo.Coin >= value {
+				for _, player := range roomInfo.players {
+					if player.playerId == playerId {
+						if betSide == Side_Blue {
+							player.bet_side = Side_Blue
+						} else {
+							player.bet_side = Side_Red
+						}
+						player.bet = value
+						playerInfo.Coin -= value
+						database.UpdatePlayerInfo(playerInfo) //update database
+						break
+					}
+				}
+				if roomInfo.state == RoomState_RedBet {
+					roomInfo.playingGame()
+				} else if roomInfo.state == RoomState_BlueBet {
+					roomInfo.toBet(Side_Red)
+
+				}
+			} else {
+				sendGS2CBetRet(a, pb.GS2CBetRet_CoinLess.Enum())
+			}
+		} else {
+			log.Error("player[%v] has no info in database", playerId)
+			sendGS2CBetRet(a, pb.GS2CBetRet_Fail.Enum())
+		}
+	} else {
+		log.Error("player[%v] bet round index[%v] error: need[%v]", playerId, roundIndex, roomInfo.round_index)
+		sendGS2CBetRet(a, pb.GS2CBetRet_IndexError.Enum())
 	}
 }

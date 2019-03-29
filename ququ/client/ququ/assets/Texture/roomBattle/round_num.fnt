@@ -1,0 +1,15 @@
+info face="微软雅黑" size=40 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1 outline=0
+common lineHeight=40 base=26 scaleW=968 scaleH=98 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="round_num.png"
+chars count=11
+char id=20845   x=0    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=19968   x=88    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=19977   x=176    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=22235   x=264    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=20116   x=352    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=20108   x=440    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=19971   x=528    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=20843   x=616    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=21512   x=704    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=22238   x=792    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15
+char id=31532   x=880    y=0     width=88    height=98    xoffset=0     yoffset=0     xadvance=88    page=0  chnl=15

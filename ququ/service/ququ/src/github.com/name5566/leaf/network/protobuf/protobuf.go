@@ -189,6 +189,7 @@ func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
 
 	packageHead := append(id, msgLen...)
 
+	log.Debug("protobuf Marshal: data=%v", data)
 	return [][]byte{packageHead, data}, err
 }
 
