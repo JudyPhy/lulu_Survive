@@ -75,10 +75,10 @@ export class Network {
             //消息完整，取出解析
             let idArray = msgBuffer.subarray(curPos, curPos + 2);  //包头前2个字节是消息ID
             let msgId = this.Uint8ArrayToInt(idArray);  //id
-            console.log("receive message id = " + msgId);
+            // console.log("receive message id = " + msgId);
             let protoBuffer = new Uint8Array(sizePackage - this.headPackageSize);   //msg
             protoBuffer.set(msgBuffer.subarray(curPos + this.headPackageSize, curPos + sizePackage), 0);
-            console.log("receive message data = " + protoBuffer);
+            // console.log("receive message data = " + protoBuffer);
             this.BuildMessage(protoBuffer, msgId);
             curPos += sizePackage;
         }

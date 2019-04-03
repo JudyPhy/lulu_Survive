@@ -14,6 +14,12 @@ export namespace pb {
         ROUND8 = 1
     }
 
+    /** Side enum. */
+    enum Side {
+        BLUE = 0,
+        RED = 1
+    }
+
     /** Properties of a PlayerInfo. */
     interface IPlayerInfo {
 
@@ -123,6 +129,108 @@ export namespace pb {
 
         /**
          * Converts this PlayerInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a BetInfo. */
+    interface IBetInfo {
+
+        /** BetInfo playerId */
+        playerId: (number|Long);
+
+        /** BetInfo betSide */
+        betSide: pb.Side;
+
+        /** BetInfo betValue */
+        betValue: (number|Long);
+    }
+
+    /** Represents a BetInfo. */
+    class BetInfo implements IBetInfo {
+
+        /**
+         * Constructs a new BetInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IBetInfo);
+
+        /** BetInfo playerId. */
+        public playerId: (number|Long);
+
+        /** BetInfo betSide. */
+        public betSide: pb.Side;
+
+        /** BetInfo betValue. */
+        public betValue: (number|Long);
+
+        /**
+         * Creates a new BetInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns BetInfo instance
+         */
+        public static create(properties?: pb.IBetInfo): pb.BetInfo;
+
+        /**
+         * Encodes the specified BetInfo message. Does not implicitly {@link pb.BetInfo.verify|verify} messages.
+         * @param message BetInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IBetInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified BetInfo message, length delimited. Does not implicitly {@link pb.BetInfo.verify|verify} messages.
+         * @param message BetInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IBetInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a BetInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns BetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.BetInfo;
+
+        /**
+         * Decodes a BetInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns BetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.BetInfo;
+
+        /**
+         * Verifies a BetInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a BetInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns BetInfo
+         */
+        public static fromObject(object: { [k: string]: any }): pb.BetInfo;
+
+        /**
+         * Creates a plain object from a BetInfo message. Also converts values to other types if specified.
+         * @param message BetInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.BetInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this BetInfo to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
@@ -656,6 +764,9 @@ export namespace pb {
         /** GS2CEnterRoomRet rountIndex */
         rountIndex: number;
 
+        /** GS2CEnterRoomRet players */
+        players?: (pb.IPlayerInfo[]|null);
+
         /** GS2CEnterRoomRet errorCode */
         errorCode: pb.GS2CEnterRoomRet.ErrorCode;
     }
@@ -674,6 +785,9 @@ export namespace pb {
 
         /** GS2CEnterRoomRet rountIndex. */
         public rountIndex: number;
+
+        /** GS2CEnterRoomRet players. */
+        public players: pb.IPlayerInfo[];
 
         /** GS2CEnterRoomRet errorCode. */
         public errorCode: pb.GS2CEnterRoomRet.ErrorCode;
@@ -860,7 +974,7 @@ export namespace pb {
         rountIndex: number;
 
         /** C2GSBet betSide */
-        betSide: number;
+        betSide: pb.Side;
 
         /** C2GSBet bet */
         bet: (number|Long);
@@ -882,7 +996,7 @@ export namespace pb {
         public rountIndex: number;
 
         /** C2GSBet betSide. */
-        public betSide: number;
+        public betSide: pb.Side;
 
         /** C2GSBet bet. */
         public bet: (number|Long);
@@ -1059,6 +1173,204 @@ export namespace pb {
         }
     }
 
+    /** Properties of a GS2CBetInfo. */
+    interface IGS2CBetInfo {
+
+        /** GS2CBetInfo roomId */
+        roomId: (number|Long);
+
+        /** GS2CBetInfo rountIndex */
+        rountIndex: number;
+
+        /** GS2CBetInfo infoList */
+        infoList?: (pb.IBetInfo[]|null);
+    }
+
+    /** Represents a GS2CBetInfo. */
+    class GS2CBetInfo implements IGS2CBetInfo {
+
+        /**
+         * Constructs a new GS2CBetInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CBetInfo);
+
+        /** GS2CBetInfo roomId. */
+        public roomId: (number|Long);
+
+        /** GS2CBetInfo rountIndex. */
+        public rountIndex: number;
+
+        /** GS2CBetInfo infoList. */
+        public infoList: pb.IBetInfo[];
+
+        /**
+         * Creates a new GS2CBetInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CBetInfo instance
+         */
+        public static create(properties?: pb.IGS2CBetInfo): pb.GS2CBetInfo;
+
+        /**
+         * Encodes the specified GS2CBetInfo message. Does not implicitly {@link pb.GS2CBetInfo.verify|verify} messages.
+         * @param message GS2CBetInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CBetInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CBetInfo message, length delimited. Does not implicitly {@link pb.GS2CBetInfo.verify|verify} messages.
+         * @param message GS2CBetInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CBetInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CBetInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CBetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CBetInfo;
+
+        /**
+         * Decodes a GS2CBetInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CBetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CBetInfo;
+
+        /**
+         * Verifies a GS2CBetInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CBetInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CBetInfo
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CBetInfo;
+
+        /**
+         * Creates a plain object from a GS2CBetInfo message. Also converts values to other types if specified.
+         * @param message GS2CBetInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CBetInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CBetInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GS2CGameResults. */
+    interface IGS2CGameResults {
+
+        /** GS2CGameResults results */
+        results: boolean;
+
+        /** GS2CGameResults info */
+        info: pb.IPlayerInfo;
+    }
+
+    /** Represents a GS2CGameResults. */
+    class GS2CGameResults implements IGS2CGameResults {
+
+        /**
+         * Constructs a new GS2CGameResults.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGS2CGameResults);
+
+        /** GS2CGameResults results. */
+        public results: boolean;
+
+        /** GS2CGameResults info. */
+        public info: pb.IPlayerInfo;
+
+        /**
+         * Creates a new GS2CGameResults instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GS2CGameResults instance
+         */
+        public static create(properties?: pb.IGS2CGameResults): pb.GS2CGameResults;
+
+        /**
+         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @param message GS2CGameResults message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @param message GS2CGameResults message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CGameResults;
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CGameResults;
+
+        /**
+         * Verifies a GS2CGameResults message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GS2CGameResults
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GS2CGameResults;
+
+        /**
+         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
+         * @param message GS2CGameResults
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GS2CGameResults, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GS2CGameResults to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
     /** Properties of a GS2CNewRoundStart. */
     interface IGS2CNewRoundStart {
 
@@ -1144,102 +1456,6 @@ export namespace pb {
 
         /**
          * Converts this GS2CNewRoundStart to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-    }
-
-    /** Properties of a GS2CGameResults. */
-    interface IGS2CGameResults {
-
-        /** GS2CGameResults results */
-        results: boolean;
-
-        /** GS2CGameResults winCoin */
-        winCoin: (number|Long);
-    }
-
-    /** Represents a GS2CGameResults. */
-    class GS2CGameResults implements IGS2CGameResults {
-
-        /**
-         * Constructs a new GS2CGameResults.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: pb.IGS2CGameResults);
-
-        /** GS2CGameResults results. */
-        public results: boolean;
-
-        /** GS2CGameResults winCoin. */
-        public winCoin: (number|Long);
-
-        /**
-         * Creates a new GS2CGameResults instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns GS2CGameResults instance
-         */
-        public static create(properties?: pb.IGS2CGameResults): pb.GS2CGameResults;
-
-        /**
-         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
-         * @param message GS2CGameResults message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
-         * @param message GS2CGameResults message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: pb.IGS2CGameResults, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a GS2CGameResults message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns GS2CGameResults
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GS2CGameResults;
-
-        /**
-         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns GS2CGameResults
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GS2CGameResults;
-
-        /**
-         * Verifies a GS2CGameResults message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns GS2CGameResults
-         */
-        public static fromObject(object: { [k: string]: any }): pb.GS2CGameResults;
-
-        /**
-         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
-         * @param message GS2CGameResults
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: pb.GS2CGameResults, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this GS2CGameResults to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

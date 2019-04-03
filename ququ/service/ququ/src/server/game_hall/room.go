@@ -22,16 +22,11 @@ const (
 	RoomState_Result  = 5
 )
 
-const (
-	Side_Blue = 1
-	Side_Red  = 2
-)
-
 type RoomPlayer struct {
 	playerId int64
-	bet_side Side
+	bet_side pb.Side
 	bet      int64
-	side     Side
+	side     pb.Side
 }
 
 type RoomInfo struct {
@@ -53,15 +48,11 @@ func init() {
 	createRobotRoom()
 }
 
-func getSide() Side {
+func getSide() pb.Side {
+	betSides := []pb.Side{pb.Side_BLUE, pb.Side_RED}
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-	num := rnd.Intn(10)
-	side := int32(num % 2)
-	if side == Side_Blue {
-		return Side_Blue
-	} else {
-		return Side_Red
-	}
+	index := rnd.Intn(2)
+	return betSides[index]
 }
 
 func createRobotRoom() {
@@ -137,32 +128,27 @@ func getResults() bool {
 }
 
 func (roomInfo *RoomInfo) startGame() {
-	roomInfo.toBet(Side_Blue)
+	roomInfo.toBet(pb.Side_BLUE)
 }
 
-func (roomInfo *RoomInfo) toBet(side Side) {
+func (roomInfo *RoomInfo) toBet(side pb.Side) {
 	log.Debug("toBet: side=%v", side)
-	if side == Side_Blue {
+	if side == pb.Side_BLUE {
 		roomInfo.state = RoomState_BlueBet
-	} else if side == Side_Red {
+	} else if side == pb.Side_RED {
 		roomInfo.state = RoomState_RedBet
 	}
 	for _, player := range roomInfo.players {
 		log.Debug("player: id=%v, side=%v", player.playerId, player.side)
 		if player.side == side {
 			if player.playerId == 0 {
-				player.bet_side = getRobotBetSide()
-				player.bet = getRobotBet()
-				// if robot is the last bet, turn to playing
-				if roomInfo.state == RoomState_RedBet {
-					roomInfo.playingGame()
-					break
-				}
+				roomInfo.robotBet(player)
+				go roomInfo.betOver()
 			} else {
 				a := playerManager.GetAgent(player.playerId)
 				sendGS2CTurnToBet(a, roomInfo.roomId)
-				break
 			}
+			break
 		}
 	}
 }
@@ -171,40 +157,62 @@ func (roomInfo *RoomInfo) playingGame() {
 	log.Debug("playing game:")
 	roomInfo.state = RoomState_Racing
 	result := getResults()
-	var win_side Side
+	var win_side pb.Side
 	if result {
-		win_side = Side_Blue
+		win_side = pb.Side_BLUE
 	} else {
-		win_side = Side_Red
+		win_side = pb.Side_RED
 	}
+	log.Debug("roomId[%v]: winSide[%v]", roomInfo.roomId, win_side)
 	win_players := make([]int64, 0)
 	all_bet := float64(0)
 	for _, player := range roomInfo.players {
 		all_bet += float64(player.bet)
 		if player.bet_side == win_side {
 			win_players = append(win_players, player.playerId)
-		} else {
-			a := playerManager.GetAgent(player.playerId)
-			sendGS2CGameResults(a, false, 0)
+		} else if player.playerId != 0 {
+			playerInfo, _ := database.GetPlayerInfo(player.playerId)
+			if playerInfo != nil {
+				a := playerManager.GetAgent(player.playerId)
+				sendGS2CGameResults(a, false, playerInfo)
+			}
 		}
 	}
-	all_bet = all_bet * 0.1
+	all_bet = all_bet * 0.9
 	ave_coin := int64(all_bet / float64(len(win_players)))
 	for _, playerId := range win_players {
 		if playerId != 0 {
 			playerInfo, _ := database.GetPlayerInfo(playerId)
-			playerInfo.Coin += ave_coin
-			database.UpdatePlayerInfo(playerInfo) //update database
-			a := playerManager.GetAgent(playerId)
-			sendGS2CGameResults(a, true, ave_coin)
+			if playerInfo != nil {
+				playerInfo.Coin += ave_coin
+				database.UpdatePlayerInfo(playerInfo) //update database
+				a := playerManager.GetAgent(playerId)
+				sendGS2CGameResults(a, true, playerInfo)
+			}
 		}
 	}
 	log.Debug("win side=%v, win players=%v, win bet=%v", win_side, win_players, ave_coin)
-	roomInfo.overGame()
+	go roomInfo.overGame()
 }
 
 func (roomInfo *RoomInfo) overGame() {
 	roomInfo.state = RoomState_Result
+	for _, player := range roomInfo.players {
+		player.bet = 0
+	}
+	t := time.NewTimer(time.Second * 3)
+	for {
+		select {
+		case <-t.C:
+			roomInfo.toNewRound()
+			t.Stop()
+		}
+		break
+	}
+}
+
+func (roomInfo *RoomInfo) toNewRound() {
+	roomInfo.state = RoomState_Idle
 	roomInfo.round_index += 1
 	roundMax := int32(0)
 	if roomInfo.round == pb.GameRound_ROUND4 {
@@ -232,30 +240,29 @@ func (roomInfo *RoomInfo) overGame() {
 	}
 }
 
-func (roomInfo *RoomInfo) bet(a gate.Agent, roundIndex int32, betSide int32, value int64) {
+func (roomInfo *RoomInfo) playerBet(a gate.Agent, roundIndex int32, betSide pb.Side, betValue int64) {
 	playerId := playerManager.GetPlayerId(a)
 	if roomInfo.round_index == roundIndex {
 		playerInfo, _ := database.GetPlayerInfo(playerId)
 		if playerInfo != nil {
-			if playerInfo.Coin >= value {
+			if playerInfo.Coin >= betValue {
+				log.Debug("bet:  playerId[%v],betValue[%v],betSide[%v]", playerId, betValue, betSide)
 				for _, player := range roomInfo.players {
 					if player.playerId == playerId {
-						if betSide == Side_Blue {
-							player.bet_side = Side_Blue
+						player.bet_side = betSide
+						player.bet = betValue
+						playerInfo.Coin -= betValue
+						err := database.UpdatePlayerInfo(playerInfo) //update database
+						if err == nil {
+							sendGS2CBetRet(a, pb.GS2CBetRet_Success.Enum())
+							roomInfo.broadcastGS2CBetInfo()
+							go roomInfo.betOver()
 						} else {
-							player.bet_side = Side_Red
+							log.Error("can't update [%v] info in database", playerId)
+							sendGS2CBetRet(a, pb.GS2CBetRet_Fail.Enum())
 						}
-						player.bet = value
-						playerInfo.Coin -= value
-						database.UpdatePlayerInfo(playerInfo) //update database
 						break
 					}
-				}
-				if roomInfo.state == RoomState_RedBet {
-					roomInfo.playingGame()
-				} else if roomInfo.state == RoomState_BlueBet {
-					roomInfo.toBet(Side_Red)
-
 				}
 			} else {
 				sendGS2CBetRet(a, pb.GS2CBetRet_CoinLess.Enum())
@@ -267,5 +274,21 @@ func (roomInfo *RoomInfo) bet(a gate.Agent, roundIndex int32, betSide int32, val
 	} else {
 		log.Error("player[%v] bet round index[%v] error: need[%v]", playerId, roundIndex, roomInfo.round_index)
 		sendGS2CBetRet(a, pb.GS2CBetRet_IndexError.Enum())
+	}
+}
+
+func (roomInfo *RoomInfo) betOver() {
+	t := time.NewTimer(time.Second * 3)
+	for {
+		select {
+		case <-t.C:
+			if roomInfo.state == RoomState_RedBet {
+				roomInfo.playingGame()
+			} else if roomInfo.state == RoomState_BlueBet {
+				roomInfo.toBet(pb.Side_RED)
+			}
+			t.Stop()
+		}
+		break
 	}
 }

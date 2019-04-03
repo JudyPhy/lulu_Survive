@@ -46,6 +46,20 @@ $root.pb = (function() {
         return values;
     })();
 
+    /**
+     * Side enum.
+     * @name pb.Side
+     * @enum {string}
+     * @property {number} BLUE=0 BLUE value
+     * @property {number} RED=1 RED value
+     */
+    pb.Side = (function() {
+        var valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "BLUE"] = 0;
+        values[valuesById[1] = "RED"] = 1;
+        return values;
+    })();
+
     pb.PlayerInfo = (function() {
 
         /**
@@ -362,6 +376,279 @@ $root.pb = (function() {
         };
 
         return PlayerInfo;
+    })();
+
+    pb.BetInfo = (function() {
+
+        /**
+         * Properties of a BetInfo.
+         * @memberof pb
+         * @interface IBetInfo
+         * @property {number|Long} playerId BetInfo playerId
+         * @property {pb.Side} betSide BetInfo betSide
+         * @property {number|Long} betValue BetInfo betValue
+         */
+
+        /**
+         * Constructs a new BetInfo.
+         * @memberof pb
+         * @classdesc Represents a BetInfo.
+         * @implements IBetInfo
+         * @constructor
+         * @param {pb.IBetInfo=} [properties] Properties to set
+         */
+        function BetInfo(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * BetInfo playerId.
+         * @member {number|Long} playerId
+         * @memberof pb.BetInfo
+         * @instance
+         */
+        BetInfo.prototype.playerId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * BetInfo betSide.
+         * @member {pb.Side} betSide
+         * @memberof pb.BetInfo
+         * @instance
+         */
+        BetInfo.prototype.betSide = 0;
+
+        /**
+         * BetInfo betValue.
+         * @member {number|Long} betValue
+         * @memberof pb.BetInfo
+         * @instance
+         */
+        BetInfo.prototype.betValue = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new BetInfo instance using the specified properties.
+         * @function create
+         * @memberof pb.BetInfo
+         * @static
+         * @param {pb.IBetInfo=} [properties] Properties to set
+         * @returns {pb.BetInfo} BetInfo instance
+         */
+        BetInfo.create = function create(properties) {
+            return new BetInfo(properties);
+        };
+
+        /**
+         * Encodes the specified BetInfo message. Does not implicitly {@link pb.BetInfo.verify|verify} messages.
+         * @function encode
+         * @memberof pb.BetInfo
+         * @static
+         * @param {pb.IBetInfo} message BetInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BetInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.playerId);
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.betSide);
+            writer.uint32(/* id 3, wireType 0 =*/24).int64(message.betValue);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified BetInfo message, length delimited. Does not implicitly {@link pb.BetInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.BetInfo
+         * @static
+         * @param {pb.IBetInfo} message BetInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BetInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a BetInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.BetInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.BetInfo} BetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BetInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.BetInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.playerId = reader.int64();
+                    break;
+                case 2:
+                    message.betSide = reader.int32();
+                    break;
+                case 3:
+                    message.betValue = reader.int64();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("playerId"))
+                throw $util.ProtocolError("missing required 'playerId'", { instance: message });
+            if (!message.hasOwnProperty("betSide"))
+                throw $util.ProtocolError("missing required 'betSide'", { instance: message });
+            if (!message.hasOwnProperty("betValue"))
+                throw $util.ProtocolError("missing required 'betValue'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a BetInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.BetInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.BetInfo} BetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BetInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a BetInfo message.
+         * @function verify
+         * @memberof pb.BetInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        BetInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.playerId) && !(message.playerId && $util.isInteger(message.playerId.low) && $util.isInteger(message.playerId.high)))
+                return "playerId: integer|Long expected";
+            switch (message.betSide) {
+            default:
+                return "betSide: enum value expected";
+            case 0:
+            case 1:
+                break;
+            }
+            if (!$util.isInteger(message.betValue) && !(message.betValue && $util.isInteger(message.betValue.low) && $util.isInteger(message.betValue.high)))
+                return "betValue: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a BetInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.BetInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.BetInfo} BetInfo
+         */
+        BetInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.BetInfo)
+                return object;
+            var message = new $root.pb.BetInfo();
+            if (object.playerId != null)
+                if ($util.Long)
+                    (message.playerId = $util.Long.fromValue(object.playerId)).unsigned = false;
+                else if (typeof object.playerId === "string")
+                    message.playerId = parseInt(object.playerId, 10);
+                else if (typeof object.playerId === "number")
+                    message.playerId = object.playerId;
+                else if (typeof object.playerId === "object")
+                    message.playerId = new $util.LongBits(object.playerId.low >>> 0, object.playerId.high >>> 0).toNumber();
+            switch (object.betSide) {
+            case "BLUE":
+            case 0:
+                message.betSide = 0;
+                break;
+            case "RED":
+            case 1:
+                message.betSide = 1;
+                break;
+            }
+            if (object.betValue != null)
+                if ($util.Long)
+                    (message.betValue = $util.Long.fromValue(object.betValue)).unsigned = false;
+                else if (typeof object.betValue === "string")
+                    message.betValue = parseInt(object.betValue, 10);
+                else if (typeof object.betValue === "number")
+                    message.betValue = object.betValue;
+                else if (typeof object.betValue === "object")
+                    message.betValue = new $util.LongBits(object.betValue.low >>> 0, object.betValue.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a BetInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.BetInfo
+         * @static
+         * @param {pb.BetInfo} message BetInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        BetInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.playerId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.playerId = options.longs === String ? "0" : 0;
+                object.betSide = options.enums === String ? "BLUE" : 0;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.betValue = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.betValue = options.longs === String ? "0" : 0;
+            }
+            if (message.playerId != null && message.hasOwnProperty("playerId"))
+                if (typeof message.playerId === "number")
+                    object.playerId = options.longs === String ? String(message.playerId) : message.playerId;
+                else
+                    object.playerId = options.longs === String ? $util.Long.prototype.toString.call(message.playerId) : options.longs === Number ? new $util.LongBits(message.playerId.low >>> 0, message.playerId.high >>> 0).toNumber() : message.playerId;
+            if (message.betSide != null && message.hasOwnProperty("betSide"))
+                object.betSide = options.enums === String ? $root.pb.Side[message.betSide] : message.betSide;
+            if (message.betValue != null && message.hasOwnProperty("betValue"))
+                if (typeof message.betValue === "number")
+                    object.betValue = options.longs === String ? String(message.betValue) : message.betValue;
+                else
+                    object.betValue = options.longs === String ? $util.Long.prototype.toString.call(message.betValue) : options.longs === Number ? new $util.LongBits(message.betValue.low >>> 0, message.betValue.high >>> 0).toNumber() : message.betValue;
+            return object;
+        };
+
+        /**
+         * Converts this BetInfo to JSON.
+         * @function toJSON
+         * @memberof pb.BetInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        BetInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return BetInfo;
     })();
 
     pb.RoomInfo = (function() {
@@ -1673,6 +1960,7 @@ $root.pb = (function() {
          * @interface IGS2CEnterRoomRet
          * @property {number|Long} roomId GS2CEnterRoomRet roomId
          * @property {number} rountIndex GS2CEnterRoomRet rountIndex
+         * @property {Array.<pb.IPlayerInfo>|null} [players] GS2CEnterRoomRet players
          * @property {pb.GS2CEnterRoomRet.ErrorCode} errorCode GS2CEnterRoomRet errorCode
          */
 
@@ -1685,6 +1973,7 @@ $root.pb = (function() {
          * @param {pb.IGS2CEnterRoomRet=} [properties] Properties to set
          */
         function GS2CEnterRoomRet(properties) {
+            this.players = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -1706,6 +1995,14 @@ $root.pb = (function() {
          * @instance
          */
         GS2CEnterRoomRet.prototype.rountIndex = 0;
+
+        /**
+         * GS2CEnterRoomRet players.
+         * @member {Array.<pb.IPlayerInfo>} players
+         * @memberof pb.GS2CEnterRoomRet
+         * @instance
+         */
+        GS2CEnterRoomRet.prototype.players = $util.emptyArray;
 
         /**
          * GS2CEnterRoomRet errorCode.
@@ -1741,7 +2038,10 @@ $root.pb = (function() {
                 writer = $Writer.create();
             writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
             writer.uint32(/* id 2, wireType 0 =*/16).int32(message.rountIndex);
-            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.errorCode);
+            if (message.players != null && message.players.length)
+                for (var i = 0; i < message.players.length; ++i)
+                    $root.pb.PlayerInfo.encode(message.players[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.errorCode);
             return writer;
         };
 
@@ -1783,6 +2083,11 @@ $root.pb = (function() {
                     message.rountIndex = reader.int32();
                     break;
                 case 3:
+                    if (!(message.players && message.players.length))
+                        message.players = [];
+                    message.players.push($root.pb.PlayerInfo.decode(reader, reader.uint32()));
+                    break;
+                case 4:
                     message.errorCode = reader.int32();
                     break;
                 default:
@@ -1830,6 +2135,15 @@ $root.pb = (function() {
                 return "roomId: integer|Long expected";
             if (!$util.isInteger(message.rountIndex))
                 return "rountIndex: integer expected";
+            if (message.players != null && message.hasOwnProperty("players")) {
+                if (!Array.isArray(message.players))
+                    return "players: array expected";
+                for (var i = 0; i < message.players.length; ++i) {
+                    var error = $root.pb.PlayerInfo.verify(message.players[i]);
+                    if (error)
+                        return "players." + error;
+                }
+            }
             switch (message.errorCode) {
             default:
                 return "errorCode: enum value expected";
@@ -1865,6 +2179,16 @@ $root.pb = (function() {
                     message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
             if (object.rountIndex != null)
                 message.rountIndex = object.rountIndex | 0;
+            if (object.players) {
+                if (!Array.isArray(object.players))
+                    throw TypeError(".pb.GS2CEnterRoomRet.players: array expected");
+                message.players = [];
+                for (var i = 0; i < object.players.length; ++i) {
+                    if (typeof object.players[i] !== "object")
+                        throw TypeError(".pb.GS2CEnterRoomRet.players: object expected");
+                    message.players[i] = $root.pb.PlayerInfo.fromObject(object.players[i]);
+                }
+            }
             switch (object.errorCode) {
             case "Success":
             case 1:
@@ -1899,6 +2223,8 @@ $root.pb = (function() {
             if (!options)
                 options = {};
             var object = {};
+            if (options.arrays || options.defaults)
+                object.players = [];
             if (options.defaults) {
                 if ($util.Long) {
                     var long = new $util.Long(0, 0, false);
@@ -1915,6 +2241,11 @@ $root.pb = (function() {
                     object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
             if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
                 object.rountIndex = message.rountIndex;
+            if (message.players && message.players.length) {
+                object.players = [];
+                for (var j = 0; j < message.players.length; ++j)
+                    object.players[j] = $root.pb.PlayerInfo.toObject(message.players[j], options);
+            }
             if (message.errorCode != null && message.hasOwnProperty("errorCode"))
                 object.errorCode = options.enums === String ? $root.pb.GS2CEnterRoomRet.ErrorCode[message.errorCode] : message.errorCode;
             return object;
@@ -2161,7 +2492,7 @@ $root.pb = (function() {
          * @interface IC2GSBet
          * @property {number|Long} roomId C2GSBet roomId
          * @property {number} rountIndex C2GSBet rountIndex
-         * @property {number} betSide C2GSBet betSide
+         * @property {pb.Side} betSide C2GSBet betSide
          * @property {number|Long} bet C2GSBet bet
          */
 
@@ -2198,7 +2529,7 @@ $root.pb = (function() {
 
         /**
          * C2GSBet betSide.
-         * @member {number} betSide
+         * @member {pb.Side} betSide
          * @memberof pb.C2GSBet
          * @instance
          */
@@ -2333,8 +2664,13 @@ $root.pb = (function() {
                 return "roomId: integer|Long expected";
             if (!$util.isInteger(message.rountIndex))
                 return "rountIndex: integer expected";
-            if (!$util.isInteger(message.betSide))
-                return "betSide: integer expected";
+            switch (message.betSide) {
+            default:
+                return "betSide: enum value expected";
+            case 0:
+            case 1:
+                break;
+            }
             if (!$util.isInteger(message.bet) && !(message.bet && $util.isInteger(message.bet.low) && $util.isInteger(message.bet.high)))
                 return "bet: integer|Long expected";
             return null;
@@ -2363,8 +2699,16 @@ $root.pb = (function() {
                     message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
             if (object.rountIndex != null)
                 message.rountIndex = object.rountIndex | 0;
-            if (object.betSide != null)
-                message.betSide = object.betSide | 0;
+            switch (object.betSide) {
+            case "BLUE":
+            case 0:
+                message.betSide = 0;
+                break;
+            case "RED":
+            case 1:
+                message.betSide = 1;
+                break;
+            }
             if (object.bet != null)
                 if ($util.Long)
                     (message.bet = $util.Long.fromValue(object.bet)).unsigned = false;
@@ -2397,7 +2741,7 @@ $root.pb = (function() {
                 } else
                     object.roomId = options.longs === String ? "0" : 0;
                 object.rountIndex = 0;
-                object.betSide = 0;
+                object.betSide = options.enums === String ? "BLUE" : 0;
                 if ($util.Long) {
                     var long = new $util.Long(0, 0, false);
                     object.bet = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
@@ -2412,7 +2756,7 @@ $root.pb = (function() {
             if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
                 object.rountIndex = message.rountIndex;
             if (message.betSide != null && message.hasOwnProperty("betSide"))
-                object.betSide = message.betSide;
+                object.betSide = options.enums === String ? $root.pb.Side[message.betSide] : message.betSide;
             if (message.bet != null && message.hasOwnProperty("bet"))
                 if (typeof message.bet === "number")
                     object.bet = options.longs === String ? String(message.bet) : message.bet;
@@ -2491,7 +2835,7 @@ $root.pb = (function() {
         GS2CBetRet.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.errorCode);
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.errorCode);
             return writer;
         };
 
@@ -2526,7 +2870,7 @@ $root.pb = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
+                case 2:
                     message.errorCode = reader.int32();
                     break;
                 default:
@@ -2661,6 +3005,490 @@ $root.pb = (function() {
         })();
 
         return GS2CBetRet;
+    })();
+
+    pb.GS2CBetInfo = (function() {
+
+        /**
+         * Properties of a GS2CBetInfo.
+         * @memberof pb
+         * @interface IGS2CBetInfo
+         * @property {number|Long} roomId GS2CBetInfo roomId
+         * @property {number} rountIndex GS2CBetInfo rountIndex
+         * @property {Array.<pb.IBetInfo>|null} [infoList] GS2CBetInfo infoList
+         */
+
+        /**
+         * Constructs a new GS2CBetInfo.
+         * @memberof pb
+         * @classdesc Represents a GS2CBetInfo.
+         * @implements IGS2CBetInfo
+         * @constructor
+         * @param {pb.IGS2CBetInfo=} [properties] Properties to set
+         */
+        function GS2CBetInfo(properties) {
+            this.infoList = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CBetInfo roomId.
+         * @member {number|Long} roomId
+         * @memberof pb.GS2CBetInfo
+         * @instance
+         */
+        GS2CBetInfo.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * GS2CBetInfo rountIndex.
+         * @member {number} rountIndex
+         * @memberof pb.GS2CBetInfo
+         * @instance
+         */
+        GS2CBetInfo.prototype.rountIndex = 0;
+
+        /**
+         * GS2CBetInfo infoList.
+         * @member {Array.<pb.IBetInfo>} infoList
+         * @memberof pb.GS2CBetInfo
+         * @instance
+         */
+        GS2CBetInfo.prototype.infoList = $util.emptyArray;
+
+        /**
+         * Creates a new GS2CBetInfo instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {pb.IGS2CBetInfo=} [properties] Properties to set
+         * @returns {pb.GS2CBetInfo} GS2CBetInfo instance
+         */
+        GS2CBetInfo.create = function create(properties) {
+            return new GS2CBetInfo(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CBetInfo message. Does not implicitly {@link pb.GS2CBetInfo.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {pb.IGS2CBetInfo} message GS2CBetInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CBetInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.roomId);
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.rountIndex);
+            if (message.infoList != null && message.infoList.length)
+                for (var i = 0; i < message.infoList.length; ++i)
+                    $root.pb.BetInfo.encode(message.infoList[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CBetInfo message, length delimited. Does not implicitly {@link pb.GS2CBetInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {pb.IGS2CBetInfo} message GS2CBetInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CBetInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CBetInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CBetInfo} GS2CBetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CBetInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CBetInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.roomId = reader.int64();
+                    break;
+                case 2:
+                    message.rountIndex = reader.int32();
+                    break;
+                case 3:
+                    if (!(message.infoList && message.infoList.length))
+                        message.infoList = [];
+                    message.infoList.push($root.pb.BetInfo.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("roomId"))
+                throw $util.ProtocolError("missing required 'roomId'", { instance: message });
+            if (!message.hasOwnProperty("rountIndex"))
+                throw $util.ProtocolError("missing required 'rountIndex'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CBetInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CBetInfo} GS2CBetInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CBetInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CBetInfo message.
+         * @function verify
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CBetInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
+                return "roomId: integer|Long expected";
+            if (!$util.isInteger(message.rountIndex))
+                return "rountIndex: integer expected";
+            if (message.infoList != null && message.hasOwnProperty("infoList")) {
+                if (!Array.isArray(message.infoList))
+                    return "infoList: array expected";
+                for (var i = 0; i < message.infoList.length; ++i) {
+                    var error = $root.pb.BetInfo.verify(message.infoList[i]);
+                    if (error)
+                        return "infoList." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GS2CBetInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CBetInfo} GS2CBetInfo
+         */
+        GS2CBetInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CBetInfo)
+                return object;
+            var message = new $root.pb.GS2CBetInfo();
+            if (object.roomId != null)
+                if ($util.Long)
+                    (message.roomId = $util.Long.fromValue(object.roomId)).unsigned = false;
+                else if (typeof object.roomId === "string")
+                    message.roomId = parseInt(object.roomId, 10);
+                else if (typeof object.roomId === "number")
+                    message.roomId = object.roomId;
+                else if (typeof object.roomId === "object")
+                    message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber();
+            if (object.rountIndex != null)
+                message.rountIndex = object.rountIndex | 0;
+            if (object.infoList) {
+                if (!Array.isArray(object.infoList))
+                    throw TypeError(".pb.GS2CBetInfo.infoList: array expected");
+                message.infoList = [];
+                for (var i = 0; i < object.infoList.length; ++i) {
+                    if (typeof object.infoList[i] !== "object")
+                        throw TypeError(".pb.GS2CBetInfo.infoList: object expected");
+                    message.infoList[i] = $root.pb.BetInfo.fromObject(object.infoList[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CBetInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CBetInfo
+         * @static
+         * @param {pb.GS2CBetInfo} message GS2CBetInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CBetInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.arrays || options.defaults)
+                object.infoList = [];
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.roomId = options.longs === String ? "0" : 0;
+                object.rountIndex = 0;
+            }
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (typeof message.roomId === "number")
+                    object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
+                else
+                    object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber() : message.roomId;
+            if (message.rountIndex != null && message.hasOwnProperty("rountIndex"))
+                object.rountIndex = message.rountIndex;
+            if (message.infoList && message.infoList.length) {
+                object.infoList = [];
+                for (var j = 0; j < message.infoList.length; ++j)
+                    object.infoList[j] = $root.pb.BetInfo.toObject(message.infoList[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this GS2CBetInfo to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CBetInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CBetInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CBetInfo;
+    })();
+
+    pb.GS2CGameResults = (function() {
+
+        /**
+         * Properties of a GS2CGameResults.
+         * @memberof pb
+         * @interface IGS2CGameResults
+         * @property {boolean} results GS2CGameResults results
+         * @property {pb.IPlayerInfo} info GS2CGameResults info
+         */
+
+        /**
+         * Constructs a new GS2CGameResults.
+         * @memberof pb
+         * @classdesc Represents a GS2CGameResults.
+         * @implements IGS2CGameResults
+         * @constructor
+         * @param {pb.IGS2CGameResults=} [properties] Properties to set
+         */
+        function GS2CGameResults(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GS2CGameResults results.
+         * @member {boolean} results
+         * @memberof pb.GS2CGameResults
+         * @instance
+         */
+        GS2CGameResults.prototype.results = false;
+
+        /**
+         * GS2CGameResults info.
+         * @member {pb.IPlayerInfo} info
+         * @memberof pb.GS2CGameResults
+         * @instance
+         */
+        GS2CGameResults.prototype.info = null;
+
+        /**
+         * Creates a new GS2CGameResults instance using the specified properties.
+         * @function create
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults=} [properties] Properties to set
+         * @returns {pb.GS2CGameResults} GS2CGameResults instance
+         */
+        GS2CGameResults.create = function create(properties) {
+            return new GS2CGameResults(properties);
+        };
+
+        /**
+         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameResults.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 0 =*/8).bool(message.results);
+            $root.pb.PlayerInfo.encode(message.info, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GS2CGameResults.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameResults.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CGameResults();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.results = reader.bool();
+                    break;
+                case 2:
+                    message.info = $root.pb.PlayerInfo.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("results"))
+                throw $util.ProtocolError("missing required 'results'", { instance: message });
+            if (!message.hasOwnProperty("info"))
+                throw $util.ProtocolError("missing required 'info'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GS2CGameResults.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GS2CGameResults message.
+         * @function verify
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GS2CGameResults.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (typeof message.results !== "boolean")
+                return "results: boolean expected";
+            {
+                var error = $root.pb.PlayerInfo.verify(message.info);
+                if (error)
+                    return "info." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GS2CGameResults} GS2CGameResults
+         */
+        GS2CGameResults.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GS2CGameResults)
+                return object;
+            var message = new $root.pb.GS2CGameResults();
+            if (object.results != null)
+                message.results = Boolean(object.results);
+            if (object.info != null) {
+                if (typeof object.info !== "object")
+                    throw TypeError(".pb.GS2CGameResults.info: object expected");
+                message.info = $root.pb.PlayerInfo.fromObject(object.info);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GS2CGameResults
+         * @static
+         * @param {pb.GS2CGameResults} message GS2CGameResults
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GS2CGameResults.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.results = false;
+                object.info = null;
+            }
+            if (message.results != null && message.hasOwnProperty("results"))
+                object.results = message.results;
+            if (message.info != null && message.hasOwnProperty("info"))
+                object.info = $root.pb.PlayerInfo.toObject(message.info, options);
+            return object;
+        };
+
+        /**
+         * Converts this GS2CGameResults to JSON.
+         * @function toJSON
+         * @memberof pb.GS2CGameResults
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GS2CGameResults.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GS2CGameResults;
     })();
 
     pb.GS2CNewRoundStart = (function() {
@@ -2848,230 +3676,6 @@ $root.pb = (function() {
         };
 
         return GS2CNewRoundStart;
-    })();
-
-    pb.GS2CGameResults = (function() {
-
-        /**
-         * Properties of a GS2CGameResults.
-         * @memberof pb
-         * @interface IGS2CGameResults
-         * @property {boolean} results GS2CGameResults results
-         * @property {number|Long} winCoin GS2CGameResults winCoin
-         */
-
-        /**
-         * Constructs a new GS2CGameResults.
-         * @memberof pb
-         * @classdesc Represents a GS2CGameResults.
-         * @implements IGS2CGameResults
-         * @constructor
-         * @param {pb.IGS2CGameResults=} [properties] Properties to set
-         */
-        function GS2CGameResults(properties) {
-            if (properties)
-                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * GS2CGameResults results.
-         * @member {boolean} results
-         * @memberof pb.GS2CGameResults
-         * @instance
-         */
-        GS2CGameResults.prototype.results = false;
-
-        /**
-         * GS2CGameResults winCoin.
-         * @member {number|Long} winCoin
-         * @memberof pb.GS2CGameResults
-         * @instance
-         */
-        GS2CGameResults.prototype.winCoin = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-
-        /**
-         * Creates a new GS2CGameResults instance using the specified properties.
-         * @function create
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {pb.IGS2CGameResults=} [properties] Properties to set
-         * @returns {pb.GS2CGameResults} GS2CGameResults instance
-         */
-        GS2CGameResults.create = function create(properties) {
-            return new GS2CGameResults(properties);
-        };
-
-        /**
-         * Encodes the specified GS2CGameResults message. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
-         * @function encode
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        GS2CGameResults.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 0 =*/8).bool(message.results);
-            writer.uint32(/* id 2, wireType 0 =*/16).int64(message.winCoin);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified GS2CGameResults message, length delimited. Does not implicitly {@link pb.GS2CGameResults.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {pb.IGS2CGameResults} message GS2CGameResults message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        GS2CGameResults.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a GS2CGameResults message from the specified reader or buffer.
-         * @function decode
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {pb.GS2CGameResults} GS2CGameResults
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        GS2CGameResults.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GS2CGameResults();
-            while (reader.pos < end) {
-                var tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1:
-                    message.results = reader.bool();
-                    break;
-                case 2:
-                    message.winCoin = reader.int64();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            if (!message.hasOwnProperty("results"))
-                throw $util.ProtocolError("missing required 'results'", { instance: message });
-            if (!message.hasOwnProperty("winCoin"))
-                throw $util.ProtocolError("missing required 'winCoin'", { instance: message });
-            return message;
-        };
-
-        /**
-         * Decodes a GS2CGameResults message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {pb.GS2CGameResults} GS2CGameResults
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        GS2CGameResults.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a GS2CGameResults message.
-         * @function verify
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        GS2CGameResults.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (typeof message.results !== "boolean")
-                return "results: boolean expected";
-            if (!$util.isInteger(message.winCoin) && !(message.winCoin && $util.isInteger(message.winCoin.low) && $util.isInteger(message.winCoin.high)))
-                return "winCoin: integer|Long expected";
-            return null;
-        };
-
-        /**
-         * Creates a GS2CGameResults message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {pb.GS2CGameResults} GS2CGameResults
-         */
-        GS2CGameResults.fromObject = function fromObject(object) {
-            if (object instanceof $root.pb.GS2CGameResults)
-                return object;
-            var message = new $root.pb.GS2CGameResults();
-            if (object.results != null)
-                message.results = Boolean(object.results);
-            if (object.winCoin != null)
-                if ($util.Long)
-                    (message.winCoin = $util.Long.fromValue(object.winCoin)).unsigned = false;
-                else if (typeof object.winCoin === "string")
-                    message.winCoin = parseInt(object.winCoin, 10);
-                else if (typeof object.winCoin === "number")
-                    message.winCoin = object.winCoin;
-                else if (typeof object.winCoin === "object")
-                    message.winCoin = new $util.LongBits(object.winCoin.low >>> 0, object.winCoin.high >>> 0).toNumber();
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a GS2CGameResults message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof pb.GS2CGameResults
-         * @static
-         * @param {pb.GS2CGameResults} message GS2CGameResults
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        GS2CGameResults.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            var object = {};
-            if (options.defaults) {
-                object.results = false;
-                if ($util.Long) {
-                    var long = new $util.Long(0, 0, false);
-                    object.winCoin = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.winCoin = options.longs === String ? "0" : 0;
-            }
-            if (message.results != null && message.hasOwnProperty("results"))
-                object.results = message.results;
-            if (message.winCoin != null && message.hasOwnProperty("winCoin"))
-                if (typeof message.winCoin === "number")
-                    object.winCoin = options.longs === String ? String(message.winCoin) : message.winCoin;
-                else
-                    object.winCoin = options.longs === String ? $util.Long.prototype.toString.call(message.winCoin) : options.longs === Number ? new $util.LongBits(message.winCoin.low >>> 0, message.winCoin.high >>> 0).toNumber() : message.winCoin;
-            return object;
-        };
-
-        /**
-         * Converts this GS2CGameResults to JSON.
-         * @function toJSON
-         * @memberof pb.GS2CGameResults
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        GS2CGameResults.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        return GS2CGameResults;
     })();
 
     pb.GS2CGameOver = (function() {

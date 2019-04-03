@@ -1,4 +1,4 @@
-import {Observer} from "./Observer"
+import { Observer } from "./Observer"
 
 export class EventDispatch {
 
@@ -9,6 +9,7 @@ export class EventDispatch {
         if (!observers) {
             EventDispatch.listeners[eventName] = [];
         }
+        // console.log("register:", eventName);
         EventDispatch.listeners[eventName].push(new Observer(callback, context));
     }
 
@@ -28,13 +29,14 @@ export class EventDispatch {
         }
     }
 
-    public static fire(eventName: string, ...args: any[]) {
+    public static fire(eventName: string, ...args: any[]) {        
         let observers: Observer[] = EventDispatch.listeners[eventName];
         if (!observers) return;
         let length = observers.length;
         for (let i = 0; i < length; i++) {
             let observer = observers[i];
             observer.notify(eventName, ...args);
+            // console.log("fire:", eventName);
         }
     }
 

@@ -18,7 +18,6 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export class PlayerInfoNode extends cc.Component {
 
-    public static Instance: PlayerInfoNode;
     mName: cc.Label;
     mHeadicon: cc.Sprite;
     mCard: cc.Label;
@@ -26,7 +25,6 @@ export class PlayerInfoNode extends cc.Component {
     mButtonCharge: cc.Button;
 
     onLoad() {
-        PlayerInfoNode.Instance = this;
         this.mName = cc.find("nameContainer/name", this.node).getComponent(cc.Label);
         // this.mHeadicon = topContainer.getChildByName("Container/Password").getComponent(cc.Sprite);
         this.mCard = cc.find("cardContainer/card", this.node).getComponent(cc.Label);
@@ -36,19 +34,25 @@ export class PlayerInfoNode extends cc.Component {
     }
 
     start() {
+        EventDispatch.register(EventType.PLAYER_UPDATE_INFO, this.initUI, this);
         this.initUI();
     }
 
     initUI() {
+        console.log("update player info");
         let player: Player = PlayerManager.getInstance().mMy;
         this.mName.string = player.nickname;
         this.mCard.string = player.card.toString();
         this.mCoin.string = player.coin.toString();
     }
 
+    updateCoin() {
+        this.mCoin.string = PlayerManager.getInstance().mMy.coin.toString();
+    }
+
     onClickCharge(button) {
         console.log("onClickCharge");
-        GameMessageHandler.getInstance().sendC2GSGMAddCoin(1);
+        GameMessageHandler.getInstance().sendC2GSGMAddCoin(1000);
     }
 
     // update (dt) {}

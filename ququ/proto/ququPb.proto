@@ -10,12 +10,23 @@ enum GameRound{
     ROUND8 = 1;
 }
 
+enum Side{
+    BLUE = 0;
+    RED = 1;
+}
+
 message PlayerInfo{
     required int64 playerId = 1;
     required string nickname = 2;
     required string headicon = 3;
     required int64 card = 4;
     required int64 coin = 5;
+}
+
+message BetInfo{
+    required int64 playerId = 1;
+    required Side betSide = 2;
+    required int64 betValue = 3;
 }
 
 message RoomInfo{
@@ -55,7 +66,8 @@ message C2GSEnterRoom {
 message GS2CEnterRoomRet {
     required int64 roomId = 1;
     required int32 rountIndex = 2;
-    required ErrorCode errorCode = 3;
+    repeated PlayerInfo players = 3;
+    required ErrorCode errorCode = 4;
     enum ErrorCode{
         Success = 1;
         Fail = 2;
@@ -71,12 +83,12 @@ message GS2CTurnToBet {
 message C2GSBet {    
     required int64 roomId = 1;
     required int32 rountIndex = 2;
-    required int32 betSide = 3;
+    required Side betSide = 3;
     required int64 bet = 4;
 }
 
-message GS2CBetRet {    
-    required ErrorCode errorCode = 1;
+message GS2CBetRet {
+    required ErrorCode errorCode = 2;
     enum ErrorCode{
         Success = 1;
         IndexError = 2;
@@ -85,13 +97,19 @@ message GS2CBetRet {
     }
 }
 
-message GS2CNewRoundStart {    
-    required int32 rountIndex = 1;
+message GS2CBetInfo {    
+    required int64 roomId = 1;
+    required int32 rountIndex = 2;
+    repeated BetInfo infoList = 3;
 }
 
 message GS2CGameResults {
     required bool results = 1;
-    required int64 winCoin = 2;
+    required PlayerInfo info = 2;
+}
+
+message GS2CNewRoundStart {    
+    required int32 rountIndex = 1;
 }
 
 message GS2CGameOver {

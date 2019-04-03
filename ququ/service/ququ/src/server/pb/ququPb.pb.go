@@ -10,6 +10,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	PlayerInfo
+	BetInfo
 	RoomInfo
 	C2GSLogin
 	GS2CLoginRet
@@ -19,8 +20,9 @@ It has these top-level messages:
 	GS2CTurnToBet
 	C2GSBet
 	GS2CBetRet
-	GS2CNewRoundStart
+	GS2CBetInfo
 	GS2CGameResults
+	GS2CNewRoundStart
 	GS2CGameOver
 	C2GSGMAddCoin
 	GS2CGMAddCoinRet
@@ -97,6 +99,39 @@ func (x *GameRound) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = GameRound(value)
+	return nil
+}
+
+type Side int32
+
+const (
+	Side_BLUE Side = 0
+	Side_RED  Side = 1
+)
+
+var Side_name = map[int32]string{
+	0: "BLUE",
+	1: "RED",
+}
+var Side_value = map[string]int32{
+	"BLUE": 0,
+	"RED":  1,
+}
+
+func (x Side) Enum() *Side {
+	p := new(Side)
+	*p = x
+	return p
+}
+func (x Side) String() string {
+	return proto.EnumName(Side_name, int32(x))
+}
+func (x *Side) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(Side_value, data, "Side")
+	if err != nil {
+		return err
+	}
+	*x = Side(value)
 	return nil
 }
 
@@ -255,6 +290,38 @@ func (m *PlayerInfo) GetCard() int64 {
 func (m *PlayerInfo) GetCoin() int64 {
 	if m != nil && m.Coin != nil {
 		return *m.Coin
+	}
+	return 0
+}
+
+type BetInfo struct {
+	PlayerId         *int64 `protobuf:"varint,1,req,name=playerId" json:"playerId,omitempty"`
+	BetSide          *Side  `protobuf:"varint,2,req,name=betSide,enum=pb.Side" json:"betSide,omitempty"`
+	BetValue         *int64 `protobuf:"varint,3,req,name=betValue" json:"betValue,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *BetInfo) Reset()         { *m = BetInfo{} }
+func (m *BetInfo) String() string { return proto.CompactTextString(m) }
+func (*BetInfo) ProtoMessage()    {}
+
+func (m *BetInfo) GetPlayerId() int64 {
+	if m != nil && m.PlayerId != nil {
+		return *m.PlayerId
+	}
+	return 0
+}
+
+func (m *BetInfo) GetBetSide() Side {
+	if m != nil && m.BetSide != nil {
+		return *m.BetSide
+	}
+	return Side_BLUE
+}
+
+func (m *BetInfo) GetBetValue() int64 {
+	if m != nil && m.BetValue != nil {
+		return *m.BetValue
 	}
 	return 0
 }
@@ -422,7 +489,8 @@ func (m *C2GSEnterRoom) GetPassword() int64 {
 type GS2CEnterRoomRet struct {
 	RoomId           *int64                      `protobuf:"varint,1,req,name=roomId" json:"roomId,omitempty"`
 	RountIndex       *int32                      `protobuf:"varint,2,req,name=rountIndex" json:"rountIndex,omitempty"`
-	ErrorCode        *GS2CEnterRoomRet_ErrorCode `protobuf:"varint,3,req,name=errorCode,enum=pb.GS2CEnterRoomRet_ErrorCode" json:"errorCode,omitempty"`
+	Players          []*PlayerInfo               `protobuf:"bytes,3,rep,name=players" json:"players,omitempty"`
+	ErrorCode        *GS2CEnterRoomRet_ErrorCode `protobuf:"varint,4,req,name=errorCode,enum=pb.GS2CEnterRoomRet_ErrorCode" json:"errorCode,omitempty"`
 	XXX_unrecognized []byte                      `json:"-"`
 }
 
@@ -442,6 +510,13 @@ func (m *GS2CEnterRoomRet) GetRountIndex() int32 {
 		return *m.RountIndex
 	}
 	return 0
+}
+
+func (m *GS2CEnterRoomRet) GetPlayers() []*PlayerInfo {
+	if m != nil {
+		return m.Players
+	}
+	return nil
 }
 
 func (m *GS2CEnterRoomRet) GetErrorCode() GS2CEnterRoomRet_ErrorCode {
@@ -470,7 +545,7 @@ func (m *GS2CTurnToBet) GetRoomId() int64 {
 type C2GSBet struct {
 	RoomId           *int64 `protobuf:"varint,1,req,name=roomId" json:"roomId,omitempty"`
 	RountIndex       *int32 `protobuf:"varint,2,req,name=rountIndex" json:"rountIndex,omitempty"`
-	BetSide          *int32 `protobuf:"varint,3,req,name=betSide" json:"betSide,omitempty"`
+	BetSide          *Side  `protobuf:"varint,3,req,name=betSide,enum=pb.Side" json:"betSide,omitempty"`
 	Bet              *int64 `protobuf:"varint,4,req,name=bet" json:"bet,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
@@ -493,11 +568,11 @@ func (m *C2GSBet) GetRountIndex() int32 {
 	return 0
 }
 
-func (m *C2GSBet) GetBetSide() int32 {
+func (m *C2GSBet) GetBetSide() Side {
 	if m != nil && m.BetSide != nil {
 		return *m.BetSide
 	}
-	return 0
+	return Side_BLUE
 }
 
 func (m *C2GSBet) GetBet() int64 {
@@ -508,7 +583,7 @@ func (m *C2GSBet) GetBet() int64 {
 }
 
 type GS2CBetRet struct {
-	ErrorCode        *GS2CBetRet_ErrorCode `protobuf:"varint,1,req,name=errorCode,enum=pb.GS2CBetRet_ErrorCode" json:"errorCode,omitempty"`
+	ErrorCode        *GS2CBetRet_ErrorCode `protobuf:"varint,2,req,name=errorCode,enum=pb.GS2CBetRet_ErrorCode" json:"errorCode,omitempty"`
 	XXX_unrecognized []byte                `json:"-"`
 }
 
@@ -523,26 +598,42 @@ func (m *GS2CBetRet) GetErrorCode() GS2CBetRet_ErrorCode {
 	return GS2CBetRet_Success
 }
 
-type GS2CNewRoundStart struct {
-	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+type GS2CBetInfo struct {
+	RoomId           *int64     `protobuf:"varint,1,req,name=roomId" json:"roomId,omitempty"`
+	RountIndex       *int32     `protobuf:"varint,2,req,name=rountIndex" json:"rountIndex,omitempty"`
+	InfoList         []*BetInfo `protobuf:"bytes,3,rep,name=infoList" json:"infoList,omitempty"`
+	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *GS2CNewRoundStart) Reset()         { *m = GS2CNewRoundStart{} }
-func (m *GS2CNewRoundStart) String() string { return proto.CompactTextString(m) }
-func (*GS2CNewRoundStart) ProtoMessage()    {}
+func (m *GS2CBetInfo) Reset()         { *m = GS2CBetInfo{} }
+func (m *GS2CBetInfo) String() string { return proto.CompactTextString(m) }
+func (*GS2CBetInfo) ProtoMessage()    {}
 
-func (m *GS2CNewRoundStart) GetRountIndex() int32 {
+func (m *GS2CBetInfo) GetRoomId() int64 {
+	if m != nil && m.RoomId != nil {
+		return *m.RoomId
+	}
+	return 0
+}
+
+func (m *GS2CBetInfo) GetRountIndex() int32 {
 	if m != nil && m.RountIndex != nil {
 		return *m.RountIndex
 	}
 	return 0
 }
 
+func (m *GS2CBetInfo) GetInfoList() []*BetInfo {
+	if m != nil {
+		return m.InfoList
+	}
+	return nil
+}
+
 type GS2CGameResults struct {
-	Results          *bool  `protobuf:"varint,1,req,name=results" json:"results,omitempty"`
-	WinCoin          *int64 `protobuf:"varint,2,req,name=winCoin" json:"winCoin,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Results          *bool       `protobuf:"varint,1,req,name=results" json:"results,omitempty"`
+	Info             *PlayerInfo `protobuf:"bytes,2,req,name=info" json:"info,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
 }
 
 func (m *GS2CGameResults) Reset()         { *m = GS2CGameResults{} }
@@ -556,9 +647,25 @@ func (m *GS2CGameResults) GetResults() bool {
 	return false
 }
 
-func (m *GS2CGameResults) GetWinCoin() int64 {
-	if m != nil && m.WinCoin != nil {
-		return *m.WinCoin
+func (m *GS2CGameResults) GetInfo() *PlayerInfo {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+type GS2CNewRoundStart struct {
+	RountIndex       *int32 `protobuf:"varint,1,req,name=rountIndex" json:"rountIndex,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GS2CNewRoundStart) Reset()         { *m = GS2CNewRoundStart{} }
+func (m *GS2CNewRoundStart) String() string { return proto.CompactTextString(m) }
+func (*GS2CNewRoundStart) ProtoMessage()    {}
+
+func (m *GS2CNewRoundStart) GetRountIndex() int32 {
+	if m != nil && m.RountIndex != nil {
+		return *m.RountIndex
 	}
 	return 0
 }
@@ -614,6 +721,7 @@ func (m *GS2CGMAddCoinRet) GetUser() *PlayerInfo {
 func init() {
 	proto.RegisterEnum("pb.PayMode", PayMode_name, PayMode_value)
 	proto.RegisterEnum("pb.GameRound", GameRound_name, GameRound_value)
+	proto.RegisterEnum("pb.Side", Side_name, Side_value)
 	proto.RegisterEnum("pb.GS2CLoginRet_ErrorCode", GS2CLoginRet_ErrorCode_name, GS2CLoginRet_ErrorCode_value)
 	proto.RegisterEnum("pb.GS2CEnterRoomRet_ErrorCode", GS2CEnterRoomRet_ErrorCode_name, GS2CEnterRoomRet_ErrorCode_value)
 	proto.RegisterEnum("pb.GS2CBetRet_ErrorCode", GS2CBetRet_ErrorCode_name, GS2CBetRet_ErrorCode_value)

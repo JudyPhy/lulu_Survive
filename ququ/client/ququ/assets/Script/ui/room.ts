@@ -2,9 +2,11 @@ import { EventDispatch } from "../handler/EventDispatch";
 import { EventType } from "../handler/EventType";
 import { PlayerManager } from "../player/playerManager";
 import { UIManager } from "../uimanager/uimanager";
-import { GameState, Side, Player } from "../player/player";
+import { GameState } from "../player/roomData";
 import { pb } from "../pbproc/pb";
 import { GameMessageHandler } from "./gameMessageHandler";
+import { RoomData } from "../player/roomData";
+import { PlayerData } from "../player/playerData";
 
 // Learn TypeScript:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -70,88 +72,123 @@ export class Room extends cc.Component {
         this.button_add.node.on('click', this.onClickBetType, this);
 
         this.bottomContainer = cc.find("betContainer/bottom", this.node);
+        this.bottomContainer.active = false;
 
         UIManager.Instance.showPlayerInfoNode(true);
     }
 
+    registerEvent() {
+        EventDispatch.register(EventType.ROOM_TURN_TO_BET, this.toBet, this);
+        EventDispatch.register(EventType.ROOM_BET_SUCCESS, this.betSuccess, this);
+        EventDispatch.register(EventType.ROOM_UPDATE_BET_INFO, this.updateBarValue, this);
+        EventDispatch.register(EventType.ROOM_ROUND_OVER, this.roundOver, this);
+        EventDispatch.register(EventType.ROOM_UPDATE_ROUND_INDEX, this.initUI, this);
+    }
+
     start() {
-        EventDispatch.register(EventType.ROOM_UPDATE_ROUND_INDEX, this.updateRoundIndex, null);
-        EventDispatch.register(EventType.ROOM_TURN_TO_BET, this.toBet, null);
-        EventDispatch.register(EventType.ROOM_BET_SUCCESS, this.betSuccess, null);
+        this.registerEvent();
         this.initUI();
     }
 
     initUI() {
-        this.roomId.string = String(PlayerManager.getInstance().mMy.getRoomId());
+        this.roomId.string = String(PlayerManager.getInstance().mMyRoom.roomId);
         this.updateRoundIndex();
         this.shineBetSide();
-        this.bet_value.string = String(PlayerManager.getInstance().mMy.getBetValue());
+        this.updateBarValue();
+        this.bet_value.string = String(PlayerManager.getInstance().mMyRoom.getBetValueByPlayerId(PlayerManager.getInstance().mMy.mId));
         this.bottomContainer.active = false;
-        let state = PlayerManager.getInstance().mMy.getGameState();
+        let state = PlayerManager.getInstance().mMyRoom.gameState;
         if (state == GameState.Bet) {
-            this.showTimer(true);
+            this.toBet();
         }
     }
 
     onClickBetSide(button) {
         if (button == this.button_blue_bet) {
-            PlayerManager.getInstance().mMy.updateBetSide(Side.Side_Blue);
+            PlayerManager.getInstance().mMyRoom.updateBetSide(PlayerManager.getInstance().mMy.mId, pb.Side.BLUE);
         } else if (button == this.button_red_bet) {
-            PlayerManager.getInstance().mMy.updateBetSide(Side.Side_Red);
+            PlayerManager.getInstance().mMyRoom.updateBetSide(PlayerManager.getInstance().mMy.mId, pb.Side.RED);
         }
         this.shineBetSide();
-    }
-
-    toBet() {
-        console.log("toBet");
-        PlayerManager.getInstance().mMy.updateGameState(GameState.Bet);
-        PlayerManager.getInstance().mMy.updateBetSide(Side.Side_Idle);
-        PlayerManager.getInstance().mMy.updateBetValue(0);
-        this.shineBetSide();
-        this.bet_value.string = "0";
-        this.bottomContainer.active = false;
     }
 
     onClickBetType(button) {
-        if (PlayerManager.getInstance().mMy.getGameState() != GameState.Bet) {
+        this.bottomContainer.active = (button == this.button_add);
+        let playerInfo: PlayerData = PlayerManager.getInstance().mMy;
+        let roomInfo: RoomData = PlayerManager.getInstance().mMyRoom;
+        if (roomInfo.gameState != GameState.Bet) {
             console.log("Not your turn, please waiting other player.");
             return;
         }
-        if (PlayerManager.getInstance().mMy.getBetSide() == Side.Side_Idle) {
+        let betSide = roomInfo.getBetSide(playerInfo.mId);
+        if (betSide == null) {
             console.log("Please select side first!");
             return;
         }
-        this.bottomContainer.active = (button == this.button_add);
-        let playerInfo: Player = PlayerManager.getInstance().mMy;
+        let betValue = 0;
         if (button == this.button_all) {
-            let roomId = playerInfo.getRoomId();
-            let roundIndex = playerInfo.getRoomRoundIndex();
-            let betSide = playerInfo.getBetSide() == Side.Side_Blue ? 1 : 2;
-            GameMessageHandler.getInstance().sendC2GSBet(roomId, roundIndex, betSide, playerInfo.coin);
+            if (playerInfo.coin < 200) {
+                console.log("Coin not enough!");
+                return;
+            }
+            betValue = playerInfo.coin;
         } else if (button == this.button_follow) {
+            let cost = roomInfo.getBetValueBySide(betSide);
+            if (cost <= 0) {
+                console.error("Has no this side bet!");
+                return;
+            }
+            if (playerInfo.coin < cost) {
+                console.error("Coin not enough!");
+                return;
+            }
+            betValue = cost;
         } else if (button == this.button_add) {
+            return;
         }
+        roomInfo.updateBetValue(playerInfo.mId, betValue);
+        roomInfo.gameState = GameState.BetOver;
+        GameMessageHandler.getInstance().sendC2GSBet(roomInfo.roomId, roomInfo.roundIndex, betSide, betValue);
     }
 
-    shineBetSide() {
-        let betSide: Side = PlayerManager.getInstance().mMy.getBetSide();
-        this.blue_bet_bar_shine.node.active = (betSide == Side.Side_Blue);
-        this.red_bet_bar_shine.node.active = (betSide == Side.Side_Red);
+    toBet() {
+        this.showTimer(true);
     }
 
     showTimer(show: boolean) {
 
     }
 
+    shineBetSide() {
+        let betSide: pb.Side = PlayerManager.getInstance().mMyRoom.getBetSide(PlayerManager.getInstance().mMy.mId);
+        this.blue_bet_bar_shine.node.active = (betSide == pb.Side.BLUE);
+        this.red_bet_bar_shine.node.active = (betSide == pb.Side.RED);
+    }
+
+    updateBarValue() {
+        let roomInfo = PlayerManager.getInstance().mMyRoom;
+        if (roomInfo) {
+            this.blue_bet_value.string = String(roomInfo.getBetValueBySide(pb.Side.BLUE));
+            this.red_bet_value.string = String(roomInfo.getBetValueBySide(pb.Side.RED));
+        } else {
+            this.blue_bet_value.string = "";
+            this.red_bet_value.string = "";
+        }
+    }
+
     betSuccess() {
-        PlayerManager.getInstance().mMy.updateBetSide(Side.Side_Idle);
-        this.shineBetSide();
-        this.showTimer(false);
         this.bottomContainer.active = false;
+        let playerInfo = PlayerManager.getInstance().mMy;
+        this.bet_value.string = String(PlayerManager.getInstance().mMyRoom.getBetValueByPlayerId(playerInfo.mId));
+    }
+
+    roundOver() {
+        this.shineBetSide();
+        this.bet_value.string = "0";
     }
 
     updateRoundIndex() {
-        let index = PlayerManager.getInstance().mMy.getRoomRoundIndex();
+        let index = PlayerManager.getInstance().mMyRoom.roundIndex;
         this.roundIndex.string = this.getChineseWords(index);
     }
 

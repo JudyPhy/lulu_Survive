@@ -13,6 +13,8 @@ const { ccclass, property } = cc._decorator;
 import { ResManager, WindowId } from "./windowDefine"
 import { MyTool } from "./../myTool/myTool"
 import { PlayerInfoNode } from "../ui/playerInfo";
+import { EventDispatch } from "../handler/EventDispatch";
+import { EventType } from "../handler/EventType";
 
 @ccclass
 export class UIManager extends cc.Component {
@@ -20,6 +22,7 @@ export class UIManager extends cc.Component {
     public static Instance: UIManager;
 
     private curWindowId: WindowId;
+    private playerInfoNode: cc.Node;
 
     onLoad() {
         UIManager.Instance = this;
@@ -58,10 +61,13 @@ export class UIManager extends cc.Component {
 
     public showPlayerInfoNode(show: boolean) {
         console.log("showPlayerInfoNode:", show);
-        PlayerInfoNode.Instance.node.active = show;
-        PlayerInfoNode.Instance.node.zIndex = show ? 1 : 0;
+        if (!this.playerInfoNode) {
+            this.playerInfoNode = cc.find("playerInfo", this.node);
+        }
+        this.playerInfoNode.active = show;
+        this.playerInfoNode.zIndex = show ? 1 : 0;
         if (show) {
-            PlayerInfoNode.Instance.initUI();
+            EventDispatch.fire(EventType.PLAYER_UPDATE_INFO);
         }
     }
 

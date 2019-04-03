@@ -1,6 +1,7 @@
 package game_hall
 
 import (
+	"server/database"
 	"server/pb"
 	"server/playerManager"
 
@@ -18,7 +19,7 @@ func RecvC2GSCreateRoom(args []interface{}) {
 		log.Error("can't find playerid of agent[%v]", a)
 	} else {
 		roomInfo := newRoom(playerId, m.GetPay(), m.GetRound(), m.GetExitPay(), m.GetPassword())
-		sendGS2CEnterRoomRet(a, roomInfo.roomId, 0, pb.GS2CEnterRoomRet_Success.Enum())
+		sendGS2CEnterRoomRet(a, roomInfo, pb.GS2CEnterRoomRet_Success.Enum())
 	}
 }
 
@@ -63,23 +64,37 @@ func RecvC2GSEnterRoom(args []interface{}) {
 	}
 }
 
-func RecvC2GSBet(args []interface{}) {
-	log.Debug("RecvC2GSEnterRoom=>%v", args)
-	m := args[0].(*pb.C2GSBet)
-	a := args[1].(gate.Agent)
-	roomId := m.GetRoomId()
-	roomInfo, ok := roomMap[roomId]
-	if ok {
-		go roomInfo.bet(a, m.GetRountIndex(), m.GetBetSide(), m.GetBet())
-	}
-}
-
-func sendGS2CEnterRoomRet(a gate.Agent, roomId int64, roundIndex int32, errorCode *pb.GS2CEnterRoomRet_ErrorCode) {
-	log.Debug("sendGS2CEnterRoomRet: roomId=%v, roundIndex=%v", roomId, roundIndex)
+func sendGS2CEnterRoomRet(a gate.Agent, roomInfo *RoomInfo, errorCode *pb.GS2CEnterRoomRet_ErrorCode) {
+	log.Debug("sendGS2CEnterRoomRet: roomId=%v, roundIndex=%v", roomInfo.roomId, roomInfo.round_index)
 	ret := &pb.GS2CEnterRoomRet{}
 	ret.ErrorCode = errorCode
-	ret.RoomId = proto.Int64(roomId)
-	ret.RountIndex = proto.Int32(roundIndex)
+	ret.Players = make([]*pb.PlayerInfo, 0)
+	if roomInfo == nil {
+		ret.RoomId = proto.Int64(0)
+		ret.RountIndex = proto.Int32(0)
+	} else {
+		ret.RoomId = proto.Int64(roomInfo.roomId)
+		ret.RountIndex = proto.Int32(roomInfo.round_index)
+		for _, player := range roomInfo.players {
+			p := &pb.PlayerInfo{}
+			p.PlayerId = proto.Int64(player.playerId)
+			if player.playerId == 0 {
+				p.Card = proto.Int64(0)
+				p.Coin = proto.Int64(0)
+				p.Nickname = proto.String("robot")
+				p.Headicon = proto.String("")
+			} else {
+				playerInfo, _ := database.GetPlayerInfo(player.playerId)
+				if playerInfo != nil {
+					p.Card = proto.Int64(playerInfo.Card)
+					p.Coin = proto.Int64(playerInfo.Coin)
+					p.Nickname = proto.String(playerInfo.Nickname)
+					p.Headicon = proto.String(playerInfo.Headicon)
+				}
+			}
+			ret.Players = append(ret.Players, p)
+		}
+	}
 	a.WriteMsg(ret)
 }
 
@@ -90,6 +105,17 @@ func sendGS2CTurnToBet(a gate.Agent, roomId int64) {
 	a.WriteMsg(ret)
 }
 
+func RecvC2GSBet(args []interface{}) {
+	log.Debug("RecvC2GSBet=>%v", args)
+	m := args[0].(*pb.C2GSBet)
+	a := args[1].(gate.Agent)
+	roomId := m.GetRoomId()
+	roomInfo, ok := roomMap[roomId]
+	if ok {
+		roomInfo.playerBet(a, m.GetRountIndex(), m.GetBetSide(), m.GetBet())
+	}
+}
+
 func sendGS2CBetRet(a gate.Agent, errorCode *pb.GS2CBetRet_ErrorCode) {
 	log.Debug("sendGS2CBetRet: errorCode=%v", errorCode)
 	ret := &pb.GS2CBetRet{}
@@ -97,11 +123,38 @@ func sendGS2CBetRet(a gate.Agent, errorCode *pb.GS2CBetRet_ErrorCode) {
 	a.WriteMsg(ret)
 }
 
-func sendGS2CGameResults(a gate.Agent, result bool, winCoin int64) {
-	log.Debug("sendGS2CGameResults: result=%v, winCoin=%v", result, winCoin)
+func (roomInfo *RoomInfo) broadcastGS2CBetInfo() {
+	ret := &pb.GS2CBetInfo{}
+	ret.RoomId = proto.Int64(roomInfo.roomId)
+	ret.RountIndex = proto.Int32(roomInfo.round_index)
+	ret.InfoList = make([]*pb.BetInfo, 0)
+	for _, player := range roomInfo.players {
+		info := &pb.BetInfo{}
+		info.PlayerId = proto.Int64(player.playerId)
+		info.BetSide = player.bet_side.Enum()
+		info.BetValue = proto.Int64(player.bet)
+		ret.InfoList = append(ret.InfoList, info)
+	}
+	log.Debug("broadcastGS2CBetInfo: roomId=%v, round_index=%v, infoList=%v",
+		roomInfo.roomId, roomInfo.round_index, ret.InfoList)
+	for _, player := range roomInfo.players {
+		if player.playerId != 0 {
+			a := playerManager.GetAgent(player.playerId)
+			a.WriteMsg(ret)
+		}
+	}
+}
+
+func sendGS2CGameResults(a gate.Agent, result bool, info *database.PlayerInfo) {
+	log.Debug("sendGS2CGameResults: result=%v, info=%v", result, info)
 	ret := &pb.GS2CGameResults{}
 	ret.Results = proto.Bool(result)
-	ret.WinCoin = proto.Int64(winCoin)
+	ret.Info = &pb.PlayerInfo{}
+	ret.Info.PlayerId = proto.Int64(info.Id)
+	ret.Info.Nickname = proto.String(info.Nickname)
+	ret.Info.Headicon = proto.String(info.Headicon)
+	ret.Info.Card = proto.Int64(info.Card)
+	ret.Info.Coin = proto.Int64(info.Coin)
 	a.WriteMsg(ret)
 }
 

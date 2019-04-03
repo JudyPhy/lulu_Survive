@@ -58,10 +58,12 @@ func UpdatePlayerInfo(info *PlayerInfo) error {
 	sess := engine.NewSession()
 	defer sess.Close()
 	if err := sess.Begin(); err != nil {
+		log.Error("sess begin error[%v]", err)
 		return err
 	}
-	if _, err := sess.Update(info); err != nil {
+	if _, err := sess.Exec("update player_info set card = ?,coin = ? where id = ?", info.Card, info.Coin, info.Id); err != nil {
 		sess.Rollback()
+		log.Error("update error, rollback[%v]", err)
 		return err
 	}
 	sess.Commit()
