@@ -34,10 +34,6 @@ export default {
         img: require('../assets/img/06.jpg')
       }]
     }
-  },
-  mounted: {
-    // let screemWidth = document.documentElement.clientWidth
-    // let gridListWidth =
   }
 }
 </script>

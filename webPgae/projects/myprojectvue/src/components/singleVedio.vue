@@ -29,9 +29,17 @@ export default {
       contextmenu: []
     }
   },
+  created () {
+    console.log('1111111111')
+    this.getParams()
+  },
   methods: {
     play: function () {
       console.log('play')
+    },
+    getParams () {
+      const routerParams = this.$route.query.id
+      console.log('接受的pdf的值：', routerParams)
     }
   }
 }

@@ -3,7 +3,7 @@
     <header>
       <VedioNav></VedioNav>
     </header>
-    <router-view/>
+<!--    <router-view/>-->
   </div>
 </template>
 

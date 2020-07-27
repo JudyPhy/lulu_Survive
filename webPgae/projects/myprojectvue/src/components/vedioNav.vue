@@ -2,47 +2,49 @@
   <div class="navigation" ref="wrapper">
     <ul ref="tab">
       <li v-for="(item,index) in tabs" :key="index" @click="selectedItem(item,index)">
-        <p :class="navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
-          {{item.title}}
-        </p>
+        <ItemNav :class="{'item-normal':navIndex !== index, 'item-active':navIndex === index}" :name="item.title" :bgColor="item.color">
+        </ItemNav>
       </li>
     </ul>
+    <router-view/>
   </div>
 </template>
 
 <script>
 import Bscroll from 'better-scroll'
+import ItemNav from './item_nav'
 export default {
   name: 'vedioNav',
+  components: {ItemNav},
   data: function () {
     return {
       tabs: [{
-        to: '/page_recommend',
-        title: '推荐'
+        to: '/page_tv',
+        title: '影视',
+        color: '#ff9914'
       },
       {
-        to: '/page_2',
-        title: '电影'
+        to: '/page_episodes',
+        title: '剧集',
+        color: '#2c9121'
       },
       {
-        to: '/vedioList',
-        title: '电视剧'
+        to: '/page_show',
+        title: '综艺',
+        color: '#1ea1dc'
       },
       {
-        to: '/page_3',
-        title: '综艺'
+        to: '/page_anime',
+        title: '动漫',
+        color: '#882087'
       },
       {
-        to: '/vedioList',
-        title: '动漫'
-      },
-      {
-        to: '/vedioList',
-        title: '游戏'
+        to: '/page_fav',
+        title: '收藏',
+        color: '#d61900'
       }],
       navIndex: 0,
       tabWidth: 120,
-      imgUrl: require('../assets/logo.png'),
       windowWidth: document.documentElement.clientWidth, // 实时屏幕宽度
       windowHeight: document.documentElement.clientHeight // 实时屏幕高度
     }
@@ -82,7 +84,7 @@ export default {
 .navigation{
   width: 100%;
   height: 5%;
-  background-color: bisque;
+  /*background-color: bisque;*/
   position: absolute;
   left: 0;
   top: 0;
@@ -95,20 +97,13 @@ export default {
 .navigation li {
   display: inline-block;
   width: 120px;
+  height: 20%;
   padding-bottom: 1.5rem;
 }
-.navigation a {
-  color: #fff;
-  text-decoration: none;
+.item-normal {
+  width: 20%;
 }
-.navigation a:hover {
-  background-color: #2c3e50;
-}
-.item-cn {
-  color: #1c2438;
-  font-weight: 800;
-}
-.item-cn-active {
-  color: #2d8cf0;
+.item-active {
+  width: 25%;
 }
 </style>

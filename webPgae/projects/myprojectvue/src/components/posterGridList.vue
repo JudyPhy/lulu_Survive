@@ -32,7 +32,12 @@ export default {
   },
   methods: {
     selectedItem: function (url) {
-
+      console.log('to:', url)
+      let routerUrl = this.$router.resolve({
+        path: '/singleVedio',
+        query: {id: 1}
+      })
+      window.open(routerUrl.href, '_blank')
     }
   }
 }
