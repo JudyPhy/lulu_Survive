@@ -1,20 +1,39 @@
 <template>
-    <div class="item_nav" :style="{'background-color':this.bg_color}">
-      <p>{{this.title}}</p>
-    </div>
+  <div class="item_nav" :style="activedStyle(actived)">
+    {{this.title}}
+  </div>
 </template>
 
 <script>
 export default {
   name: 'item_nav',
   props: {
+    posX: Number,
     name: String,
-    bgColor: String
+    bgColor: String,
+    actived: Boolean
   },
   data: function () {
     return {
       title: this.name,
       bg_color: this.bgColor
+    }
+  },
+  methods: {
+    activedStyle: function (selected) {
+      let stSelected = {
+        'background-color': this.bg_color,
+        width: '100%',
+        height: '100%',
+        color: 'red'
+      }
+      let stUnselected = {
+        'background-color': this.bg_color,
+        width: '100%',
+        height: '100%',
+        color: 'white'
+      }
+      return selected ? stSelected : stUnselected
     }
   }
 }
@@ -22,12 +41,9 @@ export default {
 
 <style scoped>
 .item_nav {
-  width: 100%;
-  height: 96px;
-}
-.item_nav p {
+  padding: 0;
+  margin: 0;
   font-size: 1rem;
   color: white;
-  padding-top: 5px;
 }
 </style>

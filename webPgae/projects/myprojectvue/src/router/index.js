@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Page1 from '@/components/page_1'
+import PageTV from '@/components/page_tv'
 import Page2 from '@/components/page_2'
-import PageRecommend from '@/components/page_recommend'
 
 Vue.use(Router)
 
@@ -15,12 +14,8 @@ Router.prototype.push = function push (location) {
 export default new Router({
   routes: [
     {
-      path: '/page_recommend',
-      component: PageRecommend
-    },
-    {
-      path: '/page_1',
-      component: Page1
+      path: '/page_tv',
+      component: PageTV
     },
     {
       path: '/page_2',
@@ -28,7 +23,7 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: '/page_recommend'
+      redirect: '/page_base'
     }
   ]
 })

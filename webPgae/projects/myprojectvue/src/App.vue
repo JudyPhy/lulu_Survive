@@ -1,18 +1,15 @@
 <template>
   <div id="app">
-    <header>
-      <VedioNav></VedioNav>
-    </header>
-<!--    <router-view/>-->
+    <PageInit></PageInit>
   </div>
 </template>
 
 <script>
-import VedioNav from './components/vedioNav'
+import PageInit from './components/page_base'
 
 export default {
   name: 'App',
-  components: {VedioNav}
+  components: {PageInit}
 }
 </script>
 
@@ -23,7 +20,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
+  /*background-color: burlywood;*/
 }
 
 a.router-link-active {color: red;}

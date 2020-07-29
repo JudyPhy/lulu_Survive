@@ -1,6 +1,6 @@
 <template>
-  <div class="container" :style="this.style_phone">
-    <p v-for="(item,index) in list" :key="index" @click="selectedItem(item.url)">
+  <div class="container">
+    <p v-for="(item,index) in vedioInfoArray" :key="index" @click="selectedItem(item.url)">
       <img :src="item.img">
       <br>{{item.name| ellipsis}}
     </p>
@@ -15,10 +15,6 @@ export default {
   },
   data: function () {
     return {
-      list: this.vedioInfoArray,
-      style_phone: {
-        'grid-template-columns': 'repeat(auto-fill, 100px)'
-      }
     }
   },
   filters: {
@@ -45,12 +41,17 @@ export default {
 
 <style>
 .container{
+  background-color: darkgray;
   display: grid;
   grid-template-columns: repeat(3, 30%);
-  grid-column-gap: 1rem;
+  grid-template-rows: repeat(3, 30%);
+  grid-column-gap: 3%;
+  grid-row-gap: 2%;
   font-size: 1rem;
   word-wrap: break-word;
-  /*padding-left: 10px;*/
+  overflow: hidden;
+  padding: 0 0 0 1%;
+  margin: 0;
 }
 .container img{
   width: 100px;
