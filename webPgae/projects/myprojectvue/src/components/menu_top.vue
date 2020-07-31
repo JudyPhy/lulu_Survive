@@ -1,8 +1,7 @@
 <template>
-  <div class="menu_top" :style="{width:menuWidth + 'px', height:menuHeight + 'px'}">
-    <div v-for="(item,index) in tabs" :key="index" @click="selectedItem(item,index)"
-    :style="{width:'20%', height:'100%'}">
-      <ItemNav :posX="getPosX(index)" :name="item.title" :bgColor="item.color" :actived="index===activedIndex">
+  <div class="menu_top">
+    <div v-for="(item,index) in tabs" :key="index" @click="selectedItem(item,index)">
+      <ItemNav :name="item.title" :bgColor="item.color" :actived="index===activedIndex">
       </ItemNav>
     </div>
     <div></div>
@@ -52,10 +51,6 @@ export default {
     selectedItem: function (item, index) {
       this.$router.push({ path: item.to })
       this.activedIndex = index
-    },
-    getPosX: function (index) {
-      let posX = index * this.menuWidth / 5
-      return posX
     }
   }
 }
@@ -63,17 +58,19 @@ export default {
 
 <style scoped>
 .menu_top {
-  background-color: #2c3e50;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-size: 0;
+  padding: 0;
+  margin: 0;
+}
+.menu_top div {
+  display: inline-block;
   overflow: hidden;
   padding: 0;
   margin: 0;
-  font-size: 0;
-}
-.menu_top div {
-  background-color: chocolate;
-  display: inline-block;
-  padding: 0;
-  margin-top: 0;
-  overflow: hidden;
+  width: 69.4px;
+  height: 64px;
 }
 </style>

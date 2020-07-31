@@ -1,6 +1,6 @@
 <template>
   <div id="page_tv">
-    <poster-grid-list :vedioInfoArray=vedioInfoList></poster-grid-list>
+    <poster-grid-list :mediaInfoArray=vedioInfoList></poster-grid-list>
   </div>
 </template>
 
@@ -64,5 +64,12 @@ export default {
 </script>
 
 <style scoped>
-
+#page_tv {
+  background-color: red;
+  width: 347px;
+  height: 480px;
+  /*position: absolute;*/
+  /*left: 0;*/
+  /*top: 0;*/
+}
 </style>

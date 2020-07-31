@@ -20,8 +20,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /*margin-top: 60px;*/
-  /*background-color: burlywood;*/
+  padding: 0;
+  margin: 0;
+  background-color: burlywood;
 }
 
 a.router-link-active {color: red;}

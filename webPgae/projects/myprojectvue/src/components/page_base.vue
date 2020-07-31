@@ -1,56 +1,59 @@
 <template>
-  <div class="page_base" :style="{width:this.screenWidth + 'px', height:this.screenHeight + 'px'}">
+  <div class="page_base">
     <header>
-      <Menu :screenWidth=this.menuWidth :screenHeight=this.menuHeight></Menu>
+      <Menu></Menu>
     </header>
-    <div class="posterList">
-      <router-view/>
+    <div id="content" @touchstart="touchstart">
+      <ContentContainer></ContentContainer>
     </div>
-    <div class="adv">
-      <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=366773481,3051478352&fm=26&gp=0.jpg">
-    </div>
+    <footer>
+<!--      <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=366773481,3051478352&fm=26&gp=0.jpg">-->
+    </footer>
   </div>
 </template>
 
 <script>
 import Menu from './menu_top'
+import ContentContainer from './container_dropdown'
 export default {
   name: 'page_base',
-  components: {Menu},
+  components: {Menu, ContentContainer},
   data: function () {
     return {
-      screenWidth: 0,
-      screenHeight: 0,
-      menuWidth: 0,
-      menuHeight: 0
     }
   },
-  mounted () {
-    this.screenWidth = document.documentElement.clientWidth
-    this.screenHeight = document.documentElement.clientHeight
-    this.menuWidth = this.screenWidth
-    this.menuHeight = this.screenHeight / 15
-    window.onresize = () => {
-      return (() => {
-        this.screenWidth = document.documentElement.clientWidth
-        this.screenHeight = document.documentElement.clientHeight
-        this.menuWidth = this.screenWidth
-        this.menuHeight = this.screenHeight / 15
-      })()
+  methods: {
+    touchstart: function () {
+      console.log('111 touchstart')
     }
   }
 }
 </script>
 
 <style scoped>
-.posterList {
-  background-color: aquamarine;
+header {
+  background-color: #2c3e50;
   overflow: hidden;
-  width: 100%;
-  height: 80%;
+  width: 347px;
+  height: 64px;
+  padding: 0;
+  margin: 0;
 }
-.adv img {
-  max-width: 100%;
-  max-height: 100%;
+#content {
+  background-color: darkgray;
+  overflow: hidden;
+  width: 347px;
+  height: 480px;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+footer {
+  background-color: darkolivegreen;
+  overflow: hidden;
+  width: 347px;
+  height: 96px;
+  padding: 0;
+  margin: 0;
 }
 </style>
