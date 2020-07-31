@@ -1,60 +1,60 @@
 <template>
   <div id="page_tv">
-    <poster-grid-list :mediaInfoArray=vedioInfoList></poster-grid-list>
+    <grid_33 :dataArray=vedioInfoList></grid_33>
   </div>
 </template>
 
 <script>
-import PosterGridList from './posterGridList'
+import Grid33 from './grid_33'
 export default {
   name: 'page_tv',
   components: {
-    'poster-grid-list': PosterGridList
+    'grid_33': Grid33
   },
   data: function () {
     return {
       vedioInfoList: [{
-        name: 'vedio1',
+        name: '一一一一',
         url: 'https://d.mahua-kb.com/20200708/DpGB4wBv/index.m3u8',
         img: require('../assets/img/01.jpeg')
       },
       {
-        name: 'vedio2vedio2vedio2vedio2vedio2vedio2vedio2',
+        name: '二二二二',
         url: '',
         img: require('../assets/img/02.jpeg')
       },
       {
-        name: 'vedio3',
+        name: '三三三三',
         url: 'https://d.mahua-kb.com/20200708/DpGB4wBv/index.m3u8',
         img: require('../assets/img/03.jpg')
       },
       {
-        name: 'vedio4',
+        name: '四四四四',
         url: '',
         img: require('../assets/img/05.jpg')
       },
       {
-        name: 'vedio5',
+        name: '五五五五',
         url: 'https://d.mahua-kb.com/20200708/DpGB4wBv/index.m3u8',
         img: require('../assets/img/06.jpg')
       },
       {
-        name: 'vedio6',
+        name: '六六六六六六六',
         url: '',
         img: require('../assets/img/06.jpg')
       },
       {
-        name: 'vedio7',
+        name: '七七七七',
         url: 'https://d.mahua-kb.com/20200708/DpGB4wBv/index.m3u8',
         img: require('../assets/img/01.jpeg')
       },
       {
-        name: 'vedio8',
+        name: '八八八八',
         url: '',
         img: require('../assets/img/03.jpg')
       },
       {
-        name: 'vedio9',
+        name: '九九九九',
         url: '',
         img: require('../assets/img/02.jpeg')
       }]
@@ -65,11 +65,8 @@ export default {
 
 <style scoped>
 #page_tv {
-  background-color: red;
   width: 347px;
   height: 480px;
-  /*position: absolute;*/
-  /*left: 0;*/
-  /*top: 0;*/
+  overflow: hidden;
 }
 </style>

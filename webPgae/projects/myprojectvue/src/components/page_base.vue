@@ -3,7 +3,7 @@
     <header>
       <Menu></Menu>
     </header>
-    <div id="content" @touchstart="touchstart">
+    <div id="content">
       <ContentContainer></ContentContainer>
     </div>
     <footer>

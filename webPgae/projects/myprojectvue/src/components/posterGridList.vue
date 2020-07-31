@@ -41,8 +41,8 @@ export default {
 
 <style>
 .container{
-  /*background-color: aqua;*/
-  /*width: 347px;*/
+  background-color: blueviolet;
+  width: 347px;
   /*height: 480px;*/
   display: grid;
   grid-template-columns: repeat(3, 100px);
@@ -52,7 +52,7 @@ export default {
   font-size: 16px;
   word-wrap: break-word;
   overflow: hidden;
-  padding: 0;
+  padding-left: 0px;
 }
 .container div {
   /*background-color: aqua;*/

@@ -1,10 +1,10 @@
 <template>
-  <div class="container" @touchstart="touchstart" @touchmove="touchMove" @touchend="touchEnd" :style="{top:offsetY + 'px', transform: 'translate3d(0,${ani_offsetY}px, 0)'}">
+  <div class="container" @touchstart="touchstart" @touchmove="touchMove" @touchend="touchEnd" :style="{top:offsetY + 'px'}">
     <div class="refresh">
       <span>{{this.message}}</span>
     </div>
     <div class="content">
-<!--      <router-view/>-->
+      <router-view/>
     </div>
   </div>
 </template>
@@ -34,8 +34,10 @@ export default {
       if (this.moveState === 2) {
         return
       }
-      e.preventDefault()
       let move = e.targetTouches[0].clientY - this.startY
+      if (Math.abs(move) > 0) {
+        e.preventDefault()
+      }
       this.startY = e.targetTouches[0].clientY
       // update container offsetY
       let curOffsetY = this.offsetY
@@ -68,7 +70,7 @@ export default {
       this.ani_offsetY = Math.abs(this.offsetY)
     },
     startTimer: function () {
-      this.timer = setTimeout(this.hideRefresh, 3000)
+      this.timer = setTimeout(this.hideRefresh, 1000)
     },
     hideRefresh: function () {
       clearTimeout(this.timer)
@@ -100,6 +102,14 @@ export default {
   position: absolute;
   width: 347px;
   bottom: 25px;
+  left: 0;
+}
+.content {
+  /*background-color: cornflowerblue;*/
+  position: absolute;
+  width: 347px;
+  height: 480px;
+  top: 64px;
   left: 0;
 }
 </style>
