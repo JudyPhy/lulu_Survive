@@ -4,14 +4,21 @@
       <span>{{this.message}}</span>
     </div>
     <div class="content">
-      <router-view/>
+      <grid_33 :dataArray=mediaDataArray></grid_33>
     </div>
   </div>
 </template>
 
 <script>
+import Grid33 from './grid_33'
 export default {
-  name: 'container_dropdown',
+  name: 'container_scroll',
+  props: {
+    mediaDataArray: Array
+  },
+  components: {
+    'grid_33': Grid33
+  },
   data: function () {
     return {
       message: '下拉即可刷新',

@@ -1,7 +1,6 @@
 <template>
   <div class="container">
-    <div class="item" v-for="(item,index) in dataArray" :key="index" @click="selectedItem(item.url)">
-<!--      <Item :imgUrl="item.img" :name="item.name" :desc="'啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊'"></Item>-->
+    <div class="item" v-for="(item,index) in dataArray" :key="index" @click="selectedItem(item.dataId)">
       <Item :info="item"></Item>
     </div>
   </div>
@@ -14,7 +13,13 @@ export default {
   props: {
     dataArray: Array
   },
-  components: {Item}
+  components: {Item},
+  methods: {
+    selectedItem: function (dataId) {
+      console.log(dataId)
+      this.$router.push({ path: '/page_vedio_play' })
+    }
+  }
 }
 </script>
 

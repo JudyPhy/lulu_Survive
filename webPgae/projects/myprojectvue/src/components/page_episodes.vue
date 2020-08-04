@@ -1,5 +1,5 @@
 <template>
-  <div id="page_tv">
+  <div id="page_episodes">
     <scroll_container :mediaDataArray=vedioInfoList></scroll_container>
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import ScrollContainer from './container_scroll'
 export default {
-  name: 'page_tv',
+  name: 'page_episodes',
   components: {
     'scroll_container': ScrollContainer
   },
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style scoped>
-#page_tv {
+#page_episodes {
   width: 347px;
   height: 480px;
   overflow: hidden;

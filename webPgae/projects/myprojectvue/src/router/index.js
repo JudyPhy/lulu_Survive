@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import PageTV from '@/components/page_tv'
-import Page2 from '@/components/page_2'
+import PageEpisodes from '@/components/page_2'
+import PageVedioPlay from '@/components/page_vedio_play'
 
 Vue.use(Router)
 
@@ -15,15 +16,31 @@ export default new Router({
   routes: [
     {
       path: '/page_tv',
-      component: PageTV
+      component: PageTV,
+      meta: {
+        showNav: true
+      }
     },
     {
-      path: '/page_2',
-      component: Page2
+      path: '/page_episodes',
+      component: PageEpisodes,
+      meta: {
+        showNav: true
+      }
+    },
+    {
+      path: '/page_vedio_play',
+      component: PageVedioPlay,
+      meta: {
+        showNav: false
+      }
     },
     {
       path: '/',
-      redirect: '/page_base'
+      redirect: '/page_tv',
+      meta: {
+        showNav: true
+      }
     }
   ]
 })
